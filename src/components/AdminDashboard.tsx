@@ -45,7 +45,7 @@ export default function AdminDashboard() {
   const fetchLogs = async () => {
     try {
       let query = supabase
-        .from('volunteer_logs')
+        .from('volunteer_log')
         .select(`
           *,
           user:users(*)

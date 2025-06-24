@@ -42,7 +42,7 @@ export default function VolunteerLogForm() {
 
     try {
       const { error } = await supabase
-        .from('volunteer_logs')
+        .from('volunteer_log')
         .insert([
           {
             user_id: user.id,

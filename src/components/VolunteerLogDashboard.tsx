@@ -20,7 +20,7 @@ export default function VolunteerLogDashboard() {
 
     try {
       const { data, error } = await supabase
-        .from('volunteer_logs')
+        .from('volunteer_log')
         .select('*')
         .eq('user_id', user.id)
         .order('date_of_service', { ascending: false });
@@ -50,7 +50,7 @@ export default function VolunteerLogDashboard() {
   const deleteLog = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('volunteer_logs')
+        .from('volunteer_log')
         .delete()
         .eq('id', id);
 
