@@ -863,104 +863,29 @@ function Admin() {
   const isAdmin = user?.email === 'divineduskdragon08@gmail.com'; // Set your admin email here
 
   const njhsMembers = [
-    { name: "Dhriti Erusalagandi", emailPrefix: "dhriti.erusalagandi58" },
-    { name: "Annie Addison", emailPrefix: "annie.addison23" },
-    { name: "Stephanie Adelowokan", emailPrefix: "stephanie.adelowokan" },
-    { name: "Nazila Allaudin", emailPrefix: "nazila.allaudin" },
-    { name: "Anvi Alleti", emailPrefix: "anvi.alleti" },
-    { name: "Farhan Altaf", emailPrefix: "farhan.altaf" },
-    { name: "Abigail Antony", emailPrefix: "abigail.antony" },
-    { name: "Rivaan Arvapalli", emailPrefix: "rivaan.arvapalli" },
-    { name: "Diya Babu", emailPrefix: "diya.babu" },
-    { name: "Vrinda Balasani", emailPrefix: "vrinda.balasani" },
-    { name: "Kabir Baweja", emailPrefix: "kabir.baweja" },
-    { name: "Lila Belanger", emailPrefix: "lila.belanger" },
-    { name: "Nihaarika Bhamidipati", emailPrefix: "nihaarika.bhamidipati" },
-    { name: "Sydney Bhattacharya", emailPrefix: "sydney.bhattacharya" },
-    { name: "Rithvik Bomidika", emailPrefix: "rithvik.bomidika" },
-    { name: "Rohan Busa", emailPrefix: "rohan.busa" },
-    { name: "Haime Cha", emailPrefix: "haime.cha" },
-    { name: "Sarah Chakkumcal", emailPrefix: "sarah.chakkumcal" },
-    { name: "Braden Chambers", emailPrefix: "braden.chambers" },
-    { name: "Colin Chambers", emailPrefix: "colin.chambers" },
-    { name: "Shivi Chauhan", emailPrefix: "shivi.chauhan" },
-    { name: "Swara Chaukade", emailPrefix: "swara.chaukade" },
-    { name: "Jing hao Cheng", emailPrefix: "jing.hao.cheng" },
-    { name: "Atharv Choubey", emailPrefix: "atharv.choubey" },
-    { name: "Saanvi Choubey", emailPrefix: "saanvi.choubey" },
-    { name: "Rafael De faria peixoto", emailPrefix: "rafael.de.faria.peixoto" },
-    { name: "Dhruv Deepak", emailPrefix: "dhruv.deepak" },
-    { name: "Saketh Donikena", emailPrefix: "saketh.donikena" },
-    { name: "Ansh Dubey", emailPrefix: "ansh.dubey" },
-    { name: "Eashan Emani", emailPrefix: "eashan.emani" },
-    { name: "Dhriti Erusalagandi", emailPrefix: "dhriti.erusalagandi58" },
-    { name: "Emery Erwin", emailPrefix: "emery.erwin" },
-    { name: "Angelo Gauna", emailPrefix: "angelo.gauna" },
-    { name: "Joann George", emailPrefix: "joann.george" },
-    { name: "Caleb Gore", emailPrefix: "caleb.gore" },
-    { name: "Kylie Hall", emailPrefix: "kylie.hall" },
-    { name: "Griffin Hartigan", emailPrefix: "griffin.hartigan" },
-    { name: "Ashur Hasnat", emailPrefix: "ashur.hasnat" },
-    { name: "Easton Heinrich", emailPrefix: "easton.heinrich" },
-    { name: "Camden Henry", emailPrefix: "camden.henry" },
-    { name: "Kaytlin Huerta", emailPrefix: "kaytlin.huerta" },
-    { name: "Harshitha Indukuri", emailPrefix: "harshitha.indukuri" },
-    { name: "Jashwanth Jagadeesan", emailPrefix: "jashwanth.jagadeesan" },
-    { name: "Arnav Jain", emailPrefix: "arnav.jain" },
-    { name: "Anwitha Jeyakumar", emailPrefix: "anwitha.jeyakumar" },
-    { name: "Sreenandana Kamattathil saril", emailPrefix: "sreenandana.kamattathilsaril62" },
-    { name: "Maanya Katari", emailPrefix: "maanya.katari" },
-    { name: "Aiza Khan", emailPrefix: "aiza.khan" },
-    { name: "Arshiya Khanna", emailPrefix: "arshiya.khanna47" },
-    { name: "Ryan Klassen", emailPrefix: "ryan.klassenn" },
-    { name: "Ashwika Konchada", emailPrefix: "ashwika.konchada" },
-    { name: "Lakshan Lakshminarayanan", emailPrefix: "lakshan.lakshminarayanan" },
-    { name: "Samanvi Mane", emailPrefix: "samanvi.mane" },
-    { name: "Esther Mathew", emailPrefix: "esther.mathew" },
-    { name: "Grace Mccloskey", emailPrefix: "grace.mccloskey" },
-    { name: "Cade Mehrens", emailPrefix: "cade.mehrens" },
-    { name: "Harper Miller", emailPrefix: "harper.miller" },
-    { name: "Harrison Miller", emailPrefix: "harrison.miller" },
-    { name: "Aarna Mishra", emailPrefix: "aarna.mishra63" },
-    { name: "Julia Moffitt", emailPrefix: "julia.moffitt" },
-    { name: "Katelyn Moffitt", emailPrefix: "katelyn.moffitt" },
-    { name: "Cade Morrison", emailPrefix: "cade.morrison" },
-    { name: "Kavya Mukherjee", emailPrefix: "kavya.mukherjee18" },
-    { name: "Ryan Nalam", emailPrefix: "ryan.nalam" },
-    { name: "Venkata sravan reddy Naru", emailPrefix: "venkata.sravan.reddy.naru" },
-    { name: "Pravin Navin", emailPrefix: "pravin.navin" },
-    { name: "Benjamin Newton", emailPrefix: "benjamin.newton" },
-    { name: "Reyansh Nighojkar", emailPrefix: "reyansh.nighojkar" },
-    { name: "James Orourke", emailPrefix: "james.orourke" },
-    { name: "Soham Pachpande", emailPrefix: "soham.pachpande" },
-    { name: "Connor Plante", emailPrefix: "connor.plante" },
-    { name: "Satvik Prasad", emailPrefix: "satvik.prasad" },
-    { name: "Pranav Pratheesh", emailPrefix: "pranav.pratheesh" },
-    { name: "Adhrit Premkumar", emailPrefix: "adhrit.premkumar33" },
-    { name: "Bella Qiu", emailPrefix: "bella.qiu" },
-    { name: "Eeshaan Raj", emailPrefix: "eeshaan.raj" },
-    { name: "Diya Raveendran", emailPrefix: "diya.raveendran" },
-    { name: "Vedant Rungta", emailPrefix: "vedant.rungta" },
-    { name: "Anirudh Sathyan", emailPrefix: "anirudh.sathyan" },
-    { name: "Brynn Schielein", emailPrefix: "brynn.schielein" },
-    { name: "Yunseo Seo", emailPrefix: "yunseo.seo" },
-    { name: "Ansh Shah", emailPrefix: "ansh.shah" },
-    { name: "Shubh Sharma", emailPrefix: "shubh.sharma" },
-    { name: "Gia Singla", emailPrefix: "gia.singla" },
-    { name: "Kate Smith", emailPrefix: "kate.smith" },
-    { name: "Bailey Sparrow", emailPrefix: "bailey.sparrow" },
-    { name: "Tharun Sridhar", emailPrefix: "tharun.sridhar" },
-    { name: "Laasya Sunkara", emailPrefix: "laasya.sunkara" },
-    { name: "Kyra Suri", emailPrefix: "kyra.suri" },
-    { name: "Parker Swan", emailPrefix: "parker.swan" },
-    { name: "Pavit Tamilselvan", emailPrefix: "pavit.tamilselvan" },
-    { name: "Truett Van daley", emailPrefix: "truett.vandaley" },
-    { name: "Reyansh Vanga", emailPrefix: "reyansh.vanga" },
-    { name: "Nikhil Vasepalli", emailPrefix: "nikhil.vasepalli" },
-    { name: "Brylee White", emailPrefix: "brylee.white" },
-    { name: "Varun Yenna", emailPrefix: "varun.yenna" },
-    { name: "Jia Yoon", emailPrefix: "jia.yoon" },
-    { name: "divineduskdragon", emailPrefix: "divineduskdragon" }
+    "Annie Addison", "Stephanie Adelowokan", "Nazila Allaudin", "Anvi Alleti", "Farhan Altaf", 
+    "Abigail Antony", "Rivaan Arvapalli", "Diya Babu", "Vrinda Balasani", "Kabir Baweja", 
+    "Lila Belanger", "Nihaarika Bhamidipati", "Sydney Bhattacharya", "Rithvik Bomidika", "Rohan Busa", 
+    "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
+    "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
+    "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
+    "Dhriti Erusalagandi",
+    "Emery Erwin", 
+    "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
+    "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
+    "Jashwanth Jagadeesan", "Arnav Jain", "Anwitha Jeyakumar", "Sreenandana Kamattathil saril", "Maanya Katari", 
+    "Aiza Khan", "Arshiya Khanna", "Ryan Klassen", "Ashwika Konchada", "Lakshan Lakshminarayanan", 
+    "Samanvi Mane", "Esther Mathew", "Grace Mccloskey", "Cade Mehrens", "Harper Miller", 
+    "Harrison Miller", "Aarna Mishra", "Julia Moffitt", "Katelyn Moffitt", "Cade Morrison", 
+    "Kavya Mukherjee", "Ryan Nalam", "Venkata sravan reddy Naru", "Pravin Navin", "Benjamin Newton", 
+    "Reyansh Nighojkar", "James Orourke", "Soham Pachpande", "Connor Plante", "Satvik Prasad", 
+    "Pranav Pratheesh", "Adhrit Premkumar", "Bella Qiu", "Eeshaan Raj", "Diya Raveendran", 
+    "Vedant Rungta", "Anirudh Sathyan", "Brynn Schielein", "Yunseo Seo", "Ansh Shah", 
+    "Shubh Sharma", "Avikaa Shrivastava", "Ayush Singh", "Saanvi Singh", "Shreyasha Singh", 
+    "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
+    "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
+    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon",
+    "divineduskdragon"
   ];
 
   const sixWeekPeriods = [
@@ -1014,22 +939,33 @@ function Admin() {
     const accomplished: string[] = [];
     const notAccomplished: string[] = [];
 
-    njhsMembers.forEach(member => {
-      const { name, emailPrefix } = member;
+    njhsMembers.forEach(memberName => {
+      // Normalize the member name from the list to email prefix style (e.g., "Dhriti Erusalagandi" -> "dhriti.erusalagandi58")
+      // We'll match by the start of the email prefix (before the @)
+      const memberEmailPrefix = memberName.toLowerCase().replace(/[^a-z0-9.]/g, '');
+      // For Dhriti Erusalagandi, this will be "dhritierusalagandi" but her email is "dhriti.erusalagandi58"
+      // So, let's match if the memberEmailPrefix is contained in the log's email prefix
+
       const totalHours = allLogs.filter(log => {
         const logDate = new Date(log.date);
         const startDate = new Date(period.startDate);
         const endDate = new Date(period.endDate);
+
+        // First, check if the log date is within the current period
         if (!(logDate >= startDate && logDate <= endDate)) {
           return false;
         }
+
+        // Extract the email prefix from the log
         const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase();
-        return logEmailPrefix === emailPrefix;
+        // Match if the memberEmailPrefix is contained in the logEmailPrefix
+        return logEmailPrefix.includes(memberEmailPrefix);
       }).reduce((sum, log) => sum + (log.hours || 0), 0);
+
       if (totalHours >= period.targetHours) {
-        accomplished.push(name);
+        accomplished.push(memberName);
       } else {
-        notAccomplished.push(name);
+        notAccomplished.push(memberName);
       }
     });
 
