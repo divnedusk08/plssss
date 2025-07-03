@@ -942,6 +942,16 @@ function Admin() {
     njhsMembers.forEach(memberName => {
       // Normalize the member name (e.g., 'Dhriti Erusalagandi' -> 'dhritierusalagandi')
       const memberNameNormalized = memberName.toLowerCase().replace(/[^a-z]/g, '');
+      let matched = false;
+      let debugLogs: {
+        logFirstName: string;
+        logLastName: string;
+        logFullName: string;
+        logEmailPrefix: string;
+        memberNameNormalized: string;
+        logDate: string;
+        logEmail: string;
+      }[] = [];
       const totalHours = allLogs.filter(log => {
         const logDate = new Date(log.date);
         const startDate = new Date(period.startDate);
@@ -956,10 +966,21 @@ function Admin() {
         // Normalize log's email prefix
         const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
         // Debug output
-        console.log(`Comparing member '${memberNameNormalized}' to logFullName '${logFullName}' and logEmailPrefix '${logEmailPrefix}'`);
-        // Match if full name matches or email prefix contains member name
-        return logFullName === memberNameNormalized || logEmailPrefix.startsWith(memberNameNormalized);
+        debugLogs.push({
+          logFirstName, logLastName, logFullName, logEmailPrefix, memberNameNormalized, logDate: log.date, logEmail: log.user_email
+        });
+        // Match if full name matches or email prefix starts with member name
+        const isMatch = logFullName === memberNameNormalized || logEmailPrefix.startsWith(memberNameNormalized);
+        if (isMatch) matched = true;
+        return isMatch;
       }).reduce((sum, log) => sum + (log.hours || 0), 0);
+      if (!matched) {
+        // Print debug info for this member
+        console.log(`NO MATCH for member '${memberName}' (${memberNameNormalized}) in period '${period.name}'`);
+        debugLogs.forEach(d => {
+          console.log(`  Log: first='${d.logFirstName}', last='${d.logLastName}', full='${d.logFullName}', emailPrefix='${d.logEmailPrefix}', email='${d.logEmail}', date='${d.logDate}'`);
+        });
+      }
       if (totalHours >= period.targetHours) {
         accomplished.push(memberName);
       } else {
