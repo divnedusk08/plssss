@@ -271,7 +271,6 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           date,
           hours: parseFloat(hours),
           additional_info: additionalInformation,
-          status: 'approved', // auto-approve for testing
         });
 
       if (error) throw error;
@@ -471,7 +470,7 @@ type Log = {
   hours?: number;
   user_email?: string;
   user_uid?: string;
-  status?: string; // <-- add this line
+  status?: string;
 };
 
 function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
@@ -899,19 +898,23 @@ function Admin() {
 
   React.useEffect(() => {
     if (!isAdmin) return; // Only fetch if the user is an admin
+    
     setIsLoading(true);
     setError(null);
+    
     const fetchAllLogs = async () => {
       try {
         const { data, error: fetchError } = await supabase
           .from('volunteer_log')
           .select('*')
           .order('date', { ascending: false });
+
         if (fetchError) {
           console.error('Error fetching all logs:', fetchError);
           setError(fetchError.message);
           return;
         }
+
         setAllLogs(data || []);
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -920,17 +923,8 @@ function Admin() {
         setIsLoading(false);
       }
     };
+
     fetchAllLogs();
-    // Add a listener for when the page becomes visible (e.g., after navigation)
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        fetchAllLogs();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
   }, [isAdmin]);
 
   if (!user || !isAdmin) return <Navigate to="/dashboard" />;
@@ -939,50 +933,46 @@ function Admin() {
     const accomplished: string[] = [];
     const notAccomplished: string[] = [];
 
+    // 1. Filter logs for this period only
+    const logsInPeriod = allLogs.filter(log => {
+      const logDate = new Date(log.date);
+      const startDate = new Date(period.startDate);
+      const endDate = new Date(period.endDate);
+      // Include logs that are approved or have no status (null/undefined) for backward compatibility
+      return logDate >= startDate && logDate <= endDate && (log.status === 'approved' || !log.status);
+    });
+
     njhsMembers.forEach(memberName => {
-      // Normalize the member name (e.g., 'Dhriti Erusalagandi' -> 'dhritierusalagandi')
+      // Normalize the member name from the list (e.g., "Annie Addison" -> "annieaddison", "divineduskdragon" -> "divineduskdragon")
       const memberNameNormalized = memberName.toLowerCase().replace(/[^a-z]/g, '');
-      let matched = false;
-      let debugLogs: {
-        logFirstName: string;
-        logLastName: string;
-        logFullName: string;
-        logEmailPrefix: string;
-        memberNameNormalized: string;
-        logDate: string;
-        logEmail: string;
-      }[] = [];
-      const totalHours = allLogs.filter(log => {
-        // Only consider approved logs
-        if (log.status !== 'approved') return false;
-        // Normalize log's first_name + last_name
+      console.log(`\n=== Processing member: ${memberName} (Normalized: ${memberNameNormalized}) ===`);
+      
+      // For this member, filter logs in this period that match
+      const memberLogs = logsInPeriod.filter(log => {
         const logFirstName = (log.first_name || '').toLowerCase().replace(/[^a-z]/g, '');
         const logLastName = (log.last_name || '').toLowerCase().replace(/[^a-z]/g, '');
-        const logFullName = `${logFirstName}${logLastName}`;
-        // Normalize log's email prefix
+        const combinedFullName = `${logFirstName}${logLastName}`;
         const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
-        // Debug output
-        debugLogs.push({
-          logFirstName: logFirstName || '',
-          logLastName: logLastName || '',
-          logFullName: logFullName || '',
-          logEmailPrefix: logEmailPrefix || '',
-          memberNameNormalized: memberNameNormalized || '',
-          logDate: log.date || '',
-          logEmail: log.user_email || ''
-        });
-        // Match if full name matches or email prefix starts with member name
-        const isMatch = logFullName === memberNameNormalized || logEmailPrefix.startsWith(memberNameNormalized);
-        if (isMatch) matched = true;
+        
+        console.log(`  Checking log: ${log.first_name} ${log.last_name} (${log.user_email})`);
+        console.log(`    Normalized: firstName="${logFirstName}", lastName="${logLastName}", combined="${combinedFullName}", emailPrefix="${logEmailPrefix}"`);
+        
+        // Candidate 1: full name, Candidate 2: email prefix, Candidate 3: just first name if no last name
+        const match1 = combinedFullName === memberNameNormalized;
+        const match2 = logEmailPrefix.startsWith(memberNameNormalized);
+        const match3 = (logFirstName && !logLastName && logFirstName === memberNameNormalized);
+        
+        console.log(`    Match results: fullName=${match1}, emailPrefix=${match2}, firstNameOnly=${match3}`);
+        
+        const isMatch = match1 || match2 || match3;
+        console.log(`    Final result: ${isMatch ? 'MATCH' : 'NO MATCH'}`);
+        
         return isMatch;
-      }).reduce((sum, log) => sum + (log.hours || 0), 0);
-      if (!matched) {
-        // Print debug info for this member
-        console.log(`NO MATCH for member '${memberName}' (${memberNameNormalized}) in period '${period.name}'`);
-        debugLogs.forEach(d => {
-          console.log(`  Log: first='${d.logFirstName}', last='${d.logLastName}', full='${d.logFullName}', emailPrefix='${d.logEmailPrefix}', email='${d.logEmail}', date='${d.logDate}'`);
-        });
-      }
+      });
+      
+      const totalHours = memberLogs.reduce((sum, log) => sum + (log.hours || 0), 0);
+      console.log(`  Total hours for ${memberName}: ${totalHours} (target: ${period.targetHours})`);
+      
       if (totalHours >= period.targetHours) {
         accomplished.push(memberName);
       } else {
@@ -1002,9 +992,6 @@ function Admin() {
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
-      <div className="mb-6 flex justify-end">
-        <Link to="/admin/status" className="px-4 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition">View Submissions Status</Link>
-      </div>
       <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin Dashboard: Volunteer Hour Compliance</h2>
       
       {isLoading ? (
@@ -1413,21 +1400,6 @@ function ContactUs() {
   );
 }
 
-function parseNameFromEmail(email: string) {
-  // Only parse if email matches school format
-  const match = email.match(/^([a-z]+)\.([a-z]+)[0-9]*@k12\.leanderisd\.org$/);
-  if (match) {
-    const first = match[1];
-    const last = match[2];
-    // Capitalize first letter
-    return {
-      firstName: first.charAt(0).toUpperCase() + first.slice(1),
-      lastName: last.charAt(0).toUpperCase() + last.slice(1)
-    };
-  }
-  return null;
-}
-
 function Profile() {
   const { user } = useAuth();
   const [firstName, setFirstName] = React.useState('');
@@ -1436,30 +1408,12 @@ function Profile() {
   const [isEditing, setIsEditing] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const [error, setError] = React.useState('');
-  const [nameWarning, setNameWarning] = React.useState('');
-  const [isStudent, setIsStudent] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if (user) {
-      const parsed = parseNameFromEmail(user.email);
-      if (parsed) {
-        setFirstName(parsed.firstName);
-        setLastName(parsed.lastName);
-        setIsStudent(true);
-        setNameWarning('');
-        // Auto-update metadata if needed
-        const currentFullName = user.user_metadata?.full_name || '';
-        const parsedFullName = `${parsed.firstName} ${parsed.lastName}`;
-        if (currentFullName !== parsedFullName) {
-          supabase.auth.updateUser({ data: { full_name: parsedFullName } });
-        }
-      } else {
-        setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
-        setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
-        setIsStudent(false);
-        setNameWarning('Your email does not match the expected school format. You may edit your name.');
-      }
+      setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
+      setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
       setProfilePicture(user.user_metadata?.avatar_url || '');
     }
   }, [user]);
@@ -1627,7 +1581,7 @@ function Profile() {
                 <input
                   value={firstName}
                   onChange={e => setFirstName(e.target.value)}
-                  readOnly={isStudent}
+                  disabled={!isEditing}
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
                 />
               </div>
@@ -1636,7 +1590,7 @@ function Profile() {
                 <input
                   value={lastName}
                   onChange={e => setLastName(e.target.value)}
-                  readOnly={isStudent}
+                  disabled={!isEditing}
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
                 />
               </div>
@@ -1683,11 +1637,6 @@ function Profile() {
             )}
           </div>
         </div>
-        {nameWarning && (
-          <div className="mb-4 p-3 bg-yellow-50 text-yellow-700 rounded-lg text-center">
-            {nameWarning}
-          </div>
-        )}
       </div>
     </div>
   );
@@ -1703,7 +1652,6 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
       <Route path="/log" element={<LogHours setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/dashboard" element={<Dashboard dashboardRefreshKey={dashboardRefreshKey} />} />
       <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/status" element={<AdminStatusPage setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<Navigate to="/" />} />
@@ -1716,141 +1664,7 @@ function Footer() {
     <footer className="bg-primary text-white text-center py-4">
       <div>© 2025 HourTrackr NJHS. All rights reserved.</div>
       <div className="text-xs mt-1">Not affiliated with National Junior Honor Society. For official info, visit <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>.</div>
-      <div className="text-xs text-primary-light mt-1">Built by Dhriti Erusalagandi</div>
     </footer>
-  );
-}
-
-// 1. Add AdminStatusPage component
-function AdminStatusPage({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>> }) {
-  const { user } = useAuth();
-  const [allLogs, setAllLogs] = React.useState<Log[]>([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
-  const isAdmin = user?.email === 'divineduskdragon08@gmail.com';
-
-  React.useEffect(() => {
-    if (!isAdmin) return;
-    setIsLoading(true);
-    setError(null);
-    const fetchAllLogs = async () => {
-      try {
-        const { data, error: fetchError } = await supabase
-          .from('volunteer_log')
-          .select('*')
-          .order('date', { ascending: false });
-        if (fetchError) {
-          setError(fetchError.message);
-          return;
-        }
-        setAllLogs(data || []);
-      } catch (err) {
-        setError('An unexpected error occurred');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchAllLogs();
-    // Add a listener for when the page becomes visible (e.g., after navigation)
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        fetchAllLogs();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, [isAdmin]);
-
-  // FIX: Add handleStatusChange function here
-  const handleStatusChange = async (logId: string, newStatus: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const { error: updateError } = await supabase
-        .from('volunteer_log')
-        .update({ status: newStatus })
-        .eq('id', logId);
-      if (updateError) throw updateError;
-      setAllLogs(logs => logs.map(log => log.id === logId ? { ...log, status: newStatus } : log));
-      setDashboardRefreshKey(prev => prev + 1); // trigger admin dashboard refresh
-    } catch (err) {
-      setError('Failed to update status');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (!user || !isAdmin) return <Navigate to="/dashboard" />;
-
-  return (
-    <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
-      <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin: Submissions Status</h2>
-      {isLoading ? (
-        <div className="flex justify-center items-center h-48">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary"></div>
-        </div>
-      ) : error ? (
-        <div className="text-red-500 text-center p-4 bg-red-50 rounded-lg">Error: {error}</div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-t rounded-lg overflow-hidden">
-            <thead className="bg-primary text-white font-bold sticky top-0 z-10">
-              <tr>
-                <th className="py-2 px-2">Date</th>
-                <th className="py-2 px-2">First Name</th>
-                <th className="py-2 px-2">Last Name</th>
-                <th className="py-2 px-2">Organization</th>
-                <th className="py-2 px-2">Description</th>
-                <th className="py-2 px-2">Hours</th>
-                <th className="py-2 px-2">Status</th>
-                <th className="py-2 px-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allLogs.map((log, i) => (
-                <tr key={log.id} className={i % 2 === 0 ? 'bg-background' : 'bg-white'}>
-                  <td className="py-2 px-2">{log.date}</td>
-                  <td className="py-2 px-2">{log.first_name}</td>
-                  <td className="py-2 px-2">{log.last_name}</td>
-                  <td className="py-2 px-2">{log.organization}</td>
-                  <td className="py-2 px-2">{log.description}</td>
-                  <td className="py-2 px-2 font-bold">{log.hours?.toFixed(2)}</td>
-                  <td className="py-2 px-2">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                      log.status === 'approved' ? 'bg-green-100 text-green-700' :
-                      log.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                      'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {log.status || 'pending'}
-                    </span>
-                  </td>
-                  <td className="py-2 px-2">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleStatusChange(log.id, 'approved')}
-                        className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
-                        disabled={log.status === 'approved'}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleStatusChange(log.id, 'rejected')}
-                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
-                        disabled={log.status === 'rejected'}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
   );
 }
 
