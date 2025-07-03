@@ -1013,6 +1013,9 @@ function Admin() {
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
+      <div className="mb-6 flex justify-end">
+        <Link to="/admin/status" className="px-4 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition">View Submissions Status</Link>
+      </div>
       <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin Dashboard: Volunteer Hour Compliance</h2>
       
       {isLoading ? (
@@ -1096,65 +1099,6 @@ function Admin() {
           })}
         </div>
       )}
-      {/* Add this table after the compliance charts, before the end of the Admin return */}
-      <div className="mt-12">
-        <h3 className="text-xl font-bold mb-4">All Volunteer Logs</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-t rounded-lg overflow-hidden">
-            <thead className="bg-primary text-white font-bold sticky top-0 z-10">
-              <tr>
-                <th className="py-2 px-2">Date</th>
-                <th className="py-2 px-2">First Name</th>
-                <th className="py-2 px-2">Last Name</th>
-                <th className="py-2 px-2">Organization</th>
-                <th className="py-2 px-2">Description</th>
-                <th className="py-2 px-2">Hours</th>
-                <th className="py-2 px-2">Status</th>
-                <th className="py-2 px-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allLogs.map((log, i) => (
-                <tr key={log.id} className={i % 2 === 0 ? 'bg-background' : 'bg-white'}>
-                  <td className="py-2 px-2">{log.date}</td>
-                  <td className="py-2 px-2">{log.first_name}</td>
-                  <td className="py-2 px-2">{log.last_name}</td>
-                  <td className="py-2 px-2">{log.organization}</td>
-                  <td className="py-2 px-2">{log.description}</td>
-                  <td className="py-2 px-2 font-bold">{log.hours?.toFixed(2)}</td>
-                  <td className="py-2 px-2">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                      log.status === 'approved' ? 'bg-green-100 text-green-700' :
-                      log.status === 'rejected' ? 'bg-red-100 text-red-700' :
-                      'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {log.status || 'pending'}
-                    </span>
-                  </td>
-                  <td className="py-2 px-2">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleStatusChange(log.id, 'approved')}
-                        className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
-                        disabled={log.status === 'approved'}
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => handleStatusChange(log.id, 'rejected')}
-                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
-                        disabled={log.status === 'rejected'}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 }
