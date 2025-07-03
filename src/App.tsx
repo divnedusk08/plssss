@@ -1408,17 +1408,21 @@ function Profile() {
 
   React.useEffect(() => {
     if (user) {
-      console.log('User object:', user); // Add this line
       setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
       setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
       setProfilePicture(user.user_metadata?.avatar_url || '');
-      console.log('Avatar URL from user metadata:', user.user_metadata?.avatar_url); // Add this line
     }
   }, [user]);
 
+  // PATCH: Add debug message to click handler, make div focusable, and un-hide file input for testing
   const handleProfilePictureClick = () => {
+    setError('Clicked profile picture!'); // Debug message
     if (isUploading) return;
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    } else {
+      setError('File input ref is not set!');
+    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1434,6 +1438,11 @@ function Profile() {
     // Check file type
     if (!file.type.startsWith('image/')) {
       setError('Please upload an image file');
+      return;
+    }
+
+    if (!user) {
+      setError('You must be logged in to upload a profile picture.');
       return;
     }
 
@@ -1454,14 +1463,20 @@ function Profile() {
         });
 
       if (uploadError) {
-        console.error('Upload error:', uploadError);
-        throw uploadError;
+        setError('Upload error: ' + uploadError.message);
+        return;
       }
 
       // Get public URL
-      const { data: { publicUrl } } = supabase.storage
+      const { data } = supabase.storage
         .from('profile-pictures')
         .getPublicUrl(fileName);
+      const publicUrl = data.publicUrl;
+
+      if (!publicUrl) {
+        setError('Failed to get public URL for uploaded image.');
+        return;
+      }
 
       // Update user metadata
       const { error: updateError } = await supabase.auth.updateUser({
@@ -1472,15 +1487,14 @@ function Profile() {
       });
 
       if (updateError) {
-        console.error('Update error:', updateError);
-        throw updateError;
+        setError('Profile update error: ' + updateError.message);
+        return;
       }
 
       setProfilePicture(publicUrl);
-      console.log('Profile picture updated successfully:', publicUrl);
-    } catch (error) {
-      console.error('Error uploading profile picture:', error);
-      setError('Failed to upload profile picture. Please try again.');
+      setError('Profile picture uploaded successfully!');
+    } catch (error: any) {
+      setError('Error uploading profile picture: ' + (error.message || error.toString()));
     } finally {
       setIsUploading(false);
     }
@@ -1504,74 +1518,59 @@ function Profile() {
       setIsEditing(false);
       setError('');
     } catch (error) {
-      console.error('Error updating profile:', error);
       setError('Failed to update profile. Please try again.');
     }
   };
 
   if (!user) return <Navigate to="/login" />;
 
-  console.log('Profile Picture URL:', profilePicture); // Moved this line here
-
   return (
     <div className="flex justify-center items-center min-h-[80vh] bg-gradient-to-br from-blue-50 to-white">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 font-inter">
         <h2 className="text-3xl font-extrabold mb-8 text-primary-dark text-center font-montserrat">Your Profile</h2>
-        
         {error && (
           <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-center">
             {error}
           </div>
         )}
-
         <div className="flex flex-col items-center space-y-6">
           {/* Profile Picture */}
-          <div className="relative group">
-            <div 
-              className={`w-32 h-32 rounded-full overflow-hidden cursor-pointer border-4 border-primary hover:border-primary-dark transition-all duration-300 ${isUploading ? 'opacity-50' : ''}`}
-              onClick={handleProfilePictureClick}
-            >
-              {profilePicture ? (
-                <img 
-                  key={profilePicture}
-                  src={profilePicture} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover"
-                  onError={(e) => { 
-                    console.error('Error loading profile image:', e.currentTarget.src);
-                    e.currentTarget.src = '/default-profile.png'; 
-                  }}
-                />
-              ) : (
-                <img 
-                  src="/default-profile.png" 
-                  alt="Default Profile" 
-                  className="w-full h-full object-cover"
-                />
-              )}
-              {isUploading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                </div>
-              )}
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-black bg-opacity-50 rounded-full p-2">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-            </div>
+          <div 
+            className={`relative group w-32 h-32 rounded-full overflow-hidden cursor-pointer border-4 border-primary hover:border-primary-dark transition-all duration-300 flex items-center justify-center ${isUploading ? 'opacity-50' : ''}`}
+            tabIndex={0}
+            onClick={handleProfilePictureClick}
+          >
+            {profilePicture ? (
+              <img 
+                key={profilePicture}
+                src={profilePicture} 
+                alt="Profile" 
+                className="w-full h-full object-cover"
+                onError={(e) => { 
+                  e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName + ' ' + lastName)}&background=2563EB&color=fff&size=128`;
+                }}
+              />
+            ) : (
+              <img 
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(firstName + ' ' + lastName)}&background=2563EB&color=fff&size=128`} 
+                alt="Default Profile" 
+                className="w-full h-full object-cover"
+              />
+            )}
+            {/* PATCH: Un-hide file input for direct testing */}
             <input
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
               accept="image/*"
-              className="hidden"
+              style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
             />
+            {isUploading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              </div>
+            )}
           </div>
-
           {/* Profile Information */}
           <div className="w-full space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1603,7 +1602,6 @@ function Profile() {
               />
             </div>
           </div>
-
           {/* Action Buttons */}
           <div className="flex gap-4">
             {isEditing ? (
