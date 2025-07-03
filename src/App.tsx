@@ -967,7 +967,13 @@ function Admin() {
         const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
         // Debug output
         debugLogs.push({
-          logFirstName, logLastName, logFullName, logEmailPrefix, memberNameNormalized, logDate: log.date, logEmail: log.user_email
+          logFirstName: logFirstName || '',
+          logLastName: logLastName || '',
+          logFullName: logFullName || '',
+          logEmailPrefix: logEmailPrefix || '',
+          memberNameNormalized: memberNameNormalized || '',
+          logDate: log.date || '',
+          logEmail: log.user_email || ''
         });
         // Match if full name matches or email prefix starts with member name
         const isMatch = logFullName === memberNameNormalized || logEmailPrefix.startsWith(memberNameNormalized);
