@@ -301,12 +301,6 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
 
-        {submitted && (
-          <div className="mb-6 p-4 bg-green-50 text-green-600 rounded-lg text-center">
-            Hours submitted successfully!
-          </div>
-        )}
-
         {error && (
           <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-center">
             {error}
@@ -444,12 +438,19 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             </p>
           </div>
 
+          {/* Success message just above the submit button */}
+          {submitted && (
+            <div className="mb-4 p-4 bg-green-50 text-green-600 rounded-lg text-center">
+              Hours submitted successfully!
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={isSubmitting}
             className="w-full py-2 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition"
           >
-            {isSubmitting ? 'Submitting...' : 'Submit Volunteer Log'}
+            {isSubmitting ? 'Submitting...' : 'Submit Hours'}
           </button>
         </form>
       </div>
