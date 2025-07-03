@@ -993,24 +993,6 @@ function Admin() {
 
   const COLORS = ['#4CAF50', '#F44336']; // Green for accomplished, Red for not accomplished
 
-  // Add approve/reject handlers
-  const handleStatusChange = async (logId: string, newStatus: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const { error: updateError } = await supabase
-        .from('volunteer_log')
-        .update({ status: newStatus })
-        .eq('id', logId);
-      if (updateError) throw updateError;
-      setAllLogs(logs => logs.map(log => log.id === logId ? { ...log, status: newStatus } : log));
-    } catch (err) {
-      setError('Failed to update status');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
       <div className="mb-6 flex justify-end">
@@ -1726,6 +1708,7 @@ function AdminStatusPage() {
     fetchAllLogs();
   }, [isAdmin]);
 
+  // FIX: Add handleStatusChange function here
   const handleStatusChange = async (logId: string, newStatus: string) => {
     setIsLoading(true);
     setError(null);
