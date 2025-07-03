@@ -921,6 +921,16 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
       }
     };
     fetchAllLogs();
+    // Add a listener for when the page becomes visible (e.g., after navigation)
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchAllLogs();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [isAdmin, dashboardRefreshKey]);
 
   if (!user || !isAdmin) return <Navigate to="/dashboard" />;
@@ -1702,7 +1712,17 @@ function AdminStatusPage({ setDashboardRefreshKey }: { setDashboardRefreshKey: R
       }
     };
     fetchAllLogs();
-  }, [isAdmin]);
+    // Add a listener for when the page becomes visible (e.g., after navigation)
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchAllLogs();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [isAdmin, dashboardRefreshKey]);
 
   // FIX: Add handleStatusChange function here
   const handleStatusChange = async (logId: string, newStatus: string) => {
