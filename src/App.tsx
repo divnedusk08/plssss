@@ -940,28 +940,24 @@ function Admin() {
     const notAccomplished: string[] = [];
 
     njhsMembers.forEach(memberName => {
-      // Normalize the member name from the list to email prefix style (e.g., "Dhriti Erusalagandi" -> "dhriti.erusalagandi58")
-      // We'll match by the start of the email prefix (before the @)
-      const memberEmailPrefix = memberName.toLowerCase().replace(/[^a-z0-9.]/g, '');
-      // For Dhriti Erusalagandi, this will be "dhritierusalagandi" but her email is "dhriti.erusalagandi58"
-      // So, let's match if the memberEmailPrefix is contained in the log's email prefix
-
+      // Normalize the member name (e.g., 'Dhriti Erusalagandi' -> 'dhritierusalagandi')
+      const memberNameNormalized = memberName.toLowerCase().replace(/[^a-z]/g, '');
       const totalHours = allLogs.filter(log => {
         const logDate = new Date(log.date);
         const startDate = new Date(period.startDate);
         const endDate = new Date(period.endDate);
-
-        // First, check if the log date is within the current period
         if (!(logDate >= startDate && logDate <= endDate)) {
           return false;
         }
-
-        // Extract the email prefix from the log
-        const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase();
-        // Match if the memberEmailPrefix is contained in the logEmailPrefix
-        return logEmailPrefix.includes(memberEmailPrefix);
+        // Normalize log's first_name + last_name
+        const logFirstName = (log.first_name || '').toLowerCase().replace(/[^a-z]/g, '');
+        const logLastName = (log.last_name || '').toLowerCase().replace(/[^a-z]/g, '');
+        const logFullName = `${logFirstName}${logLastName}`;
+        // Normalize log's email prefix
+        const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
+        // Match if email prefix contains member name, or full name matches
+        return logEmailPrefix.includes(memberNameNormalized) || logFullName === memberNameNormalized;
       }).reduce((sum, log) => sum + (log.hours || 0), 0);
-
       if (totalHours >= period.targetHours) {
         accomplished.push(memberName);
       } else {
