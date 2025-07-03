@@ -1082,6 +1082,7 @@ function Login() {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
   const [error, setError] = React.useState('');
+  const [success, setSuccess] = React.useState('');
   const [authLoading, setAuthLoading] = React.useState(false);
   const [mode, setMode] = React.useState<'signin' | 'signup'>('signin');
 
@@ -1093,10 +1094,16 @@ function Login() {
     setError('');
     setAuthLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError('Invalid login credentials. If you haven\'t registered, please use Google sign-in or sign up below.');
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError('Invalid login credentials. Please check your email and password.');
+      } else if (data.user) {
+        // Success - user will be redirected automatically
+        console.log('Sign in successful:', data.user.email);
+      }
     } catch (err) {
-      setError('Sign in failed.');
+      console.error('Sign in error:', err);
+      setError('Sign in failed. Please try again.');
     }
     setAuthLoading(false);
   };
@@ -1109,13 +1116,44 @@ function Login() {
       setError('Passwords do not match.');
       return;
     }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
     setAuthLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) setError(error.message);
-      else setMode('signin'); // After sign up, go to sign in mode
+      const { data, error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          emailRedirectTo: window.location.origin
+        }
+      });
+      
+      if (error) {
+        setError(error.message);
+      } else if (data.user) {
+        if (data.user.email_confirmed_at) {
+          // User is already confirmed (email confirmation disabled)
+          setSuccess('Account created successfully! You can now sign in.');
+          setError('');
+          setMode('signin');
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+        } else {
+          // Email confirmation required
+          setSuccess('Check your email for a confirmation link! Please confirm your email before signing in.');
+          setError('');
+          setMode('signin');
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+        }
+      }
     } catch (err) {
-      setError('Sign up failed.');
+      console.error('Sign up error:', err);
+      setError('Sign up failed. Please try again.');
     }
     setAuthLoading(false);
   };
@@ -1174,6 +1212,7 @@ function Login() {
               </div>
             </div>
             {error && <div className="text-red-600 text-sm font-semibold">{error}</div>}
+            {success && <div className="text-green-600 text-sm font-semibold">{success}</div>}
             <div>
               <button
                 type="submit"
@@ -1185,7 +1224,7 @@ function Login() {
             </div>
             <div className="text-center text-sm mt-2">
               Don't have an account?{' '}
-              <button type="button" className="text-primary underline hover:text-primary-dark" onClick={() => { setMode('signup'); setError(''); }}>
+              <button type="button" className="text-primary underline hover:text-primary-dark" onClick={() => { setMode('signup'); setError(''); setSuccess(''); }}>
                 Sign up
               </button>
             </div>
@@ -1240,6 +1279,7 @@ function Login() {
               />
             </div>
             {error && <div className="text-red-600 text-sm font-semibold">{error}</div>}
+            {success && <div className="text-green-600 text-sm font-semibold">{success}</div>}
             <div>
               <button
                 type="submit"
@@ -1251,7 +1291,7 @@ function Login() {
             </div>
             <div className="text-center text-sm mt-2">
               Already have an account?{' '}
-              <button type="button" className="text-primary underline hover:text-primary-dark" onClick={() => { setMode('signin'); setError(''); }}>
+              <button type="button" className="text-primary underline hover:text-primary-dark" onClick={() => { setMode('signin'); setError(''); setSuccess(''); }}>
                 Back to Sign In
               </button>
             </div>
