@@ -470,6 +470,7 @@ type Log = {
   hours?: number;
   user_email?: string;
   user_uid?: string;
+  status?: string; // <-- add this line
 };
 
 function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
@@ -992,6 +993,24 @@ function Admin() {
 
   const COLORS = ['#4CAF50', '#F44336']; // Green for accomplished, Red for not accomplished
 
+  // Add approve/reject handlers
+  const handleStatusChange = async (logId: string, newStatus: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { error: updateError } = await supabase
+        .from('volunteer_log')
+        .update({ status: newStatus })
+        .eq('id', logId);
+      if (updateError) throw updateError;
+      setAllLogs(logs => logs.map(log => log.id === logId ? { ...log, status: newStatus } : log));
+    } catch (err) {
+      setError('Failed to update status');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
       <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin Dashboard: Volunteer Hour Compliance</h2>
@@ -1077,6 +1096,65 @@ function Admin() {
           })}
         </div>
       )}
+      {/* Add this table after the compliance charts, before the end of the Admin return */}
+      <div className="mt-12">
+        <h3 className="text-xl font-bold mb-4">All Volunteer Logs</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-t rounded-lg overflow-hidden">
+            <thead className="bg-primary text-white font-bold sticky top-0 z-10">
+              <tr>
+                <th className="py-2 px-2">Date</th>
+                <th className="py-2 px-2">First Name</th>
+                <th className="py-2 px-2">Last Name</th>
+                <th className="py-2 px-2">Organization</th>
+                <th className="py-2 px-2">Description</th>
+                <th className="py-2 px-2">Hours</th>
+                <th className="py-2 px-2">Status</th>
+                <th className="py-2 px-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allLogs.map((log, i) => (
+                <tr key={log.id} className={i % 2 === 0 ? 'bg-background' : 'bg-white'}>
+                  <td className="py-2 px-2">{log.date}</td>
+                  <td className="py-2 px-2">{log.first_name}</td>
+                  <td className="py-2 px-2">{log.last_name}</td>
+                  <td className="py-2 px-2">{log.organization}</td>
+                  <td className="py-2 px-2">{log.description}</td>
+                  <td className="py-2 px-2 font-bold">{log.hours?.toFixed(2)}</td>
+                  <td className="py-2 px-2">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                      log.status === 'approved' ? 'bg-green-100 text-green-700' :
+                      log.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                      'bg-yellow-100 text-yellow-700'
+                    }`}>
+                      {log.status || 'pending'}
+                    </span>
+                  </td>
+                  <td className="py-2 px-2">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleStatusChange(log.id, 'approved')}
+                        className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
+                        disabled={log.status === 'approved'}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => handleStatusChange(log.id, 'rejected')}
+                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                        disabled={log.status === 'rejected'}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
