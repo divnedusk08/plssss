@@ -1491,7 +1491,6 @@ function Profile() {
       }
 
       setProfilePicture(publicUrl);
-      setError('Profile picture uploaded successfully!');
     } catch (error: any) {
       setError('Error uploading profile picture: ' + (error.message || error.toString()));
     } finally {
