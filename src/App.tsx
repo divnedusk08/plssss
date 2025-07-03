@@ -869,7 +869,7 @@ function Admin() {
     "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
     "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
     "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
-    "Dhriti Erusalagandi",
+    "Dhriti Erusalagandi", "Dhriti E", // <-- Added new member here
     "Emery Erwin", 
     "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
     "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
