@@ -943,9 +943,25 @@ function Admin() {
       return logDate >= startDate && logDate <= endDate && (log.status === 'approved' || !log.status);
     });
 
+    console.log(`\n=== PERIOD: ${period.name} ===`);
+    console.log(`Period dates: ${period.startDate} to ${period.endDate}`);
+    console.log(`Total logs in database: ${allLogs.length}`);
+    console.log(`Logs in period: ${logsInPeriod.length}`);
+    
+    // Debug: Show all logs and their status
+    allLogs.forEach(log => {
+      const logDate = new Date(log.date);
+      const startDate = new Date(period.startDate);
+      const endDate = new Date(period.endDate);
+      const inPeriod = logDate >= startDate && logDate <= endDate;
+      const statusOk = log.status === 'approved' || !log.status;
+      console.log(`  Log: ${log.first_name} ${log.last_name} - Date: ${log.date} - Status: "${log.status}" - In period: ${inPeriod} - Status OK: ${statusOk}`);
+    });
+
     njhsMembers.forEach(memberName => {
       // Normalize the member name from the list (e.g., "Annie Addison" -> "annieaddison", "divineduskdragon" -> "divineduskdragon")
       const memberNameNormalized = memberName.toLowerCase().replace(/[^a-z]/g, '');
+      console.log(`\n=== Processing member: ${memberName} (Normalized: ${memberNameNormalized}) ===`);
       
       // For this member, filter logs in this period that match
       const memberLogs = logsInPeriod.filter(log => {
@@ -954,15 +970,24 @@ function Admin() {
         const combinedFullName = `${logFirstName}${logLastName}`;
         const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
         
+        console.log(`  Checking log: ${log.first_name} ${log.last_name} (${log.user_email})`);
+        console.log(`    Normalized: firstName="${logFirstName}", lastName="${logLastName}", combined="${combinedFullName}", emailPrefix="${logEmailPrefix}"`);
+        
         // Candidate 1: full name, Candidate 2: email prefix, Candidate 3: just first name if no last name
         const match1 = combinedFullName === memberNameNormalized;
         const match2 = logEmailPrefix.startsWith(memberNameNormalized);
         const match3 = (logFirstName && !logLastName && logFirstName === memberNameNormalized);
         
-        return match1 || match2 || match3;
+        console.log(`    Match results: fullName=${match1}, emailPrefix=${match2}, firstNameOnly=${match3}`);
+        
+        const isMatch = match1 || match2 || match3;
+        console.log(`    Final result: ${isMatch ? 'MATCH' : 'NO MATCH'}`);
+        
+        return isMatch;
       });
       
       const totalHours = memberLogs.reduce((sum, log) => sum + (log.hours || 0), 0);
+      console.log(`  Total hours for ${memberName}: ${totalHours} (target: ${period.targetHours})`);
       
       if (totalHours >= period.targetHours) {
         accomplished.push(memberName);
