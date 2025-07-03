@@ -853,7 +853,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   );
 }
 
-function Admin() {
+function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   const { user } = useAuth();
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -898,23 +898,19 @@ function Admin() {
 
   React.useEffect(() => {
     if (!isAdmin) return; // Only fetch if the user is an admin
-    
     setIsLoading(true);
     setError(null);
-    
     const fetchAllLogs = async () => {
       try {
         const { data, error: fetchError } = await supabase
           .from('volunteer_log')
           .select('*')
           .order('date', { ascending: false });
-
         if (fetchError) {
           console.error('Error fetching all logs:', fetchError);
           setError(fetchError.message);
           return;
         }
-
         setAllLogs(data || []);
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -923,9 +919,8 @@ function Admin() {
         setIsLoading(false);
       }
     };
-
     fetchAllLogs();
-  }, [isAdmin]);
+  }, [isAdmin, dashboardRefreshKey]);
 
   if (!user || !isAdmin) return <Navigate to="/dashboard" />;
 
@@ -1657,8 +1652,8 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
       <Route path="/login" element={<Login />} />
       <Route path="/log" element={<LogHours setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/dashboard" element={<Dashboard dashboardRefreshKey={dashboardRefreshKey} />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/status" element={<AdminStatusPage />} />
+      <Route path="/admin" element={<Admin dashboardRefreshKey={dashboardRefreshKey} />} />
+      <Route path="/admin/status" element={<AdminStatusPage setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<Navigate to="/" />} />
@@ -1677,7 +1672,7 @@ function Footer() {
 }
 
 // 1. Add AdminStatusPage component
-function AdminStatusPage() {
+function AdminStatusPage({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>> }) {
   const { user } = useAuth();
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -1719,6 +1714,7 @@ function AdminStatusPage() {
         .eq('id', logId);
       if (updateError) throw updateError;
       setAllLogs(logs => logs.map(log => log.id === logId ? { ...log, status: newStatus } : log));
+      setDashboardRefreshKey(prev => prev + 1); // trigger admin dashboard refresh
     } catch (err) {
       setError('Failed to update status');
     } finally {
