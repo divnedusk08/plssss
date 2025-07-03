@@ -168,6 +168,7 @@ function Home() {
 function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>> }) {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const selectedPeriod = location.state?.selectedPeriod; // Get the selected period from navigation state
 
   const [firstName, setFirstName] = React.useState('');
@@ -284,6 +285,10 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       setAdditionalInformation(''); // Clear new field
       setError('');
       setDashboardRefreshKey(prev => prev + 1); // Trigger dashboard refresh
+      // Redirect to dashboard after 1.5 seconds
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1500);
     } catch (error: any) {
       setError(error.message || 'An unexpected error occurred.');
     } finally {
@@ -441,10 +446,10 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
           <button
             type="submit"
-            className="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isSubmitting}
+            className="w-full py-2 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition"
           >
-            {isSubmitting ? 'Submitting...' : 'Submit Hours'}
+            {isSubmitting ? 'Submitting...' : 'Submit Volunteer Log'}
           </button>
         </form>
       </div>
