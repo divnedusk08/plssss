@@ -931,7 +931,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [isAdmin, dashboardRefreshKey]);
+  }, [isAdmin]);
 
   if (!user || !isAdmin) return <Navigate to="/dashboard" />;
 
@@ -1722,7 +1722,7 @@ function AdminStatusPage({ setDashboardRefreshKey }: { setDashboardRefreshKey: R
     return () => {
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [isAdmin, dashboardRefreshKey]);
+  }, [isAdmin]);
 
   // FIX: Add handleStatusChange function here
   const handleStatusChange = async (logId: string, newStatus: string) => {
