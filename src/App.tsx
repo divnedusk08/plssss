@@ -940,9 +940,11 @@ function Admin() {
     const notAccomplished: string[] = [];
 
     njhsMembers.forEach(memberName => {
-      // Normalize the member name from the list (e.g., "Annie Addison" -> "annieaddison", "divineduskdragon" -> "divineduskdragon")
-      const memberNameNormalized = memberName.toLowerCase().replace(/[^a-z]/g, ''); // Keep only alphabet characters from list names
-      console.log(`Processing member: ${memberName} (Normalized: ${memberNameNormalized})`);
+      // Normalize the member name from the list to email prefix style (e.g., "Dhriti Erusalagandi" -> "dhriti.erusalagandi58")
+      // We'll match by the start of the email prefix (before the @)
+      const memberEmailPrefix = memberName.toLowerCase().replace(/[^a-z0-9.]/g, '');
+      // For Dhriti Erusalagandi, this will be "dhritierusalagandi" but her email is "dhriti.erusalagandi58"
+      // So, let's match if the memberEmailPrefix is contained in the log's email prefix
 
       const totalHours = allLogs.filter(log => {
         const logDate = new Date(log.date);
@@ -954,32 +956,10 @@ function Admin() {
           return false;
         }
 
-        const logCandidatesForThisLog = new Set<string>();
-
-        // Candidate 1: Normalized full name from log's first and last name
-        const logFirstName = (log.first_name || '').toLowerCase().replace(/[^a-z]/g, '');
-        const logLastName = (log.last_name || '').toLowerCase().replace(/[^a-z]/g, '');
-        const combinedFullName = `${logFirstName}${logLastName}`;
-        if (combinedFullName) {
-            logCandidatesForThisLog.add(combinedFullName);
-        }
-
-        // Candidate 2: Normalized email prefix from log (e.g., "divineduskdragon" from "divineduskdragon08@gmail.com")
-        const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
-        if (logEmailPrefix) {
-            logCandidatesForThisLog.add(logEmailPrefix);
-        }
-        
-        // Candidate 3: If only first name is present in metadata, use that as a candidate
-        if (logFirstName && !logLastName && log.first_name) {
-            logCandidatesForThisLog.add(log.first_name.toLowerCase().replace(/[^a-z]/g, ''));
-        }
-
-        console.log(`  Log (Email: ${log.user_email}, FName: ${log.first_name}, LName: ${log.last_name}, Date: ${log.date}): Candidates -> [${Array.from(logCandidatesForThisLog).join(', ')}]`);
-        const isMatch = logCandidatesForThisLog.has(memberNameNormalized);
-        console.log(`    Matching ${memberNameNormalized} against log candidates: ${isMatch ? 'MATCH' : 'NO MATCH'}`);
-        
-        return isMatch;
+        // Extract the email prefix from the log
+        const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase();
+        // Match if the memberEmailPrefix is contained in the logEmailPrefix
+        return logEmailPrefix.includes(memberEmailPrefix);
       }).reduce((sum, log) => sum + (log.hours || 0), 0);
 
       if (totalHours >= period.targetHours) {
