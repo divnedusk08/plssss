@@ -854,7 +854,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   );
 }
 
-function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
+function Admin() {
   const { user } = useAuth();
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -1663,7 +1663,7 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
       <Route path="/login" element={<Login />} />
       <Route path="/log" element={<LogHours setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/dashboard" element={<Dashboard dashboardRefreshKey={dashboardRefreshKey} />} />
-      <Route path="/admin" element={<Admin dashboardRefreshKey={dashboardRefreshKey} />} />
+      <Route path="/admin" element={<Admin />} />
       <Route path="/admin/status" element={<AdminStatusPage setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/profile" element={<Profile />} />
