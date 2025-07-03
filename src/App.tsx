@@ -955,8 +955,10 @@ function Admin() {
         const logFullName = `${logFirstName}${logLastName}`;
         // Normalize log's email prefix
         const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
-        // Match if email prefix contains member name, or full name matches
-        return logEmailPrefix.includes(memberNameNormalized) || logFullName === memberNameNormalized;
+        // Debug output
+        console.log(`Comparing member '${memberNameNormalized}' to logFullName '${logFullName}' and logEmailPrefix '${logEmailPrefix}'`);
+        // Match if full name matches or email prefix contains member name
+        return logFullName === memberNameNormalized || logEmailPrefix.startsWith(memberNameNormalized);
       }).reduce((sum, log) => sum + (log.hours || 0), 0);
       if (totalHours >= period.targetHours) {
         accomplished.push(memberName);
@@ -1388,6 +1390,21 @@ function ContactUs() {
   );
 }
 
+function parseNameFromEmail(email: string) {
+  // Only parse if email matches school format
+  const match = email.match(/^([a-z]+)\.([a-z]+)[0-9]*@k12\.leanderisd\.org$/);
+  if (match) {
+    const first = match[1];
+    const last = match[2];
+    // Capitalize first letter
+    return {
+      firstName: first.charAt(0).toUpperCase() + first.slice(1),
+      lastName: last.charAt(0).toUpperCase() + last.slice(1)
+    };
+  }
+  return null;
+}
+
 function Profile() {
   const { user } = useAuth();
   const [firstName, setFirstName] = React.useState('');
@@ -1396,12 +1413,21 @@ function Profile() {
   const [isEditing, setIsEditing] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const [error, setError] = React.useState('');
+  const [nameWarning, setNameWarning] = React.useState('');
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if (user) {
-      setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
-      setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
+      const parsed = parseNameFromEmail(user.email);
+      if (parsed) {
+        setFirstName(parsed.firstName);
+        setLastName(parsed.lastName);
+        setNameWarning('');
+      } else {
+        setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
+        setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
+        setNameWarning('Your email does not match the expected school format. Please contact support if your name is incorrect.');
+      }
       setProfilePicture(user.user_metadata?.avatar_url || '');
     }
   }, [user]);
@@ -1568,8 +1594,7 @@ function Profile() {
                 <label className="block text-sm font-medium text-primary-dark mb-1">First Name</label>
                 <input
                   value={firstName}
-                  onChange={e => setFirstName(e.target.value)}
-                  disabled={!isEditing}
+                  readOnly
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
                 />
               </div>
@@ -1577,8 +1602,7 @@ function Profile() {
                 <label className="block text-sm font-medium text-primary-dark mb-1">Last Name</label>
                 <input
                   value={lastName}
-                  onChange={e => setLastName(e.target.value)}
-                  disabled={!isEditing}
+                  readOnly
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
                 />
               </div>
@@ -1625,6 +1649,11 @@ function Profile() {
             )}
           </div>
         </div>
+        {nameWarning && (
+          <div className="mb-4 p-3 bg-yellow-50 text-yellow-700 rounded-lg text-center">
+            {nameWarning}
+          </div>
+        )}
       </div>
     </div>
   );
