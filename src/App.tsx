@@ -1414,9 +1414,8 @@ function Profile() {
     }
   }, [user]);
 
-  // PATCH: Add debug message to click handler, make div focusable, and un-hide file input for testing
+  // Remove debug message from click handler
   const handleProfilePictureClick = () => {
-    setError('Clicked profile picture!'); // Debug message
     if (isUploading) return;
     if (fileInputRef.current) {
       fileInputRef.current.click();
