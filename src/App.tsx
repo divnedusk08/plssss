@@ -953,12 +953,8 @@ function Admin() {
         logEmail: string;
       }[] = [];
       const totalHours = allLogs.filter(log => {
-        const logDate = new Date(log.date);
-        const startDate = new Date(period.startDate);
-        const endDate = new Date(period.endDate);
-        if (!(logDate >= startDate && logDate <= endDate)) {
-          return false;
-        }
+        // Only consider approved logs
+        if (log.status !== 'approved') return false;
         // Normalize log's first_name + last_name
         const logFirstName = (log.first_name || '').toLowerCase().replace(/[^a-z]/g, '');
         const logLastName = (log.last_name || '').toLowerCase().replace(/[^a-z]/g, '');
