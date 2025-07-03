@@ -1414,6 +1414,7 @@ function Profile() {
   const [isUploading, setIsUploading] = React.useState(false);
   const [error, setError] = React.useState('');
   const [nameWarning, setNameWarning] = React.useState('');
+  const [isStudent, setIsStudent] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
@@ -1422,11 +1423,19 @@ function Profile() {
       if (parsed) {
         setFirstName(parsed.firstName);
         setLastName(parsed.lastName);
+        setIsStudent(true);
         setNameWarning('');
+        // Auto-update metadata if needed
+        const currentFullName = user.user_metadata?.full_name || '';
+        const parsedFullName = `${parsed.firstName} ${parsed.lastName}`;
+        if (currentFullName !== parsedFullName) {
+          supabase.auth.updateUser({ data: { full_name: parsedFullName } });
+        }
       } else {
         setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
         setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
-        setNameWarning('Your email does not match the expected school format. Please contact support if your name is incorrect.');
+        setIsStudent(false);
+        setNameWarning('Your email does not match the expected school format. You may edit your name.');
       }
       setProfilePicture(user.user_metadata?.avatar_url || '');
     }
@@ -1594,7 +1603,8 @@ function Profile() {
                 <label className="block text-sm font-medium text-primary-dark mb-1">First Name</label>
                 <input
                   value={firstName}
-                  readOnly
+                  onChange={e => setFirstName(e.target.value)}
+                  readOnly={isStudent}
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
                 />
               </div>
@@ -1602,7 +1612,8 @@ function Profile() {
                 <label className="block text-sm font-medium text-primary-dark mb-1">Last Name</label>
                 <input
                   value={lastName}
-                  readOnly
+                  onChange={e => setLastName(e.target.value)}
+                  readOnly={isStudent}
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
                 />
               </div>
