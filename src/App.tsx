@@ -271,6 +271,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           date,
           hours: parseFloat(hours),
           additional_info: additionalInformation,
+          status: 'approved', // auto-approve for testing
         });
 
       if (error) throw error;
