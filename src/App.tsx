@@ -1732,6 +1732,7 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
       <Route path="/log" element={<LogHours setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/dashboard" element={<Dashboard dashboardRefreshKey={dashboardRefreshKey} />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/admin/status" element={<AdminStatusPage />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<Navigate to="/" />} />
@@ -1746,6 +1747,127 @@ function Footer() {
       <div className="text-xs mt-1">Not affiliated with National Junior Honor Society. For official info, visit <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>.</div>
       <div className="text-xs text-primary-light mt-1">Built by Dhriti Erusalagandi</div>
     </footer>
+  );
+}
+
+// 1. Add AdminStatusPage component
+function AdminStatusPage() {
+  const { user } = useAuth();
+  const [allLogs, setAllLogs] = React.useState<Log[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+  const isAdmin = user?.email === 'divineduskdragon08@gmail.com';
+
+  React.useEffect(() => {
+    if (!isAdmin) return;
+    setIsLoading(true);
+    setError(null);
+    const fetchAllLogs = async () => {
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('volunteer_log')
+          .select('*')
+          .order('date', { ascending: false });
+        if (fetchError) {
+          setError(fetchError.message);
+          return;
+        }
+        setAllLogs(data || []);
+      } catch (err) {
+        setError('An unexpected error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAllLogs();
+  }, [isAdmin]);
+
+  const handleStatusChange = async (logId: string, newStatus: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { error: updateError } = await supabase
+        .from('volunteer_log')
+        .update({ status: newStatus })
+        .eq('id', logId);
+      if (updateError) throw updateError;
+      setAllLogs(logs => logs.map(log => log.id === logId ? { ...log, status: newStatus } : log));
+    } catch (err) {
+      setError('Failed to update status');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!user || !isAdmin) return <Navigate to="/dashboard" />;
+
+  return (
+    <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
+      <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin: Submissions Status</h2>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary"></div>
+        </div>
+      ) : error ? (
+        <div className="text-red-500 text-center p-4 bg-red-50 rounded-lg">Error: {error}</div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-t rounded-lg overflow-hidden">
+            <thead className="bg-primary text-white font-bold sticky top-0 z-10">
+              <tr>
+                <th className="py-2 px-2">Date</th>
+                <th className="py-2 px-2">First Name</th>
+                <th className="py-2 px-2">Last Name</th>
+                <th className="py-2 px-2">Organization</th>
+                <th className="py-2 px-2">Description</th>
+                <th className="py-2 px-2">Hours</th>
+                <th className="py-2 px-2">Status</th>
+                <th className="py-2 px-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allLogs.map((log, i) => (
+                <tr key={log.id} className={i % 2 === 0 ? 'bg-background' : 'bg-white'}>
+                  <td className="py-2 px-2">{log.date}</td>
+                  <td className="py-2 px-2">{log.first_name}</td>
+                  <td className="py-2 px-2">{log.last_name}</td>
+                  <td className="py-2 px-2">{log.organization}</td>
+                  <td className="py-2 px-2">{log.description}</td>
+                  <td className="py-2 px-2 font-bold">{log.hours?.toFixed(2)}</td>
+                  <td className="py-2 px-2">
+                    <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                      log.status === 'approved' ? 'bg-green-100 text-green-700' :
+                      log.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                      'bg-yellow-100 text-yellow-700'
+                    }`}>
+                      {log.status || 'pending'}
+                    </span>
+                  </td>
+                  <td className="py-2 px-2">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleStatusChange(log.id, 'approved')}
+                        className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-xs"
+                        disabled={log.status === 'approved'}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => handleStatusChange(log.id, 'rejected')}
+                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                        disabled={log.status === 'rejected'}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   );
 }
 
