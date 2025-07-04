@@ -928,7 +928,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     if (!isAdmin) return;
     const subscription = supabase
       .channel('volunteer_log_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'volunteer_log' }, payload => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'volunteer_log' }, () => {
         // Re-fetch logs when any change happens
         fetchAllLogs();
       })
