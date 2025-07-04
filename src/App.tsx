@@ -27,6 +27,7 @@ function SplashScreen({ className }: { className?: string }) {
 
 function Header() {
   const { user, signOut } = useAuth();
+  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com';
   return (
     <header className="sticky top-0 z-20 bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 shadow-lg">
       <nav className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
@@ -45,7 +46,7 @@ function Header() {
           {user && <Link to="/dashboard" className="font-bold text-white text-fill-hover-yellow">Dashboard</Link>}
           {user && <Link to="/profile" className="font-bold text-white text-fill-hover-yellow">Profile</Link>}
           <Link to="/contact" className="font-bold text-white text-fill-hover-yellow">Contact Us</Link>
-          {user && <Link to="/admin" className="font-bold text-white text-fill-hover-yellow">Admin</Link>}
+          {user && isSuperAdmin && <Link to="/admin" className="font-bold text-white text-fill-hover-yellow">Admin</Link>}
           {user ? (
             <button onClick={signOut} className="ml-4 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition">Sign out</button>
           ) : (
@@ -1668,7 +1669,8 @@ function Profile() {
 }
 
 function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>>, dashboardRefreshKey: number }) {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
+  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com';
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-primary-light text-xl font-semibold font-montserrat text-primary-dark">Loading...</div>;
   return (
     <Routes>
@@ -1676,7 +1678,7 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
       <Route path="/login" element={<Login />} />
       <Route path="/log" element={<LogHours setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/dashboard" element={<Dashboard dashboardRefreshKey={dashboardRefreshKey} />} />
-      <Route path="/admin" element={<Admin dashboardRefreshKey={dashboardRefreshKey} />} />
+      {isSuperAdmin && <Route path="/admin" element={<Admin dashboardRefreshKey={dashboardRefreshKey} />} />}
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<Navigate to="/" />} />
