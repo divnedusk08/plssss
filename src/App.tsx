@@ -862,14 +862,29 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Define sixWeekPeriods for use in processPeriodData and rendering
-  const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-14', endDate: '2025-09-23', targetHours: 2 },
-    { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-24', endDate: '2025-11-04', targetHours: 2 },
-    { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-20', targetHours: 2 },
-    { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-07', endDate: '2026-02-18', targetHours: 2 },
-    { name: 'Six Weeks 5 (2025-2026)', startDate: '2026-02-19', endDate: '2026-04-08', targetHours: 2 },
-    { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-09', endDate: '2026-05-23', targetHours: 2 },
+  // Define njhsMembers array for member matching
+  const njhsMembers: string[] = [
+    "Annie Addison", "Stephanie Adelowokan", "Nazila Allaudin", "Anvi Alleti", "Farhan Altaf", 
+    "Abigail Antony", "Rivaan Arvapalli", "Diya Babu", "Vrinda Balasani", "Kabir Baweja", 
+    "Lila Belanger", "Nihaarika Bhamidipati", "Sydney Bhattacharya", "Rithvik Bomidika", "Rohan Busa", 
+    "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
+    "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
+    "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
+    "Dhriti Erusalagandi", "Dhriti E", "dhriti.erusalagandi58", // <-- School email prefix
+    "Emery Erwin", "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
+    "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
+    "Jashwanth Jagadeesan", "Arnav Jain", "Anwitha Jeyakumar", "Sreenandana Kamattathil saril", "Maanya Katari", 
+    "Aiza Khan", "Arshiya Khanna", "Ryan Klassen", "Ashwika Konchada", "Lakshan Lakshminarayanan", 
+    "Samanvi Mane", "Esther Mathew", "Grace Mccloskey", "Cade Mehrens", "Harper Miller", 
+    "Harrison Miller", "Aarna Mishra", "Julia Moffitt", "Katelyn Moffitt", "Cade Morrison", 
+    "Kavya Mukherjee", "Ryan Nalam", "Venkata sravan reddy Naru", "Pravin Navin", "Benjamin Newton", 
+    "Reyansh Nighojkar", "James Orourke", "Soham Pachpande", "Connor Plante", "Satvik Prasad", 
+    "Pranav Pratheesh", "Adhrit Premkumar", "Bella Qiu", "Eeshaan Raj", "Diya Raveendran", 
+    "Vedant Rungta", "Anirudh Sathyan", "Brynn Schielein", "Yunseo Seo", "Ansh Shah", 
+    "Shubh Sharma", "Avikaa Shrivastava", "Ayush Singh", "Saanvi Singh", "Shreyasha Singh", 
+    "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
+    "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
+    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon", "divineduskdragon"
   ];
 
   // Move fetchAllLogs to outer scope so it can be used in both useEffects
