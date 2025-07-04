@@ -872,6 +872,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
     "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
     "Dhriti Erusalagandi", "Dhriti E", // <-- Added new member here
+    "dhriti.erusalagandi58", // <-- Add school email prefix for matching
     "Emery Erwin", 
     "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
     "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
@@ -887,7 +888,8 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
     "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
     "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon",
-    "divineduskdragon"
+    "divineduskdragon",
+    "dhriti.erusalagandi58" // <-- add this
   ];
 
   const sixWeekPeriods = [
