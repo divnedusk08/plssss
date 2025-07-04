@@ -854,7 +854,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   );
 }
 
-function Admin() {
+function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const { user } = useAuth();
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -897,36 +897,46 @@ function Admin() {
     { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-09', endDate: '2026-05-23', targetHours: 2 },
   ];
 
+  // Move fetchAllLogs to outer scope so it can be used in both useEffects
+  const fetchAllLogs = React.useCallback(async () => {
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('volunteer_log')
+        .select('*')
+        .order('date', { ascending: false });
+
+      if (fetchError) {
+        setError(fetchError.message);
+        return;
+      }
+      setAllLogs(data || []);
+    } catch (err) {
+      setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   React.useEffect(() => {
     if (!isAdmin) return; // Only fetch if the user is an admin
-    
     setIsLoading(true);
     setError(null);
-    
-    const fetchAllLogs = async () => {
-      try {
-        const { data, error: fetchError } = await supabase
-          .from('volunteer_log')
-          .select('*')
-          .order('date', { ascending: false });
-
-        if (fetchError) {
-          console.error('Error fetching all logs:', fetchError);
-          setError(fetchError.message);
-          return;
-        }
-
-        setAllLogs(data || []);
-      } catch (err) {
-        console.error('Unexpected error:', err);
-        setError('An unexpected error occurred');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchAllLogs();
-  }, [isAdmin]);
+  }, [isAdmin, dashboardRefreshKey, fetchAllLogs]);
+
+  React.useEffect(() => {
+    if (!isAdmin) return;
+    const subscription = supabase
+      .channel('volunteer_log_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'volunteer_log' }, payload => {
+        // Re-fetch logs when any change happens
+        fetchAllLogs();
+      })
+      .subscribe();
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, [isAdmin, fetchAllLogs]);
 
   if (!user || !isAdmin) return <Navigate to="/dashboard" />;
 
@@ -1667,7 +1677,7 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
       <Route path="/login" element={<Login />} />
       <Route path="/log" element={<LogHours setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/dashboard" element={<Dashboard dashboardRefreshKey={dashboardRefreshKey} />} />
-      <Route path="/admin" element={<Admin />} />
+      <Route path="/admin" element={<Admin dashboardRefreshKey={dashboardRefreshKey} />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<Navigate to="/" />} />
