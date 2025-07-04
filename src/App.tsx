@@ -862,7 +862,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Define 6-week periods (fix linter error)
+  // Define sixWeekPeriods for use in processPeriodData and rendering
   const sixWeekPeriods = [
     { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-14', endDate: '2025-09-23', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-24', endDate: '2025-11-04', targetHours: 2 },
@@ -911,7 +911,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     };
   }, [fetchAllLogs]);
 
-  const processPeriodData = (period: typeof sixWeekPeriods[0]) => {
+  const processPeriodData = (period: any) => {
     const accomplished: string[] = [];
     const notAccomplished: string[] = [];
 
