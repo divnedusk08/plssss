@@ -872,18 +872,16 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-09', endDate: '2026-05-23', targetHours: 2 },
   ];
 
-  const isAdmin = user?.email === 'divineduskdragon08@gmail.com'; // Set your admin email here
-
-  const njhsMembers = [
+  // Define njhsMembers array for member matching
+  const njhsMembers: string[] = [
     "Annie Addison", "Stephanie Adelowokan", "Nazila Allaudin", "Anvi Alleti", "Farhan Altaf", 
     "Abigail Antony", "Rivaan Arvapalli", "Diya Babu", "Vrinda Balasani", "Kabir Baweja", 
     "Lila Belanger", "Nihaarika Bhamidipati", "Sydney Bhattacharya", "Rithvik Bomidika", "Rohan Busa", 
     "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
     "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
     "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
-    "Dhriti Erusalagandi", "Dhriti E", // <-- Added new member here
-    "Emery Erwin", 
-    "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
+    "Dhriti Erusalagandi", "Dhriti E", "dhriti.erusalagandi58", // <-- School email prefix
+    "Emery Erwin", "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
     "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
     "Jashwanth Jagadeesan", "Arnav Jain", "Anwitha Jeyakumar", "Sreenandana Kamattathil saril", "Maanya Katari", 
     "Aiza Khan", "Arshiya Khanna", "Ryan Klassen", "Ashwika Konchada", "Lakshan Lakshminarayanan", 
@@ -896,8 +894,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     "Shubh Sharma", "Avikaa Shrivastava", "Ayush Singh", "Saanvi Singh", "Shreyasha Singh", 
     "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
     "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
-    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon",
-    "divineduskdragon"
+    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon", "divineduskdragon"
   ];
 
   // Move fetchAllLogs to outer scope so it can be used in both useEffects
