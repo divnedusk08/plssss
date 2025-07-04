@@ -973,17 +973,17 @@ function Admin() {
         console.log(`  Checking log: ${log.first_name} ${log.last_name} (${log.user_email})`);
         console.log(`    Normalized: firstName="${logFirstName}", lastName="${logLastName}", combined="${combinedFullName}", emailPrefix="${logEmailPrefix}"`);
         
-        // Candidate 1: full name, Candidate 2: email prefix, Candidate 3: just first name if no last name
-        const match1 = combinedFullName === memberNameNormalized;
-        const match2 = logEmailPrefix.startsWith(memberNameNormalized);
-        const match3 = (logFirstName && !logLastName && logFirstName === memberNameNormalized);
-        
-        console.log(`    Match results: fullName=${match1}, emailPrefix=${match2}, firstNameOnly=${match3}`);
-        
-        const isMatch = match1 || match2 || match3;
-        console.log(`    Final result: ${isMatch ? 'MATCH' : 'NO MATCH'}`);
-        
-        return isMatch;
+        // Flexible matching: match if any normalized field contains or equals the member name
+        return (
+          combinedFullName === memberNameNormalized ||
+          combinedFullName.includes(memberNameNormalized) ||
+          logFirstName === memberNameNormalized ||
+          logLastName === memberNameNormalized ||
+          logFirstName.includes(memberNameNormalized) ||
+          logLastName.includes(memberNameNormalized) ||
+          logEmailPrefix === memberNameNormalized ||
+          logEmailPrefix.includes(memberNameNormalized)
+        );
       });
       
       const totalHours = memberLogs.reduce((sum, log) => sum + (log.hours || 0), 0);
