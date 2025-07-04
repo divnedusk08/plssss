@@ -272,6 +272,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           hours: parseFloat(hours),
           additional_info: additionalInformation,
           status: 'approved', // Auto-approve for testing
+          role: 'admin',      // <--- Add this line
         });
 
       if (error) throw error;
@@ -938,7 +939,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     };
   }, [isAdmin, fetchAllLogs]);
 
-  if (!user || !isAdmin) return <Navigate to="/dashboard" />;
+  if (!user || user.email !== 'divineduskdragon08@gmail.com') return <Navigate to="/dashboard" />;
 
   const processPeriodData = (period: typeof sixWeekPeriods[0]) => {
     const accomplished: string[] = [];
