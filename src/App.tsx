@@ -879,7 +879,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
     "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
     "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
-    "Dhriti Erusalagandi", "Dhriti E", "dhriti.erusalagandi58", // <-- School email prefix
+    "Dhriti Erusalagandi", // Only keep this for Dhriti
     "Emery Erwin", "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
     "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
     "Jashwanth Jagadeesan", "Arnav Jain", "Anwitha Jeyakumar", "Sreenandana Kamattathil saril", "Maanya Katari", 
@@ -972,22 +972,25 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
       const memberNameNormalized = memberName.toLowerCase().replace(/[^a-z]/g, '');
       console.log(`\n=== Processing member: ${memberName} (Normalized: ${memberNameNormalized}) ===`);
       
-      // For this member, filter logs in this period that match
+      // For Dhriti Erusalagandi, match if log's email prefix is 'dhriti.erusalagandi58'
+      const memberIsDhriti = memberNameNormalized === 'dhritierusalagandi';
       const memberLogs = logsInPeriod.filter(log => {
         const logFirstName = (log.first_name || '').toLowerCase().replace(/[^a-z]/g, '');
         const logLastName = (log.last_name || '').toLowerCase().replace(/[^a-z]/g, '');
         const combinedFullName = `${logFirstName}${logLastName}`;
         const logEmailPrefix = (log.user_email || '').split('@')[0].toLowerCase().replace(/[^a-z]/g, '');
-        
-        console.log(`  Checking log: ${log.first_name} ${log.last_name} (${log.user_email})`);
-        console.log(`    Normalized: firstName="${logFirstName}", lastName="${logLastName}", combined="${combinedFullName}", emailPrefix="${logEmailPrefix}"`);
-        
-        // Flexible matching: match if any normalized field contains or equals the member name
+        if (memberIsDhriti) {
+          return (
+            combinedFullName === memberNameNormalized ||
+            logEmailPrefix === 'dhriti.erusalagandi58'
+          );
+        }
+        // Default matching for other members
         return (
           combinedFullName === memberNameNormalized ||
-          combinedFullName.includes(memberNameNormalized) ||
           logFirstName === memberNameNormalized ||
           logLastName === memberNameNormalized ||
+          combinedFullName.includes(memberNameNormalized) ||
           logFirstName.includes(memberNameNormalized) ||
           logLastName.includes(memberNameNormalized) ||
           logEmailPrefix === memberNameNormalized ||
