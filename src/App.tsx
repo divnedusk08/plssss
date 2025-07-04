@@ -856,7 +856,6 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
 function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const { user } = useAuth();
-  // Allow all logged-in users to access the admin dashboard
   if (!user) return <Navigate to="/dashboard" />;
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -896,6 +895,10 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
     "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon", "divineduskdragon"
   ];
+
+  // Only divineduskdragon can see all logs, others only see their own
+  const isSuperAdmin = user.email === 'divineduskdragon08@gmail.com';
+  const visibleLogs = isSuperAdmin ? allLogs : allLogs.filter(log => log.user_email === user.email);
 
   // Move fetchAllLogs to outer scope so it can be used in both useEffects
   const fetchAllLogs = React.useCallback(async () => {
@@ -941,7 +944,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     const notAccomplished: string[] = [];
 
     // 1. Filter logs for this period only
-    const logsInPeriod = allLogs.filter(log => {
+    const logsInPeriod = visibleLogs.filter(log => {
       const logDate = new Date(log.date);
       const startDate = new Date(period.startDate);
       const endDate = new Date(period.endDate);
@@ -951,11 +954,11 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
     console.log(`\n=== PERIOD: ${period.name} ===`);
     console.log(`Period dates: ${period.startDate} to ${period.endDate}`);
-    console.log(`Total logs in database: ${allLogs.length}`);
+    console.log(`Total logs in database: ${visibleLogs.length}`);
     console.log(`Logs in period: ${logsInPeriod.length}`);
     
     // Debug: Show all logs and their status
-    allLogs.forEach(log => {
+    visibleLogs.forEach(log => {
       const logDate = new Date(log.date);
       const startDate = new Date(period.startDate);
       const endDate = new Date(period.endDate);
