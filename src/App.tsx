@@ -856,42 +856,13 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
 function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const { user } = useAuth();
-  // TEMP: Allow all logged-in users to access the admin dashboard for debugging
+  // Allow all logged-in users to access the admin dashboard
   if (!user) return <Navigate to="/dashboard" />;
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
-  const isAdmin = user?.email === 'divineduskdragon08@gmail.com'; // Set your admin email here
-
-  const njhsMembers = [
-    "Annie Addison", "Stephanie Adelowokan", "Nazila Allaudin", "Anvi Alleti", "Farhan Altaf", 
-    "Abigail Antony", "Rivaan Arvapalli", "Diya Babu", "Vrinda Balasani", "Kabir Baweja", 
-    "Lila Belanger", "Nihaarika Bhamidipati", "Sydney Bhattacharya", "Rithvik Bomidika", "Rohan Busa", 
-    "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
-    "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
-    "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
-    "Dhriti Erusalagandi", "Dhriti E", // <-- Added new member here
-    "dhriti.erusalagandi58", // <-- Add school email prefix for matching
-    "Emery Erwin", 
-    "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
-    "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
-    "Jashwanth Jagadeesan", "Arnav Jain", "Anwitha Jeyakumar", "Sreenandana Kamattathil saril", "Maanya Katari", 
-    "Aiza Khan", "Arshiya Khanna", "Ryan Klassen", "Ashwika Konchada", "Lakshan Lakshminarayanan", 
-    "Samanvi Mane", "Esther Mathew", "Grace Mccloskey", "Cade Mehrens", "Harper Miller", 
-    "Harrison Miller", "Aarna Mishra", "Julia Moffitt", "Katelyn Moffitt", "Cade Morrison", 
-    "Kavya Mukherjee", "Ryan Nalam", "Venkata sravan reddy Naru", "Pravin Navin", "Benjamin Newton", 
-    "Reyansh Nighojkar", "James Orourke", "Soham Pachpande", "Connor Plante", "Satvik Prasad", 
-    "Pranav Pratheesh", "Adhrit Premkumar", "Bella Qiu", "Eeshaan Raj", "Diya Raveendran", 
-    "Vedant Rungta", "Anirudh Sathyan", "Brynn Schielein", "Yunseo Seo", "Ansh Shah", 
-    "Shubh Sharma", "Avikaa Shrivastava", "Ayush Singh", "Saanvi Singh", "Shreyasha Singh", 
-    "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
-    "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
-    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon",
-    "divineduskdragon",
-    "dhriti.erusalagandi58" // <-- add this
-  ];
-
+  // Define 6-week periods (fix linter error)
   const sixWeekPeriods = [
     { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-14', endDate: '2025-09-23', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-24', endDate: '2025-11-04', targetHours: 2 },
@@ -922,14 +893,12 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   }, []);
 
   React.useEffect(() => {
-    if (!isAdmin) return; // Only fetch if the user is an admin
     setIsLoading(true);
     setError(null);
     fetchAllLogs();
-  }, [isAdmin, dashboardRefreshKey, fetchAllLogs]);
+  }, [dashboardRefreshKey, fetchAllLogs]);
 
   React.useEffect(() => {
-    if (!isAdmin) return;
     const subscription = supabase
       .channel('volunteer_log_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'volunteer_log' }, () => {
@@ -940,9 +909,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [isAdmin, fetchAllLogs]);
-
-  if (!user || user.email !== 'divineduskdragon08@gmail.com') return <Navigate to="/dashboard" />;
+  }, [fetchAllLogs]);
 
   const processPeriodData = (period: typeof sixWeekPeriods[0]) => {
     const accomplished: string[] = [];
