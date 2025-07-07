@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { StarBorder } from './components/ui/star-border';
+import { StarBorder } from './components/StarBorder';
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -117,13 +117,12 @@ function Home() {
         </p>
       </div>
 
-      {/* Get Started Button (replaced with StarBorder) */}
+      {/* Get Started Button */}
       <StarBorder
         onClick={() => navigate(user ? '/log' : '/login')}
-        className="mb-12"
+        className="mb-12 glow-on-hover"
       >
-        {/* Update the prompt here as desired */}
-        Start Tracking Your NJHS Hours
+        Get Started
       </StarBorder>
 
       {/* How it works section */}
