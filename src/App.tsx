@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { GetStartedButton } from "@/components/ui/get-started-demo"
+import { GetStartedButton } from "./components/GetStartedButton"
 
 function SplashScreen({ className }: { className?: string }) {
   return (
