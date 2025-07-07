@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { GetStartedButton } from "./components/GetStartedButton"
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -60,16 +59,67 @@ function Header() {
 }
 
 function Home() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const homeRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (homeRef.current) {
+        const rect = homeRef.current.getBoundingClientRect();
+        homeRef.current.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        homeRef.current.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      }
+    };
+
+    const currentHomeRef = homeRef.current;
+    if (currentHomeRef) {
+      currentHomeRef.addEventListener('mousemove', handleMouseMove);
+    }
+
+    return () => {
+      if (currentHomeRef) {
+        currentHomeRef.removeEventListener('mousemove', handleMouseMove);
+      }
+    };
+  }, []);
+
   return (
-    <div className="text-center mt-12">
-      <h2 className="text-2xl font-bold mb-2 text-primary">Ready to Track Your NJHS Hours?</h2>
-      <p className="mb-6 text-lg text-muted-foreground">
-        Click "Get Started" to log your volunteer hours, check your progress, and see if you've accomplished your goals for this six weeks.<br />
-        HourTrackrr makes it easy to stay on top of your NJHS requirements—all in one place!
-      </p>
-      <GetStartedButton />
+    <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 bg-white">
+      {/* Logo and Title */}
+      <div className="flex flex-col items-center mb-6 fade-in">
+        <div className="relative">
+          <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
+            <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
+            <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
+            <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
+          </svg>
+          <div className="absolute inset-0 animate-ping-slow opacity-20">
+            <svg width="100" height="100" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="32" fill="#FBBF24"/>
+            </svg>
+          </div>
+        </div>
+        <h1 className="text-5xl font-extrabold text-primary-dark font-montserrat mt-4 mb-2 drop-shadow">HourTrackr NJHS</h1>
+        <div className="text-blue-900 text-xl font-montserrat mb-4">National Junior Honor Society</div>
+      </div>
+      {/* Tagline */}
+      <div className="max-w-xl text-center mb-8 fade-in">
+        <p className="text-2xl text-gray-800 font-montserrat mb-4 text-hover-effect">
+          Log and track your NJHS volunteer hours in one place.
+        </p>
+      </div>
+      {/* Get Started Button */}
+      <button
+        onClick={() => navigate(user ? '/log' : '/login')}
+        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
+      >
+        Get Started
+      </button>
+      {/* ...rest of original Home content... */}
     </div>
-  )
+  );
 }
 
 function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>> }) {
