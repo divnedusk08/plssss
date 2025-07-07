@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { GetStartedButton } from "@/components/ui/get-started-demo"
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -59,110 +60,16 @@ function Header() {
 }
 
 function Home() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const homeRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (homeRef.current) {
-        const rect = homeRef.current.getBoundingClientRect();
-        homeRef.current.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        homeRef.current.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      }
-    };
-
-    const currentHomeRef = homeRef.current;
-    if (currentHomeRef) {
-      currentHomeRef.addEventListener('mousemove', handleMouseMove);
-    }
-
-    return () => {
-      if (currentHomeRef) {
-        currentHomeRef.removeEventListener('mousemove', handleMouseMove);
-      }
-    };
-  }, []);
-
   return (
-    <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 bg-white">
-      {/* Removed animated-gradient-bg, parallax-container, spotlight-container, and gray/gradient backgrounds */}
-      {/* Removed <div className="spotlight-overlay"></div> */}
-      {/* Removed decorative blobs */}
-      
-      {/* Logo and Title */}
-      <div className="flex flex-col items-center mb-6 fade-in">
-        <div className="relative">
-          <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
-            <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
-            <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
-            <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
-          </svg>
-          <div className="absolute inset-0 animate-ping-slow opacity-20">
-            <svg width="100" height="100" viewBox="0 0 64 64" fill="none">
-              <circle cx="32" cy="32" r="32" fill="#FBBF24"/>
-            </svg>
-          </div>
-        </div>
-        <h1 className="text-5xl font-extrabold text-primary-dark font-montserrat mt-4 mb-2 drop-shadow">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-xl font-montserrat mb-4">National Junior Honor Society</div>
-      </div>
-
-      {/* Tagline */}
-      <div className="max-w-xl text-center mb-8 fade-in">
-        <p className="text-2xl text-gray-800 font-montserrat mb-4 text-hover-effect">
-          Log and track your NJHS volunteer hours in one place.
-        </p>
-      </div>
-
-      {/* Get Started Button */}
-      <button
-        onClick={() => navigate(user ? '/log' : '/login')}
-        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
-      >
-        Get Started
-      </button>
-
-      {/* How it works section */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.2s' } as React.CSSProperties}>
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
-          </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Log Your Hours</h3>
-          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Submit hours easily. All submissions stored securely.</p>
-        </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.4s' } as React.CSSProperties}>
-          <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round"/></svg>
-          </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Track Progress</h3>
-          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">View total hours and history. Stay on top of requirements.</p>
-        </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.6s' } as React.CSSProperties}>
-          <div className="w-20 h-20 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round"/></svg>
-          </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Get Recognized</h3>
-          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Earn recognition for service and leadership. Your impact matters!</p>
-        </div>
-      </div>
-
-      {/* Contact Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-4 border-t-4 border-primary-dark fade-in">
-        <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
-        <p className="text-gray-700 text-base font-inter text-hover-effect">
-          Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
-        </p>
-      </div>
-
-      {/* Simple Footer */}
-      <footer className="w-full text-center text-gray-400 text-xs mt-12 mb-2 fade-in text-hover-effect">
-        © {new Date().getFullYear()} HourTrackr NJHS. Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>
-      </footer>
+    <div className="text-center mt-12">
+      <h2 className="text-2xl font-bold mb-2 text-primary">Ready to Track Your NJHS Hours?</h2>
+      <p className="mb-6 text-lg text-muted-foreground">
+        Click "Get Started" to log your volunteer hours, check your progress, and see if you've accomplished your goals for this six weeks.<br />
+        HourTrackrr makes it easy to stay on top of your NJHS requirements—all in one place!
+      </p>
+      <GetStartedButton />
     </div>
-  );
+  )
 }
 
 function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>> }) {
