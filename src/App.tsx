@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { StarBorder } from './components/StarBorder';
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -118,12 +117,12 @@ function Home() {
       </div>
 
       {/* Get Started Button */}
-      <StarBorder
+      <button
         onClick={() => navigate(user ? '/log' : '/login')}
-        className="mb-12 glow-on-hover"
+        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
       >
         Get Started
-      </StarBorder>
+      </button>
 
       {/* How it works section */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

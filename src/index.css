@@ -262,26 +262,4 @@
   transform: scale(1);
 }
 
-@keyframes spin-slow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
-}
-
-@keyframes border-glow {
-  0%, 100% {
-    box-shadow: 0 0 8px 2px #FBBF24, 0 0 0px 0 #2563EB;
-    border-color: #FBBF24;
-  }
-  50% {
-    box-shadow: 0 0 24px 6px #FBBF24, 0 0 8px 2px #2563EB;
-    border-color: #2563EB;
-  }
-}
-
-.animate-border-glow {
-  animation: border-glow 2.5s ease-in-out infinite;
-} 
+/* ... existing code ... */ 
