@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { MovingBorderDemo } from './components/ui/moving-border-demo';
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -86,6 +87,10 @@ function Home() {
 
   return (
     <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 bg-white">
+      {/* MovingBorderDemo animation at the top */}
+      <div className="mb-8">
+        <MovingBorderDemo />
+      </div>
       {/* Removed animated-gradient-bg, parallax-container, spotlight-container, and gray/gradient backgrounds */}
       {/* Removed <div className="spotlight-overlay"></div> */}
       {/* Removed decorative blobs */}
