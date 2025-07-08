@@ -119,8 +119,7 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate(user ? '/log' : '/login')}
-        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover animated-border-light"
-        style={{ minWidth: 180 }}
+        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
       >
         Get Started
       </button>
