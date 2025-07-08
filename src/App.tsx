@@ -3,9 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { cn } from "@/lib/utils"
-import { ElementType, ComponentPropsWithoutRef } from "react"
-import { GetStartedButton } from "@/components/ui/get-started-button"
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -120,12 +117,12 @@ function Home() {
       </div>
 
       {/* Get Started Button */}
-      <GetStartedButton
+      <button
         onClick={() => navigate(user ? '/log' : '/login')}
-        className="mb-12"
+        className="mb-12 px-8 py-3 rounded-full bg-gradient-to-r from-primary via-accent to-primary-dark text-white font-bold text-xl shadow-lg border-4 border-transparent hover:border-accent focus:outline-none focus:ring-4 focus:ring-accent transition-all duration-300 relative overflow-hidden"
       >
         Get Started
-      </GetStartedButton>
+      </button>
 
       {/* How it works section */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
