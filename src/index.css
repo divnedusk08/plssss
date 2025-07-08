@@ -260,4 +260,6 @@
 
 .glow-on-hover:hover::before {
   transform: scale(1);
-} 
+}
+
+/* ... existing code ... */ 
