@@ -123,8 +123,8 @@ function Home() {
           onClick={() => navigate(user ? '/log' : '/login')}
           borderRadius="0.5rem"
           className="bg-primary text-white font-bold text-xl hover:bg-primary-dark transition"
-          borderClassName="bg-[radial-gradient(var(--accent)_60%,transparent_40%)] h-24 w-24 opacity-[0.9]"
-          duration={1500}
+          borderClassName="bg-[radial-gradient(var(--accent)_80%,transparent_20%)] h-28 w-28 opacity-[1.0]"
+          duration={800}
         >
           Get Started
         </Button>
