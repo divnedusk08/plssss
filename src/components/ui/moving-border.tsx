@@ -44,7 +44,7 @@ export function Button({
         className="absolute inset-0"
         style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
       >
-        <MovingBorder duration={duration} rx="8px" ry="8px">
+        <MovingBorder duration={duration} rx="30%" ry="30%">
           <div
             className={cn(
               "h-20 w-20 opacity-[0.8] bg-[radial-gradient(var(--sky-500)_40%,transparent_60%)]",
@@ -114,9 +114,12 @@ export const MovingBorder = ({
         height="100%"
         {...otherProps}
       >
-        <path
+        <rect
           fill="none"
-          d="M 0,8 Q 0,0 8,0 L calc(100% - 8),0 Q 100%,0 100%,8 L 100%,calc(100% - 8) Q 100%,100% calc(100% - 8),100% L 8,100% Q 0,100% 0,calc(100% - 8) Z"
+          width="100%"
+          height="100%"
+          rx={rx}
+          ry={ry}
           ref={pathRef}
         />
       </svg>
