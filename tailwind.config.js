@@ -6,15 +6,6 @@ export default {
   ],
   theme: {
     extend: {
-      animation: {
-        'light-sweep': 'light-sweep 2s linear infinite',
-      },
-      keyframes: {
-        'light-sweep': {
-          '0%': { backgroundPosition: '200% 0' },
-          '100%': { backgroundPosition: '-200% 0' },
-        },
-      },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
       },
