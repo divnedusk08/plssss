@@ -1,11 +1,4 @@
-import { StarBorder } from "@/components/ui/star-border"
-
-export function StarBorderDemo() {
-  return (
-    <div className="space-y-8">
-      <StarBorder>
-        Theme-aware Border
-      </StarBorder>
-    </div>
-  )
+// src/components/ui/star-border.tsx
+export function StarBorder({ children }: { children: React.ReactNode }) {
+  return <div>{children}</div>;
 } 
