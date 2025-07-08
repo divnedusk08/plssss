@@ -121,8 +121,9 @@ function Home() {
       <div className="mb-12">
         <Button
           onClick={() => navigate(user ? '/log' : '/login')}
-          borderRadius="1.75rem"
-          className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+          borderRadius="16px"
+          className="bg-[#3366ee] text-white font-bold text-2xl shadow-lg"
+          containerClassName="shadow-lg"
         >
           Get Started
         </Button>
