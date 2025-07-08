@@ -114,12 +114,9 @@ export const MovingBorder = ({
         height="100%"
         {...otherProps}
       >
-        <rect
+        <path
           fill="none"
-          width="100%"
-          height="100%"
-          rx={rx}
-          ry={ry}
+          d="M 0,8 Q 0,0 8,0 L calc(100% - 8),0 Q 100%,0 100%,8 L 100%,calc(100% - 8) Q 100%,100% calc(100% - 8),100% L 8,100% Q 0,100% 0,calc(100% - 8) Z"
           ref={pathRef}
         />
       </svg>
