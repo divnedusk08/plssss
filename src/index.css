@@ -262,4 +262,14 @@
   transform: scale(1);
 }
 
-/* ... existing code ... */ 
+@keyframes star-orbit {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(120px) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) translateX(120px) rotate(-360deg);
+  }
+}
+.star-orbit {
+  animation: star-orbit 2.8s linear infinite;
+} 

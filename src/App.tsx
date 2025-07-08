@@ -117,12 +117,39 @@ function Home() {
       </div>
 
       {/* Get Started Button */}
-      <button
-        onClick={() => navigate(user ? '/log' : '/login')}
-        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
-      >
-        Get Started
-      </button>
+      <div className="relative mb-12 flex items-center justify-center">
+        <button
+          onClick={() => navigate(user ? '/log' : '/login')}
+          className="px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover relative z-10"
+          style={{ minWidth: 180 }}
+        >
+          Get Started
+        </button>
+        {/* Orbiting Star */}
+        <span
+          className="absolute left-1/2 top-1/2 z-20 pointer-events-none"
+          style={{
+            width: '0',
+            height: '0',
+            transform: 'translate(-50%, -50%)',
+            animation: 'star-orbit 2.8s linear infinite',
+          }}
+        >
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              filter: 'drop-shadow(0 0 16px #FBBF24) drop-shadow(0 0 32px #FBBF24)',
+              color: '#FBBF24',
+            }}
+          >
+            <polygon points="24,4 29,18 44,18 32,28 36,44 24,35 12,44 16,28 4,18 19,18" fill="#FBBF24" stroke="#F59E42" strokeWidth="2" />
+          </svg>
+        </span>
+      </div>
 
       {/* How it works section */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
