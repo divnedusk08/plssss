@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import { FlickeringGridDemo } from "@/components/ui/flickering-grid-demo";
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -1734,5 +1736,31 @@ export default function WrappedApp() {
         </Router>
       )}
     </AuthProvider>
+  );
+}
+
+export function FlickeringGridDemo() {
+  return (
+    <div className="relative h-[500px] rounded-lg w-full bg-background overflow-hidden border">
+      <FlickeringGrid
+        className="z-0 absolute inset-0 size-full"
+        squareSize={4}
+        gridGap={6}
+        color="#6B7280" // This is Tailwind's gray-500, matches your color scheme
+        maxOpacity={0.5}
+        flickerChance={0.1}
+        height={800}
+        width={800}
+      />
+    </div>
+  );
+}
+
+export function HomePage() {
+  return (
+    <div className="relative min-h-screen bg-background">
+      <FlickeringGridDemo />
+      {/* ...rest of your content... */}
+    </div>
   );
 }
