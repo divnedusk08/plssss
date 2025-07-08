@@ -4,7 +4,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { FlickeringGrid } from "@/components/ui/flickering-grid";
-import { FlickeringGridDemo } from "@/components/ui/flickering-grid-demo";
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -1739,9 +1738,9 @@ export default function WrappedApp() {
   );
 }
 
-export function FlickeringGridDemo() {
+export function HomePage() {
   return (
-    <div className="relative h-[500px] rounded-lg w-full bg-background overflow-hidden border">
+    <div className="relative min-h-screen bg-background">
       <FlickeringGrid
         className="z-0 absolute inset-0 size-full"
         squareSize={4}
@@ -1752,14 +1751,6 @@ export function FlickeringGridDemo() {
         height={800}
         width={800}
       />
-    </div>
-  );
-}
-
-export function HomePage() {
-  return (
-    <div className="relative min-h-screen bg-background">
-      <FlickeringGridDemo />
       {/* ...rest of your content... */}
     </div>
   );
