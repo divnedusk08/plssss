@@ -64,7 +64,7 @@ function Home() {
 
   React.useEffect(() => {
     if (user) {
-      navigate('/dashboard', { replace: true });
+      navigate('/log', { replace: true });
     }
   }, [user, navigate]);
 
