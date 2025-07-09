@@ -3,7 +3,6 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -23,7 +22,6 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   squareSize = 4,
   gridGap = 6,
   flickerChance = 0.3,
-  color = "rgb(240, 240, 240)", // Much lighter grey
   width,
   height,
   className,
@@ -34,7 +32,6 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   const [isInView, setIsInView] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
-  const [rippleEffect, setRippleEffect] = useState<{ x: number; y: number; intensity: number; time: number } | null>(null);
 
   const setupCanvas = useCallback(
     (canvas: HTMLCanvasElement, width: number, height: number) => {
