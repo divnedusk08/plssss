@@ -1736,7 +1736,7 @@ export default function WrappedApp() {
             />
             
             {/* Content with semi-transparent white background overlay */}
-            <div className="relative z-10 flex flex-col min-h-screen bg-white/90">
+            <div className="relative z-10 flex flex-col min-h-screen bg-white/60">
               <Header />
               <main className="flex-grow fade-in">
                 <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
