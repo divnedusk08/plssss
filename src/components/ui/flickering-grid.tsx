@@ -79,8 +79,8 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       let rippleRadius = 0;
       let rippleAlpha = 0;
       if (ripple) {
-        rippleRadius = Math.min(400, (now - ripple.startTime) * 0.7); // Expands over time
-        rippleAlpha = Math.max(0, 1 - (now - ripple.startTime) / 900); // Fades out
+        rippleRadius = Math.min(800, (now - ripple.startTime) * 1.2); // Expands faster and further
+        rippleAlpha = Math.max(0, 1 - (now - ripple.startTime) / 2000); // Lasts 2 seconds
       }
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -89,18 +89,23 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
           const squareWidth = squareSize * dpr;
           const squareHeight = squareSize * dpr;
           let opacity = squares[i * rows + j];
+
           // Ripple effect
           if (ripple) {
             const dx = ripple.x * dpr - (squareX + squareWidth / 2);
             const dy = ripple.y * dpr - (squareY + squareHeight / 2);
             const dist = Math.sqrt(dx * dx + dy * dy);
             const waveFront = Math.abs(dist - rippleRadius);
-            if (waveFront < 30) {
-              // Animate opacity as the wave passes
-              opacity = 0.7 * rippleAlpha * (1 - waveFront / 30) + opacity * (waveFront / 30);
+            if (waveFront < 60) { // Wider wavefront
+              // Animate opacity and color as the wave passes
+              opacity = 0.9 * rippleAlpha * (1 - waveFront / 60) + opacity * (waveFront / 60);
+              ctx.fillStyle = `rgba(80, 120, 255, ${opacity})`; // Strong blue ripple
+            } else {
+              ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`; // Normal grid
             }
+          } else {
+            ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`; // Normal grid
           }
-          ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`;
           ctx.fillRect(squareX, squareY, squareWidth, squareHeight);
         }
       }
