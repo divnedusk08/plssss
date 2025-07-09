@@ -1725,33 +1725,27 @@ export default function WrappedApp() {
         <SplashScreen className={isFadingOut ? 'fade-out' : ''} />
       ) : (
         <Router>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow fade-in bg-white">
-              <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
-            </main>
-            <Footer />
+          <div className="flex flex-col min-h-screen relative">
+            {/* FlickeringGrid Background */}
+            <FlickeringGrid
+              className="z-0 absolute inset-0 size-full"
+              squareSize={4}
+              gridGap={6}
+              color="#6B7280" // Gray color that matches your scheme
+              maxOpacity={0.3} // Subtle opacity to keep content readable
+              flickerChance={0.1}
+            />
+            {/* Content with white background overlay */}
+            <div className="relative z-10 flex flex-col min-h-screen bg-white/95">
+              <Header />
+              <main className="flex-grow fade-in">
+                <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
+              </main>
+              <Footer />
+            </div>
           </div>
         </Router>
       )}
     </AuthProvider>
-  );
-}
-
-export function HomePage() {
-  return (
-    <div className="relative min-h-screen bg-background">
-      <FlickeringGrid
-        className="z-0 absolute inset-0 size-full"
-        squareSize={4}
-        gridGap={6}
-        color="#6B7280" // This is Tailwind's gray-500, matches your color scheme
-        maxOpacity={0.5}
-        flickerChance={0.1}
-        height={800}
-        width={800}
-      />
-      {/* ...rest of your content... */}
-    </div>
   );
 }
