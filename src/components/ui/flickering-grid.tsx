@@ -31,7 +31,6 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(true); // Always true for debugging
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-  const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
   const [ripple, setRipple] = useState<{ x: number; y: number; startTime: number } | null>(null);
 
   const setupCanvas = useCallback(
