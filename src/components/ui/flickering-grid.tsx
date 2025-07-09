@@ -32,6 +32,7 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   const [isInView, setIsInView] = useState(true); // Always true for debugging
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
+  const [ripple, setRipple] = useState<{ x: number; y: number; startTime: number } | null>(null);
 
   const setupCanvas = useCallback(
     (canvas: HTMLCanvasElement, width: number, height: number) => {
@@ -75,62 +76,36 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       dpr: number,
     ) => {
       ctx.clearRect(0, 0, width, height);
-
-      const currentTime = Date.now() * 0.001; // Convert to seconds for smoother animation
-
+      const now = performance.now();
+      let rippleRadius = 0;
+      let rippleAlpha = 0;
+      if (ripple) {
+        rippleRadius = Math.min(400, (now - ripple.startTime) * 0.7); // Expands over time
+        rippleAlpha = Math.max(0, 1 - (now - ripple.startTime) / 900); // Fades out
+      }
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
           const squareX = i * (squareSize + gridGap) * dpr;
           const squareY = j * (squareSize + gridGap) * dpr;
           const squareWidth = squareSize * dpr;
           const squareHeight = squareSize * dpr;
-          
-          // Calculate distance from mouse for ripple effect
-          const mouseX = mousePosition.x * dpr;
-          const mouseY = mousePosition.y * dpr;
-          const centerX = squareX + squareWidth / 2;
-          const centerY = squareY + squareHeight / 2;
-          const distance = Math.sqrt((mouseX - centerX) ** 2 + (mouseY - centerY) ** 2);
-          
           let opacity = squares[i * rows + j];
-          
-          // Apply ripple effect if mouse is near (smoother calculation)
-          if (mousePosition.x >= 0 && mousePosition.y >= 0 && distance < 150 * dpr) {
-            const rippleDistance = distance / (150 * dpr);
-            const rippleIntensity = Math.max(0, 1 - rippleDistance);
-            
-            // Smoother wave-like effect with reduced frequency
-            const wave = Math.sin(currentTime * 2 + distance * 0.005) * 0.3 + 0.7;
-            const rippleEffect = rippleIntensity * wave;
-            
-            // Increase opacity in ripple area (smoother)
-            opacity = Math.min(opacity + rippleEffect * 0.4, 0.7);
-            
-            // Smoother pulsing effect
-            const pulse = Math.sin(currentTime * 1.5 + distance * 0.01) * 0.2 + 0.8;
-            opacity *= pulse;
+          // Ripple effect
+          if (ripple) {
+            const dx = ripple.x * dpr - (squareX + squareWidth / 2);
+            const dy = ripple.y * dpr - (squareY + squareHeight / 2);
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const waveFront = Math.abs(dist - rippleRadius);
+            if (waveFront < 30) {
+              // Animate opacity as the wave passes
+              opacity = 0.7 * rippleAlpha * (1 - waveFront / 30) + opacity * (waveFront / 30);
+            }
           }
-          
-          // Smoother gradient effect based on distance
-          const gradientIntensity = mousePosition.x >= 0 && mousePosition.y >= 0 
-            ? Math.max(0, 1 - distance / (200 * dpr))
-            : 0;
-          
-          // Mix colors for cool effect (smoother transition)
-          const baseColor = [245, 245, 245]; // Very light grey
-          const accentColor = [200, 220, 255]; // Light blue tint
-          
-          const r = Math.floor(baseColor[0] * (1 - gradientIntensity) + accentColor[0] * gradientIntensity);
-          const g = Math.floor(baseColor[1] * (1 - gradientIntensity) + accentColor[1] * gradientIntensity);
-          const b = Math.floor(baseColor[2] * (1 - gradientIntensity) + accentColor[2] * gradientIntensity);
-          
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+          ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`;
           ctx.fillRect(squareX, squareY, squareWidth, squareHeight);
         }
       }
-    },
-    [squareSize, gridGap, mousePosition],
-  );
+    }, [squareSize, gridGap, ripple]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -190,17 +165,18 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
     intersectionObserver.observe(canvas);
 
-    // Mouse move handler for hover effects
+    // Mouse move handler for ripple effect
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      setMousePosition({
+      setRipple({
         x: e.clientX - rect.left,
-        y: e.clientY - rect.top
+        y: e.clientY - rect.top,
+        startTime: performance.now(),
       });
     };
 
     const handleMouseLeave = () => {
-      setMousePosition({ x: -1, y: -1 });
+      setRipple(null);
     };
 
     canvas.addEventListener('mousemove', handleMouseMove);
