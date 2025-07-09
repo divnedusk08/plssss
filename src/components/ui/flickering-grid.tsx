@@ -23,34 +23,18 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   squareSize = 4,
   gridGap = 6,
   flickerChance = 0.3,
-  color = "rgb(128, 128, 128)", // Light grey default
+  color = "rgb(240, 240, 240)", // Much lighter grey
   width,
   height,
   className,
-  maxOpacity = 0.4, // Increased opacity for better visibility
+  maxOpacity = 0.3, // Lower base opacity
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
-
-  const memoizedColor = useMemo(() => {
-    const toRGBA = (color: string) => {
-      if (typeof window === "undefined") {
-        return `rgba(0, 0, 0,`;
-      }
-      const canvas = document.createElement("canvas");
-      canvas.width = canvas.height = 1;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return "rgba(255, 0, 0,";
-      ctx.fillStyle = color;
-      ctx.fillRect(0, 0, 1, 1);
-      const [r, g, b] = Array.from(ctx.getImageData(0, 0, 1, 1).data);
-      return `rgba(${r}, ${g}, ${b},`;
-    };
-    return toRGBA(color);
-  }, [color]);
+  const [rippleEffect, setRippleEffect] = useState<{ x: number; y: number; intensity: number; time: number } | null>(null);
 
   const setupCanvas = useCallback(
     (canvas: HTMLCanvasElement, width: number, height: number) => {
@@ -97,6 +81,8 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       ctx.fillStyle = "transparent";
       ctx.fillRect(0, 0, width, height);
 
+      const currentTime = Date.now();
+
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
           const squareX = i * (squareSize + gridGap) * dpr;
@@ -104,27 +90,53 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
           const squareWidth = squareSize * dpr;
           const squareHeight = squareSize * dpr;
           
-          // Check if mouse is hovering over this square
+          // Calculate distance from mouse for ripple effect
           const mouseX = mousePosition.x * dpr;
           const mouseY = mousePosition.y * dpr;
-          const isHovered = mouseX >= squareX && mouseX <= squareX + squareWidth &&
-                           mouseY >= squareY && mouseY <= squareY + squareHeight;
+          const centerX = squareX + squareWidth / 2;
+          const centerY = squareY + squareHeight / 2;
+          const distance = Math.sqrt((mouseX - centerX) ** 2 + (mouseY - centerY) ** 2);
           
           let opacity = squares[i * rows + j];
+          let flickerIntensity = 1;
           
-          // Apply hover effect
-          if (isHovered) {
-            opacity = Math.min(opacity + 0.3, 1.0); // Increase opacity on hover
-            ctx.fillStyle = `rgba(64, 64, 64, ${opacity})`; // Dark grey on hover
-          } else {
-            ctx.fillStyle = `rgba(192, 192, 192, ${opacity})`; // Light grey by default
+          // Apply ripple effect if mouse is near
+          if (mousePosition.x >= 0 && mousePosition.y >= 0 && distance < 200 * dpr) {
+            const rippleDistance = distance / (200 * dpr);
+            const rippleIntensity = Math.max(0, 1 - rippleDistance);
+            
+            // Create wave-like effect
+            const wave = Math.sin(currentTime * 0.01 + distance * 0.01) * 0.5 + 0.5;
+            const rippleEffect = rippleIntensity * wave;
+            
+            // Increase flickering in ripple area
+            flickerIntensity = 1 + rippleEffect * 3;
+            opacity = Math.min(opacity * flickerIntensity, 0.8);
+            
+            // Add pulsing effect
+            const pulse = Math.sin(currentTime * 0.005 + distance * 0.02) * 0.3 + 0.7;
+            opacity *= pulse;
           }
           
+          // Create gradient effect based on distance
+          const gradientIntensity = mousePosition.x >= 0 && mousePosition.y >= 0 
+            ? Math.max(0, 1 - distance / (300 * dpr))
+            : 0;
+          
+          // Mix colors for cool effect
+          const baseColor = [240, 240, 240]; // Light grey
+          const accentColor = [180, 200, 255]; // Light blue tint
+          
+          const r = Math.floor(baseColor[0] * (1 - gradientIntensity) + accentColor[0] * gradientIntensity);
+          const g = Math.floor(baseColor[1] * (1 - gradientIntensity) + accentColor[1] * gradientIntensity);
+          const b = Math.floor(baseColor[2] * (1 - gradientIntensity) + accentColor[2] * gradientIntensity);
+          
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
           ctx.fillRect(squareX, squareY, squareWidth, squareHeight);
         }
       }
     },
-    [memoizedColor, squareSize, gridGap, mousePosition],
+    [squareSize, gridGap, mousePosition],
   );
 
   useEffect(() => {

@@ -92,8 +92,8 @@ function Home() {
         className="absolute inset-0 z-0"
         squareSize={6}
         gridGap={8}
-        color="rgb(192, 192, 192)" // Light grey
-        maxOpacity={0.4}
+        color="rgb(240, 240, 240)" // Much lighter grey
+        maxOpacity={0.3}
         flickerChance={0.3}
       />
       
@@ -315,8 +315,8 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
         className="absolute inset-0 z-0"
         squareSize={6}
         gridGap={8}
-        color="rgb(192, 192, 192)" // Light grey
-        maxOpacity={0.4}
+        color="rgb(240, 240, 240)" // Much lighter grey
+        maxOpacity={0.3}
         flickerChance={0.3}
       />
       
@@ -1750,8 +1750,8 @@ export default function WrappedApp() {
               className="z-0 absolute inset-0 size-full"
               squareSize={6}
               gridGap={8}
-              color="rgb(192, 192, 192)" // Light grey
-              maxOpacity={0.4} // Consistent opacity
+              color="rgb(240, 240, 240)" // Much lighter grey
+              maxOpacity={0.3} // Consistent opacity
               flickerChance={0.3} // Slightly higher flicker rate for more dynamic effect
             />
             
