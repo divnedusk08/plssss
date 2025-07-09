@@ -262,7 +262,10 @@
   transform: scale(1);
 }
 
-#root {
+#root > div {
   transform: scale(0.8);
   transform-origin: top center;
+  width: 125%;
+  margin-left: auto;
+  margin-right: auto;
 } 
