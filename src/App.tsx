@@ -85,7 +85,7 @@ function Home() {
       </div>
 
       {/* Tagline */}
-      <div className="max-w-xl text-center mb-8 fade-in">
+      <div className="max-w-xl text-center mb-12 fade-in">
         <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
           Log and track your NJHS volunteer hours in one place.
         </p>
@@ -94,39 +94,48 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate('/login')}
-        className="mb-12 px-8 py-4 rounded-xl bg-primary text-white font-bold text-xl shadow-lg hover:bg-primary-dark transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary/30"
+        className="mb-16 px-8 py-4 rounded-xl bg-primary text-white font-bold text-xl shadow-lg hover:bg-primary-dark transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary/30"
+        style={{ boxShadow: '0 4px 16px 0 rgba(37,99,235,0.10)' }}
       >
         Get Started
       </button>
 
-      {/* Feature Cards */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.03] transition-all duration-300">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
+      {/* Feature Cards Section with light background */}
+      <div className="w-full flex justify-center mb-12">
+        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#f7f9fd] rounded-2xl py-10 px-2 md:px-8">
+          {/* Card 1 */}
+          <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center border-t-4 border-[#2563EB] transition-all duration-300" style={{ boxShadow: '0 4px 24px 0 rgba(37,99,235,0.07)' }}>
+            <div className="w-20 h-20 bg-[#e8edfa] rounded-full flex items-center justify-center mb-4">
+              <svg width="44" height="44" fill="none" viewBox="0 0 24 24"><circle cx="22" cy="22" r="22" fill="none"/><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round"/></svg>
+            </div>
+            <h3 className="font-bold text-[#2563EB] mb-2 text-lg font-montserrat">Log Your Hours</h3>
+            <p className="text-gray-600 text-sm font-inter text-center">Submit hours easily. All submissions stored securely.</p>
           </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat">Log Your Hours</h3>
-          <p className="text-gray-600 text-sm font-inter text-center">Submit hours easily. All submissions stored securely.</p>
-        </div>
-        <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center border-t-4 border-accent hover:shadow-2xl hover:scale-[1.03] transition-all duration-300">
-          <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round"/></svg>
+          {/* Card 2 (middle, yellow underline) */}
+          <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center border-t-4 border-[#FBBF24] transition-all duration-300 relative" style={{ boxShadow: '0 4px 24px 0 rgba(251,191,36,0.07)' }}>
+            <div className="w-20 h-20 bg-[#fdf6e3] rounded-full flex items-center justify-center mb-4">
+              <svg width="44" height="44" fill="none" viewBox="0 0 24 24"><circle cx="22" cy="22" r="22" fill="none"/><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round"/></svg>
+            </div>
+            <h3 className="font-bold text-[#2563EB] mb-2 text-lg font-montserrat relative">
+              Track Progress
+              <span className="block w-10 h-1 bg-[#FBBF24] rounded-full mx-auto mt-1"></span>
+            </h3>
+            <p className="text-gray-600 text-sm font-inter text-center">View total hours and history. Stay on top of requirements.</p>
           </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat">Track Progress</h3>
-          <p className="text-gray-600 text-sm font-inter text-center">View total hours and history. Stay on top of requirements.</p>
-        </div>
-        <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center border-t-4 border-primary-dark hover:shadow-2xl hover:scale-[1.03] transition-all duration-300">
-          <div className="w-16 h-16 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="36" height="36" fill="none" viewBox="0 0 24 24"><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round"/></svg>
+          {/* Card 3 */}
+          <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center border-t-4 border-[#2563EB] transition-all duration-300" style={{ boxShadow: '0 4px 24px 0 rgba(37,99,235,0.07)' }}>
+            <div className="w-20 h-20 bg-[#e8edfa] rounded-full flex items-center justify-center mb-4">
+              <svg width="44" height="44" fill="none" viewBox="0 0 24 24"><circle cx="22" cy="22" r="22" fill="none"/><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#2563EB" strokeWidth="2.5" strokeLinejoin="round"/></svg>
+            </div>
+            <h3 className="font-bold text-[#2563EB] mb-2 text-lg font-montserrat">Get Recognized</h3>
+            <p className="text-gray-600 text-sm font-inter text-center">Earn recognition for service and leadership. Your impact matters!</p>
           </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat">Get Recognized</h3>
-          <p className="text-gray-600 text-sm font-inter text-center">Earn recognition for service and leadership. Your impact matters!</p>
         </div>
       </div>
 
       {/* Contact Section */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full text-center mt-2 border-t-4 border-primary-dark">
-        <h3 className="font-bold text-primary-dark mb-2 font-montserrat">Need Help?</h3>
+      <div className="bg-white rounded-2xl shadow-md p-6 max-w-md w-full text-center mt-2 border-t-4 border-[#2563EB]" style={{ boxShadow: '0 4px 16px 0 rgba(37,99,235,0.10)' }}>
+        <h3 className="font-bold text-[#2563EB] mb-2 font-montserrat">Need Help?</h3>
         <p className="text-gray-700 text-base font-inter">
           Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
         </p>
