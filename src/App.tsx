@@ -1688,8 +1688,9 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
 
 function Footer() {
   return (
-    <footer className="w-full py-4 bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-center text-white font-semibold mt-12">
-      2025 Dhriti Erusalagandi | Developer & Designer
+    <footer className="bg-primary text-white text-center py-4">
+      <div>© 2025 Dhriti Erusalagandi | Developer & Designer</div>
+      <div className="text-xs mt-1">Not affiliated with National Junior Honor Society. For official info, visit <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>.</div>
     </footer>
   );
 }
