@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "^2.50.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.3.1",
+    "dotenv": "^17.2.0",
     "framer-motion": "^12.23.0",
     "react": "^18.3.1",
     "react-datepicker": "^4.25.0",
