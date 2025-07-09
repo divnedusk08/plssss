@@ -1732,11 +1732,11 @@ export default function WrappedApp() {
               direction="diagonal"
               speed={0.5}
               squareSize={40}
-              borderColor="#e5e7eb" // Light gray border for subtle effect
-              hoverFillColor="#d1d5db" // Light gray hover for subtle effect
+              borderColor="#3b82f6" // Blue border for visibility
+              hoverFillColor="#1d4ed8" // Darker blue for hover effect
             />
-            {/* Content with white background overlay */}
-            <div className="relative z-10 flex flex-col min-h-screen bg-white/95">
+            {/* Content with semi-transparent white background overlay */}
+            <div className="relative z-10 flex flex-col min-h-screen bg-white/90">
               <Header />
               <main className="flex-grow fade-in">
                 <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
