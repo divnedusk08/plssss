@@ -71,27 +71,22 @@ function Home() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
       {/* Logo and Title */}
-      <div className="flex flex-col items-center mb-10 mt-20 fade-in">
-        <div className="relative mb-6">
-          <svg width="140" height="140" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
+      <div className="flex flex-col items-center mb-6 mt-16 fade-in">
+        <div className="relative">
+          <svg width="120" height="120" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
             <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
             <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
             <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
           </svg>
-          <div className="absolute inset-0 animate-ping-slow opacity-20">
-            <svg width="140" height="140" viewBox="0 0 64 64" fill="none">
-              <circle cx="32" cy="32" r="32" fill="#FBBF24"/>
-            </svg>
-          </div>
         </div>
-        <h1 className="text-6xl font-extrabold text-primary-dark font-montserrat mt-2 mb-2 drop-shadow">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-2xl font-montserrat mb-4">National Junior Honor Society</div>
+        <h1 className="text-6xl font-black text-primary-dark font-montserrat mt-4 mb-2 drop-shadow-lg">HourTrackr NJHS</h1>
+        <div className="text-blue-900 text-2xl font-montserrat font-medium mb-4">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
       <div className="max-w-xl text-center mb-10 fade-in">
-        <p className="text-3xl text-gray-800 font-montserrat mb-2 text-hover-effect">
+        <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
           Log and track your NJHS volunteer hours in one place.
         </p>
       </div>
@@ -99,7 +94,7 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate('/login')}
-        className="mb-16 px-10 py-5 rounded-xl bg-primary text-white font-bold text-2xl hover:bg-primary-dark transition glow-on-hover shadow-lg"
+        className="mb-16 px-10 py-4 rounded-xl bg-primary text-white font-bold text-2xl shadow-lg hover:bg-primary-dark transition glow-on-hover"
       >
         Get Started
       </button>
