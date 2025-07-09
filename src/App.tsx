@@ -71,22 +71,22 @@ function Home() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen px-4 py-4 bg-white">
       {/* Logo and Title */}
-      <div className="flex flex-col items-center mb-8 mt-16 fade-in">
-        <div className="relative mb-4">
-          <svg width="96" height="96" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
-            <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
+      <div className="flex flex-col items-center mb-6 mt-10 fade-in">
+        <div className="mb-4">
+          <svg width="90" height="90" viewBox="0 0 64 64" fill="none" className="" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="32" fill="#FBBF24" />
             <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
             <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
+            <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
           </svg>
         </div>
-        <h1 className="text-5xl font-extrabold text-primary-dark font-montserrat mb-1 drop-shadow">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-xl font-montserrat mb-2">National Junior Honor Society</div>
+        <h1 className="text-5xl font-extrabold text-[#2341a0] font-montserrat mb-1 tracking-tight">HourTrackr NJHS</h1>
+        <div className="text-[#3b4a7b] text-lg font-medium font-montserrat mb-2">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
-      <div className="max-w-xl text-center mb-12 fade-in">
-        <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
+      <div className="max-w-xl text-center mb-8 fade-in">
+        <p className="text-xl text-gray-700 font-inter mb-2">
           Log and track your NJHS volunteer hours in one place.
         </p>
       </div>
@@ -94,57 +94,62 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate('/login')}
-        className="mb-16 px-8 py-4 rounded-xl bg-primary text-white font-bold text-xl shadow-lg hover:bg-primary-dark transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary/30"
-        style={{ boxShadow: '0 4px 16px 0 rgba(37,99,235,0.10)' }}
+        className="mb-14 px-8 py-3 rounded-lg bg-[#2341a0] text-white font-bold text-xl shadow-[0_4px_16px_rgba(35,65,160,0.15)] hover:bg-[#1d357e] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#2341a0]/30"
+        style={{ boxShadow: '0 4px 16px rgba(35,65,160,0.15)' }}
       >
         Get Started
       </button>
 
-      {/* Feature Cards Section with light background */}
-      <div className="w-full flex justify-center mb-12">
-        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#f7f9fd] rounded-2xl py-10 px-2 md:px-8">
-          {/* Card 1 */}
-          <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center border-t-4 border-[#2563EB] transition-all duration-300" style={{ boxShadow: '0 4px 24px 0 rgba(37,99,235,0.07)' }}>
-            <div className="w-20 h-20 bg-[#e8edfa] rounded-full flex items-center justify-center mb-4">
-              <svg width="44" height="44" fill="none" viewBox="0 0 24 24"><circle cx="22" cy="22" r="22" fill="none"/><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round"/></svg>
-            </div>
-            <h3 className="font-bold text-[#2563EB] mb-2 text-lg font-montserrat">Log Your Hours</h3>
-            <p className="text-gray-600 text-sm font-inter text-center">Submit hours easily. All submissions stored securely.</p>
+      {/* Feature Cards */}
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* Log Your Hours */}
+        <div className="bg-white rounded-2xl shadow-lg p-7 flex flex-col items-center border-t-4 border-[#2341a0] min-h-[220px]">
+          <div className="w-16 h-16 bg-[#2341a0]/10 rounded-full flex items-center justify-center mb-4">
+            <svg width="38" height="38" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="12" fill="#f3f6fd" />
+              <path d="M12 6v12M6 12h12" stroke="#2341a0" strokeWidth="2.2" strokeLinecap="round"/>
+            </svg>
           </div>
-          {/* Card 2 (middle, yellow underline) */}
-          <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center border-t-4 border-[#FBBF24] transition-all duration-300 relative" style={{ boxShadow: '0 4px 24px 0 rgba(251,191,36,0.07)' }}>
-            <div className="w-20 h-20 bg-[#fdf6e3] rounded-full flex items-center justify-center mb-4">
-              <svg width="44" height="44" fill="none" viewBox="0 0 24 24"><circle cx="22" cy="22" r="22" fill="none"/><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2.5" strokeLinecap="round"/></svg>
-            </div>
-            <h3 className="font-bold text-[#2563EB] mb-2 text-lg font-montserrat relative">
-              Track Progress
-              <span className="block w-10 h-1 bg-[#FBBF24] rounded-full mx-auto mt-1"></span>
-            </h3>
-            <p className="text-gray-600 text-sm font-inter text-center">View total hours and history. Stay on top of requirements.</p>
+          <h3 className="font-bold text-[#2341a0] mb-1 text-lg font-montserrat">Log Your Hours</h3>
+          <p className="text-gray-600 text-sm font-inter text-center">Submit hours easily. All submissions stored securely.</p>
+        </div>
+        {/* Track Progress */}
+        <div className="bg-white rounded-2xl shadow-lg p-7 flex flex-col items-center border-t-4 border-[#fbbf24] min-h-[220px]">
+          <div className="w-16 h-16 bg-[#fbbf24]/20 rounded-full flex items-center justify-center mb-4">
+            <svg width="38" height="38" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="12" fill="#fdf7e3" />
+              <path d="M4 16l6-6 4 4 6-6" stroke="#fbbf24" strokeWidth="2.2" strokeLinecap="round"/>
+              <path d="M8 12h2v2" stroke="#fbbf24" strokeWidth="2.2" strokeLinecap="round"/>
+            </svg>
           </div>
-          {/* Card 3 */}
-          <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center border-t-4 border-[#2563EB] transition-all duration-300" style={{ boxShadow: '0 4px 24px 0 rgba(37,99,235,0.07)' }}>
-            <div className="w-20 h-20 bg-[#e8edfa] rounded-full flex items-center justify-center mb-4">
-              <svg width="44" height="44" fill="none" viewBox="0 0 24 24"><circle cx="22" cy="22" r="22" fill="none"/><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#2563EB" strokeWidth="2.5" strokeLinejoin="round"/></svg>
-            </div>
-            <h3 className="font-bold text-[#2563EB] mb-2 text-lg font-montserrat">Get Recognized</h3>
-            <p className="text-gray-600 text-sm font-inter text-center">Earn recognition for service and leadership. Your impact matters!</p>
+          <h3 className="font-bold text-[#2341a0] mb-1 text-lg font-montserrat">Track Progress</h3>
+          <p className="text-gray-600 text-sm font-inter text-center">View total hours and history. Stay on top of requirements.</p>
+        </div>
+        {/* Get Recognized */}
+        <div className="bg-white rounded-2xl shadow-lg p-7 flex flex-col items-center border-t-4 border-[#2341a0] min-h-[220px]">
+          <div className="w-16 h-16 bg-[#2341a0]/10 rounded-full flex items-center justify-center mb-4">
+            <svg width="38" height="38" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="12" fill="#f3f6fd" />
+              <path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#2341a0" strokeWidth="2.2" strokeLinejoin="round"/>
+            </svg>
           </div>
+          <h3 className="font-bold text-[#2341a0] mb-1 text-lg font-montserrat">Get Recognized</h3>
+          <p className="text-gray-600 text-sm font-inter text-center">Earn recognition for service and leadership. Your impact matters!</p>
         </div>
       </div>
 
       {/* Contact Section */}
-      <div className="bg-white rounded-2xl shadow-md p-6 max-w-md w-full text-center mt-2 border-t-4 border-[#2563EB]" style={{ boxShadow: '0 4px 16px 0 rgba(37,99,235,0.10)' }}>
-        <h3 className="font-bold text-[#2563EB] mb-2 font-montserrat">Need Help?</h3>
+      <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full text-center mt-2 border-t-4 border-[#2341a0]">
+        <h3 className="font-bold text-[#2341a0] mb-2 font-montserrat text-lg">Need Help?</h3>
         <p className="text-gray-700 text-base font-inter">
-          Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
+          Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-[#2341a0] underline hover:text-[#1d357e] transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
         </p>
       </div>
 
       {/* Not affiliated notice and copyright */}
       <div className="w-full flex justify-center">
         <div className="text-gray-400 text-xs mt-8 mb-4 text-center max-w-lg flex flex-wrap items-center justify-center gap-2">
-          <span>Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a></span>
+          <span>Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-[#fbbf24]">njhs.us</a></span>
           <span className="hidden sm:inline">|</span>
           <span>© {new Date().getFullYear()} HourTrackr NJHS.</span>
         </div>
