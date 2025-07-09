@@ -23,11 +23,11 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   squareSize = 4,
   gridGap = 6,
   flickerChance = 0.3,
-  color = "rgb(0, 0, 0)",
+  color = "rgb(128, 128, 128)", // Light grey default
   width,
   height,
   className,
-  maxOpacity = 0.3,
+  maxOpacity = 0.4, // Increased opacity for better visibility
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -114,10 +114,10 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
           
           // Apply hover effect
           if (isHovered) {
-            opacity = Math.min(opacity + 0.4, 1.0); // Increase opacity on hover
-            ctx.fillStyle = `rgba(59, 130, 246, ${opacity})`; // Blue color on hover
+            opacity = Math.min(opacity + 0.3, 1.0); // Increase opacity on hover
+            ctx.fillStyle = `rgba(64, 64, 64, ${opacity})`; // Dark grey on hover
           } else {
-            ctx.fillStyle = `${memoizedColor}${opacity})`;
+            ctx.fillStyle = `rgba(192, 192, 192, ${opacity})`; // Light grey by default
           }
           
           ctx.fillRect(squareX, squareY, squareWidth, squareHeight);
