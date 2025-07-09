@@ -205,6 +205,12 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
     setError('');
     setIsSubmitting(true);
 
+    if (!firstName.trim() || !lastName.trim()) {
+      setError('Please enter your first name and last name.');
+      setIsSubmitting(false);
+      return;
+    }
+
     const hours = calcHours();
     if (!hours || isNaN(Number(hours))) {
       setError('Please enter valid start and end times.');
@@ -303,7 +309,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              readOnly // First name is pre-filled from user metadata
+              required
             />
           </div>
 
@@ -316,7 +322,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              readOnly // Last name is pre-filled from user metadata
+              required
             />
           </div>
 
