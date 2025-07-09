@@ -1100,7 +1100,7 @@ function Login() {
   const [authLoading, setAuthLoading] = React.useState(false);
   const [mode, setMode] = React.useState<'signin' | 'signup'>('signin');
 
-  if (user) return <Navigate to="/dashboard" />;
+  if (user) return <Navigate to="/log" />;
 
   // Email/password sign in
   const handleSignIn = async (e: React.FormEvent) => {
