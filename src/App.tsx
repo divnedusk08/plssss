@@ -155,6 +155,9 @@ function Home() {
         <p className="text-gray-700 text-base font-inter text-hover-effect">
           Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
         </p>
+        <div className="text-xs text-gray-400 mt-2">
+          Not affiliated with National Junior Honor Society. For official info, visit <a href="https://www.njhs.us/" className="underline hover:text-primary">njhs.us</a>.
+        </div>
       </div>
     </div>
   );
