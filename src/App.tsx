@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import { Squares } from "@/components/ui/squares-background";
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -1726,14 +1726,14 @@ export default function WrappedApp() {
       ) : (
         <Router>
           <div className="flex flex-col min-h-screen relative">
-            {/* FlickeringGrid Background */}
-            <FlickeringGrid
+            {/* Squares Background */}
+            <Squares
               className="z-0 absolute inset-0 size-full"
-              squareSize={4}
-              gridGap={6}
-              color="#6B7280" // Gray color that matches your scheme
-              maxOpacity={0.3} // Subtle opacity to keep content readable
-              flickerChance={0.1}
+              direction="diagonal"
+              speed={0.5}
+              squareSize={40}
+              borderColor="#e5e7eb" // Light gray border for subtle effect
+              hoverFillColor="#d1d5db" // Light gray hover for subtle effect
             />
             {/* Content with white background overlay */}
             <div className="relative z-10 flex flex-col min-h-screen bg-white/95">
