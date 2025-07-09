@@ -1695,6 +1695,7 @@ function Footer() {
     <footer className="bg-primary text-white text-center py-4">
       <div>© 2025 HourTrackr NJHS. All rights reserved.</div>
       <div className="text-xs mt-1">Not affiliated with National Junior Honor Society. For official info, visit <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>.</div>
+      <div className="text-xs mt-2">2025 Dhriti Erusalagandi | Developer & Designer</div>
     </footer>
   );
 }
