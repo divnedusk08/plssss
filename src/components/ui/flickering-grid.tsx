@@ -76,34 +76,37 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     now: number
   ) => {
     ctx.clearRect(0, 0, width, height);
+    // Water-like horizontal shift
+    const shift = Math.sin(now * 0.0002) * 10; // Slowly oscillate left/right
     let rippleRadius = 0;
     let rippleAlpha = 0;
     if (ripplePos.current && rippleStartTime.current !== null) {
-      rippleRadius = Math.min(800, (now - rippleStartTime.current) * 1.2); // Expands faster and further
-      rippleAlpha = Math.max(0, 1 - (now - rippleStartTime.current) / 2000); // Lasts 2 seconds
+      rippleRadius = Math.min(800, (now - rippleStartTime.current) * 1.2);
+      rippleAlpha = Math.max(0, 1 - (now - rippleStartTime.current) / 2000);
     }
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
-        const squareX = i * (squareSize + gridGap) * dpr;
+        // Add shift for water effect
+        const squareX = i * (squareSize + gridGap) * dpr + shift;
         const squareY = j * (squareSize + gridGap) * dpr;
         const squareWidth = squareSize * dpr;
         const squareHeight = squareSize * dpr;
-        let opacity = squares[i * rows + j];
+        // Gentle flicker
+        let opacity = 0.18 + 0.12 * Math.sin(now * 0.001 + i * 0.3 + j * 0.5);
         // Ripple effect
         if (ripplePos.current && rippleStartTime.current !== null) {
           const dx = ripplePos.current.x * dpr - (squareX + squareWidth / 2);
           const dy = ripplePos.current.y * dpr - (squareY + squareHeight / 2);
           const dist = Math.sqrt(dx * dx + dy * dy);
           const waveFront = Math.abs(dist - rippleRadius);
-          if (waveFront < 60) { // Wider wavefront
-            // Animate opacity and color as the wave passes
+          if (waveFront < 60) {
             opacity = 0.9 * rippleAlpha * (1 - waveFront / 60) + opacity * (waveFront / 60);
-            ctx.fillStyle = `rgba(80, 120, 255, ${opacity})`; // Strong blue ripple
+            ctx.fillStyle = `rgba(80, 120, 255, ${opacity})`;
           } else {
-            ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`; // Normal grid
+            ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`;
           }
         } else {
-          ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`; // Normal grid
+          ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`;
         }
         ctx.fillRect(squareX, squareY, squareWidth, squareHeight);
       }
