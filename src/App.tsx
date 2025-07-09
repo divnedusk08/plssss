@@ -19,8 +19,8 @@ function SplashScreen({ className }: { className?: string }) {
           <path d="M50 30 C48 36, 54 38, 50 46 C54 42, 60 38, 50 30 Z" fill="#FBBF24" />
         </svg>
       </div>
-      <h1 className="text-5xl font-extrabold font-montserrat text-white drop-shadow-xl tracking-tight">HourTrackr NJHS</h1>
-      <div className="mt-2 text-xl font-inter text-white/80 tracking-wide font-medium drop-shadow-sm">Service. Leadership. Citizenship. Character. Scholarship.</div>
+      <h1 className="text-4xl font-extrabold font-inter text-accent drop-shadow-lg text-hover-effect">HourTrackr NJHS</h1>
+      <div className="mt-2 text-2xl font-montserrat text-[#FBBF24]">Service. Leadership. Citizenship. Character. Scholarship.</div>
     </div>
   );
 }
