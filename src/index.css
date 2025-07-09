@@ -1,3 +1,7 @@
+html {
+  font-size: 12.8px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -260,6 +264,4 @@
 
 .glow-on-hover:hover::before {
   transform: scale(1);
-}
-
-/* ... existing code ... */ 
+} 
