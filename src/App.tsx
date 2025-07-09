@@ -85,7 +85,7 @@ function Home() {
   }, []);
 
   return (
-    <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 bg-white">
+    <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 pt-8 pb-2 bg-white">
       {/* Removed animated-gradient-bg, parallax-container, spotlight-container, and gray/gradient backgrounds */}
       {/* Removed <div className="spotlight-overlay"></div> */}
       {/* Removed decorative blobs */}
@@ -156,11 +156,6 @@ function Home() {
           Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
         </p>
       </div>
-
-      {/* Simple Footer */}
-      <footer className="w-full text-center text-gray-400 text-xs mt-12 mb-2 fade-in text-hover-effect">
-        © {new Date().getFullYear()} HourTrackr NJHS. Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>
-      </footer>
     </div>
   );
 }
