@@ -1418,8 +1418,6 @@ function ContactUs() {
 
 function Profile() {
   const { user } = useAuth();
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
   const [profilePicture, setProfilePicture] = React.useState('');
   const [isEditing, setIsEditing] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
@@ -1428,8 +1426,6 @@ function Profile() {
 
   React.useEffect(() => {
     if (user) {
-      setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
-      setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
       setProfilePicture(user.user_metadata?.avatar_url || '');
     }
   }, [user]);
@@ -1500,8 +1496,7 @@ function Profile() {
       // Update user metadata
       const { error: updateError } = await supabase.auth.updateUser({
         data: { 
-          avatar_url: publicUrl,
-          full_name: `${firstName} ${lastName}`.trim()
+          avatar_url: publicUrl
         }
       });
 
@@ -1518,27 +1513,7 @@ function Profile() {
     }
   };
 
-  const handleSaveProfile = async () => {
-    if (!firstName.trim() || !lastName.trim()) {
-      setError('First name and last name are required');
-      return;
-    }
 
-    try {
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: { 
-          full_name: `${firstName.trim()} ${lastName.trim()}`,
-          avatar_url: profilePicture // Preserve the avatar URL
-        }
-      });
-
-      if (updateError) throw updateError;
-      setIsEditing(false);
-      setError('');
-    } catch (error) {
-      setError('Failed to update profile. Please try again.');
-    }
-  };
 
   if (!user) return <Navigate to="/login" />;
 
@@ -1565,12 +1540,12 @@ function Profile() {
                 alt="Profile" 
                 className="w-full h-full object-cover"
                 onError={(e) => { 
-                  e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName + ' ' + lastName)}&background=2563EB&color=fff&size=128`;
+                  e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=2563EB&color=fff&size=128`;
                 }}
               />
             ) : (
               <img 
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(firstName + ' ' + lastName)}&background=2563EB&color=fff&size=128`} 
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=2563EB&color=fff&size=128`} 
                 alt="Default Profile" 
                 className="w-full h-full object-cover"
               />
@@ -1591,26 +1566,6 @@ function Profile() {
           </div>
           {/* Profile Information */}
           <div className="w-full space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-primary-dark mb-1">First Name</label>
-                <input
-                  value={firstName}
-                  onChange={e => setFirstName(e.target.value)}
-                  disabled={!isEditing}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-primary-dark mb-1">Last Name</label>
-                <input
-                  value={lastName}
-                  onChange={e => setLastName(e.target.value)}
-                  disabled={!isEditing}
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
-                />
-              </div>
-            </div>
             <div>
               <label className="block text-sm font-medium text-primary-dark mb-1">Email</label>
               <input
@@ -1622,35 +1577,12 @@ function Profile() {
           </div>
           {/* Action Buttons */}
           <div className="flex gap-4">
-            {isEditing ? (
-              <>
-                <button
-                  onClick={handleSaveProfile}
-                  className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-                >
-                  Save Changes
-                </button>
-                <button
-                  onClick={() => {
-                    setIsEditing(false);
-                    setError('');
-                    // Reset to original values
-                    setFirstName(user.user_metadata?.full_name?.split(' ')[0] || '');
-                    setLastName(user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '');
-                  }}
-                  className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-              >
-                Edit Profile
-              </button>
-            )}
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+            >
+              {isEditing ? 'Cancel' : 'Edit Profile Picture'}
+            </button>
           </div>
         </div>
       </div>
