@@ -4,6 +4,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Squares } from "@/components/ui/squares-background";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
+import { BackgroundToggle } from "@/components/ui/background-toggle";
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -1700,6 +1702,7 @@ export default function WrappedApp() {
   const [showSplash, setShowSplash] = React.useState(true);
   const [isFadingOut, setIsFadingOut] = React.useState(false);
   const [dashboardRefreshKey, setDashboardRefreshKey] = React.useState(0);
+  const [currentBackground, setCurrentBackground] = React.useState<'squares' | 'flickering'>('squares');
 
   React.useEffect(() => {
     const splashDuration = 2000; // Adjusted duration for a longer splash screen animation
@@ -1726,15 +1729,36 @@ export default function WrappedApp() {
       ) : (
         <Router>
           <div className="flex flex-col min-h-screen relative">
-            {/* Squares Background */}
-            <Squares
-              className="z-0 absolute inset-0 size-full"
-              direction="diagonal"
-              speed={0.5}
-              squareSize={40}
-              borderColor="#3b82f6" // Blue border for visibility
-              hoverFillColor="#1d4ed8" // Darker blue for hover effect
+            {/* Background Toggle */}
+            <BackgroundToggle 
+              currentBackground={currentBackground}
+              onBackgroundChange={setCurrentBackground}
             />
+            
+            {/* Squares Background */}
+            {currentBackground === 'squares' && (
+              <Squares
+                className="z-0 absolute inset-0 size-full"
+                direction="diagonal"
+                speed={0.5}
+                squareSize={40}
+                borderColor="#3b82f6" // Blue border for visibility
+                hoverFillColor="#1d4ed8" // Darker blue for hover effect
+              />
+            )}
+            
+            {/* FlickeringGrid Background */}
+            {currentBackground === 'flickering' && (
+              <FlickeringGrid
+                className="z-0 absolute inset-0 size-full"
+                squareSize={4}
+                gridGap={6}
+                color="#3b82f6" // Blue color to match Squares
+                maxOpacity={0.4} // Slightly more visible
+                flickerChance={0.2} // Moderate flicker rate
+              />
+            )}
+            
             {/* Content with semi-transparent white background overlay */}
             <div className="relative z-10 flex flex-col min-h-screen bg-white/90">
               <Header />
