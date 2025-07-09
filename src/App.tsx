@@ -41,11 +41,9 @@ function Header() {
           <span className="font-montserrat text-2xl font-extrabold text-white drop-shadow">HourTrackr NJHS</span>
         </div>
         <div className="flex gap-4 items-center font-semibold">
-          {user && <Link to="/" className="font-bold text-white text-fill-hover-yellow">Home</Link>}
-          {user && <Link to="/log" className="font-bold text-white text-fill-hover-yellow">Log Hours</Link>}
+          
           {user && <Link to="/dashboard" className="font-bold text-white text-fill-hover-yellow">Dashboard</Link>}
           {user && <Link to="/profile" className="font-bold text-white text-fill-hover-yellow">Profile</Link>}
-          <Link to="/contact" className="font-bold text-white text-fill-hover-yellow">Contact Us</Link>
           {user && isSuperAdmin && <Link to="/admin" className="font-bold text-white text-fill-hover-yellow">Admin</Link>}
           {user ? (
             <button onClick={signOut} className="ml-4 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition">Sign out</button>
@@ -1685,7 +1683,7 @@ function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboa
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-primary-light text-xl font-semibold font-montserrat text-primary-dark">Loading...</div>;
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      
       <Route path="/login" element={<Login />} />
       <Route path="/log" element={<LogHours setDashboardRefreshKey={setDashboardRefreshKey} />} />
       <Route path="/dashboard" element={<Dashboard dashboardRefreshKey={dashboardRefreshKey} />} />
