@@ -84,6 +84,13 @@ function Home() {
     };
   }, []);
 
+  // Redirect logged-in users to /log
+  React.useEffect(() => {
+    if (user) {
+      navigate('/log', { replace: true });
+    }
+  }, [user, navigate]);
+
   return (
     <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
       {/* Removed animated-gradient-bg, parallax-container, spotlight-container, and gray/gradient backgrounds */}
