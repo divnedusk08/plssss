@@ -62,7 +62,6 @@ function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect logged-in users to /log
   React.useEffect(() => {
     if (user) {
       navigate('/log', { replace: true });
