@@ -71,6 +71,7 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     height: number,
     cols: number,
     rows: number,
+    squares: Float32Array,
     dpr: number,
     now: number
   ) => {
@@ -90,8 +91,8 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
         const squareY = j * (squareSize + gridGap) * dpr;
         const squareWidth = squareSize * dpr;
         const squareHeight = squareSize * dpr;
-        // Gentle flicker
-        let opacity = 0.18 + 0.12 * Math.sin(now * 0.001 + i * 0.3 + j * 0.5);
+        // Use flickering value from squares array
+        let opacity = squares[i * rows + j];
         // Ripple effect
         if (ripplePos.current && rippleStartTime.current !== null) {
           const dx = ripplePos.current.x * dpr - (squareX + squareWidth / 2);
@@ -149,6 +150,7 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
         canvas.height,
         gridParams.cols,
         gridParams.rows,
+        gridParams.squares, // <-- use the flickering squares
         gridParams.dpr,
         time
       );
