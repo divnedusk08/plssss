@@ -85,13 +85,13 @@ function Home() {
   }, []);
 
   return (
-    <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 bg-white">
+    <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
       {/* Removed animated-gradient-bg, parallax-container, spotlight-container, and gray/gradient backgrounds */}
       {/* Removed <div className="spotlight-overlay"></div> */}
       {/* Removed decorative blobs */}
       
       {/* Logo and Title */}
-      <div className="flex flex-col items-center mb-6 fade-in">
+      <div className="flex flex-col items-center mb-4 fade-in">
         <div className="relative">
           <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
@@ -105,13 +105,13 @@ function Home() {
             </svg>
           </div>
         </div>
-        <h1 className="text-5xl font-extrabold text-primary-dark font-montserrat mt-4 mb-2 drop-shadow">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-xl font-montserrat mb-4">National Junior Honor Society</div>
+        <h1 className="text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow">HourTrackr NJHS</h1>
+        <div className="text-blue-900 text-xl font-montserrat mb-2">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
-      <div className="max-w-xl text-center mb-8 fade-in">
-        <p className="text-2xl text-gray-800 font-montserrat mb-4 text-hover-effect">
+      <div className="max-w-xl text-center mb-4 fade-in">
+        <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
           Log and track your NJHS volunteer hours in one place.
         </p>
       </div>
@@ -119,13 +119,13 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate(user ? '/log' : '/login')}
-        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
+        className="mb-4 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
       >
         Get Started
       </button>
 
       {/* How it works section */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.2s' } as React.CSSProperties}>
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
@@ -150,7 +150,7 @@ function Home() {
       </div>
 
       {/* Contact Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-4 border-t-4 border-primary-dark fade-in">
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-2 border-t-4 border-primary-dark fade-in">
         <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
         <p className="text-gray-700 text-base font-inter text-hover-effect">
           Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
@@ -158,7 +158,7 @@ function Home() {
       </div>
 
       {/* Simple Footer */}
-      <footer className="w-full text-center text-gray-400 text-xs mt-12 mb-2 fade-in text-hover-effect">
+      <footer className="w-full text-center text-gray-400 text-xs mt-2 mb-0 fade-in text-hover-effect">
         © {new Date().getFullYear()} HourTrackr NJHS. Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>
       </footer>
     </div>
