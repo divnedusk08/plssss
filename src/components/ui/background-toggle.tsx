@@ -1,7 +1,3 @@
-import React from 'react';
-import { Squares } from "@/components/ui/squares-background";
-import { FlickeringGrid } from "@/components/ui/flickering-grid";
-
 interface BackgroundToggleProps {
   currentBackground: 'squares' | 'flickering';
   onBackgroundChange: (background: 'squares' | 'flickering') => void;
