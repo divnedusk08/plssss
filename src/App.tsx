@@ -157,9 +157,16 @@ function Home() {
         </p>
       </div>
 
+      {/* Not affiliated notice - centered between box and blue footer */}
+      <div className="w-full flex justify-center">
+        <div className="text-gray-400 text-xs mt-8 mb-4 text-center max-w-lg">
+          Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>
+        </div>
+      </div>
+
       {/* Simple Footer */}
       <footer className="w-full text-center text-gray-400 text-xs mt-2 mb-0 fade-in text-hover-effect">
-        © {new Date().getFullYear()} HourTrackr NJHS. Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a>
+        © {new Date().getFullYear()} HourTrackr NJHS.
       </footer>
     </div>
   );
