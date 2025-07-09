@@ -56,8 +56,8 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   const updateSquares = useCallback(
     (squares: Float32Array, deltaTime: number) => {
       for (let i = 0; i < squares.length; i++) {
-        if (Math.random() < flickerChance * deltaTime) {
-          squares[i] = Math.random() * maxOpacity;
+        if (Math.random() < flickerChance * deltaTime * 0.5) { // Reduced flicker rate for smoother effect
+          squares[i] = Math.random() * maxOpacity * 0.8; // Slightly lower max opacity
         }
       }
     },
@@ -75,10 +75,8 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       dpr: number,
     ) => {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = "transparent";
-      ctx.fillRect(0, 0, width, height);
 
-      const currentTime = Date.now();
+      const currentTime = Date.now() * 0.001; // Convert to seconds for smoother animation
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -95,34 +93,32 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
           const distance = Math.sqrt((mouseX - centerX) ** 2 + (mouseY - centerY) ** 2);
           
           let opacity = squares[i * rows + j];
-          let flickerIntensity = 1;
           
-          // Apply ripple effect if mouse is near
-          if (mousePosition.x >= 0 && mousePosition.y >= 0 && distance < 200 * dpr) {
-            const rippleDistance = distance / (200 * dpr);
+          // Apply ripple effect if mouse is near (smoother calculation)
+          if (mousePosition.x >= 0 && mousePosition.y >= 0 && distance < 150 * dpr) {
+            const rippleDistance = distance / (150 * dpr);
             const rippleIntensity = Math.max(0, 1 - rippleDistance);
             
-            // Create wave-like effect
-            const wave = Math.sin(currentTime * 0.01 + distance * 0.01) * 0.5 + 0.5;
+            // Smoother wave-like effect with reduced frequency
+            const wave = Math.sin(currentTime * 2 + distance * 0.005) * 0.3 + 0.7;
             const rippleEffect = rippleIntensity * wave;
             
-            // Increase flickering in ripple area
-            flickerIntensity = 1 + rippleEffect * 3;
-            opacity = Math.min(opacity * flickerIntensity, 0.8);
+            // Increase opacity in ripple area (smoother)
+            opacity = Math.min(opacity + rippleEffect * 0.4, 0.7);
             
-            // Add pulsing effect
-            const pulse = Math.sin(currentTime * 0.005 + distance * 0.02) * 0.3 + 0.7;
+            // Smoother pulsing effect
+            const pulse = Math.sin(currentTime * 1.5 + distance * 0.01) * 0.2 + 0.8;
             opacity *= pulse;
           }
           
-          // Create gradient effect based on distance
+          // Smoother gradient effect based on distance
           const gradientIntensity = mousePosition.x >= 0 && mousePosition.y >= 0 
-            ? Math.max(0, 1 - distance / (300 * dpr))
+            ? Math.max(0, 1 - distance / (200 * dpr))
             : 0;
           
-          // Mix colors for cool effect
-          const baseColor = [240, 240, 240]; // Light grey
-          const accentColor = [180, 200, 255]; // Light blue tint
+          // Mix colors for cool effect (smoother transition)
+          const baseColor = [245, 245, 245]; // Very light grey
+          const accentColor = [200, 220, 255]; // Light blue tint
           
           const r = Math.floor(baseColor[0] * (1 - gradientIntensity) + accentColor[0] * gradientIntensity);
           const g = Math.floor(baseColor[1] * (1 - gradientIntensity) + accentColor[1] * gradientIntensity);

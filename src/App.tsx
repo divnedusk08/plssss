@@ -87,16 +87,6 @@ function Home() {
 
   return (
     <div ref={homeRef} className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-8">
-      {/* FlickeringGrid Background for Home */}
-      <FlickeringGrid
-        className="absolute inset-0 z-0"
-        squareSize={6}
-        gridGap={8}
-        color="rgb(240, 240, 240)" // Much lighter grey
-        maxOpacity={0.3}
-        flickerChance={0.3}
-      />
-      
       {/* Content with semi-transparent background */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full bg-white/90 rounded-2xl p-8 shadow-xl">
         {/* Logo and Title */}
@@ -310,16 +300,6 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center py-10 px-4 relative">
-      {/* FlickeringGrid Background for LogHours */}
-      <FlickeringGrid
-        className="absolute inset-0 z-0"
-        squareSize={6}
-        gridGap={8}
-        color="rgb(240, 240, 240)" // Much lighter grey
-        maxOpacity={0.3}
-        flickerChance={0.3}
-      />
-      
       <div className="relative z-10 w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
 
