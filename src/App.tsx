@@ -91,7 +91,7 @@ function Home() {
       {/* Removed decorative blobs */}
       
       {/* Logo and Title */}
-      <div className="flex flex-col items-center mb-6 mt-24 fade-in">
+      <div className="flex flex-col items-center mb-6 mt-12 fade-in">
         <div className="relative">
           <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
