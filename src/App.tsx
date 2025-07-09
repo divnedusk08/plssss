@@ -1702,7 +1702,7 @@ export default function WrappedApp() {
   const [showSplash, setShowSplash] = React.useState(true);
   const [isFadingOut, setIsFadingOut] = React.useState(false);
   const [dashboardRefreshKey, setDashboardRefreshKey] = React.useState(0);
-  const [currentBackground, setCurrentBackground] = React.useState<'squares' | 'flickering'>('squares');
+  const [currentBackground, setCurrentBackground] = React.useState<'squares' | 'flickering'>('flickering');
 
   React.useEffect(() => {
     const splashDuration = 2000; // Adjusted duration for a longer splash screen animation
@@ -1751,11 +1751,11 @@ export default function WrappedApp() {
             {currentBackground === 'flickering' && (
               <FlickeringGrid
                 className="z-0 absolute inset-0 size-full"
-                squareSize={4}
-                gridGap={6}
-                color="#3b82f6" // Blue color to match Squares
-                maxOpacity={0.4} // Slightly more visible
-                flickerChance={0.2} // Moderate flicker rate
+                squareSize={6}
+                gridGap={8}
+                color="#3b82f6" // Blue color to match theme
+                maxOpacity={0.6} // More visible opacity
+                flickerChance={0.3} // Slightly higher flicker rate for more dynamic effect
               />
             )}
             
