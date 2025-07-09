@@ -71,7 +71,6 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     height: number,
     cols: number,
     rows: number,
-    squares: Float32Array,
     dpr: number,
     now: number
   ) => {
@@ -150,7 +149,6 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
         canvas.height,
         gridParams.cols,
         gridParams.rows,
-        gridParams.squares,
         gridParams.dpr,
         time
       );
