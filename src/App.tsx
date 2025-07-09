@@ -41,7 +41,7 @@ function Header() {
           <span className="font-montserrat text-2xl font-extrabold text-white drop-shadow">HourTrackr NJHS</span>
         </div>
         <div className="flex gap-4 items-center font-semibold">
-          <Link to="/" className="font-bold text-white text-fill-hover-yellow">Home</Link>
+          {user && <Link to="/" className="font-bold text-white text-fill-hover-yellow">Home</Link>}
           {user && <Link to="/log" className="font-bold text-white text-fill-hover-yellow">Log Hours</Link>}
           {user && <Link to="/dashboard" className="font-bold text-white text-fill-hover-yellow">Dashboard</Link>}
           {user && <Link to="/profile" className="font-bold text-white text-fill-hover-yellow">Profile</Link>}
