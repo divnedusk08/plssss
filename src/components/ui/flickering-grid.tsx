@@ -144,8 +144,11 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     let gridParams: ReturnType<typeof setupCanvas>;
 
     const updateCanvasSize = () => {
-      const newWidth = width || container.clientWidth;
-      const newHeight = height || container.clientHeight;
+      let newWidth = width || container.clientWidth;
+      let newHeight = height || container.clientHeight;
+      // Fallback to window size if container is 0
+      if (!newWidth) newWidth = window.innerWidth;
+      if (!newHeight) newHeight = window.innerHeight;
       setCanvasSize({ width: newWidth, height: newHeight });
       gridParams = setupCanvas(canvas, newWidth, newHeight);
     };
@@ -217,7 +220,11 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   }, [setupCanvas, updateSquares, drawGrid, width, height, isInView]);
 
   return (
-    <div ref={containerRef} className={`w-full h-full ${className}`}>
+    <div
+      ref={containerRef}
+      className={`fixed inset-0 min-h-screen min-w-full w-screen h-screen pointer-events-none ${className || ""}`}
+      style={{ zIndex: 0 }}
+    >
       <canvas
         ref={canvasRef}
         className="pointer-events-auto"
@@ -225,6 +232,7 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
           width: canvasSize.width,
           height: canvasSize.height,
           border: '2px solid red', // for debugging
+          display: 'block',
         }}
       />
     </div>
