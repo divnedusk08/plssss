@@ -262,4 +262,7 @@
   transform: scale(1);
 }
 
-/* ... existing code ... */ 
+#root {
+  transform: scale(0.8);
+  transform-origin: top center;
+} 
