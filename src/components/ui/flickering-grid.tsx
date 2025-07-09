@@ -33,6 +33,7 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: -1, y: -1 });
 
   const memoizedColor = useMemo(() => {
     const toRGBA = (color: string) => {
@@ -98,18 +99,32 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-          const opacity = squares[i * rows + j];
-          ctx.fillStyle = `${memoizedColor}${opacity})`;
-          ctx.fillRect(
-            i * (squareSize + gridGap) * dpr,
-            j * (squareSize + gridGap) * dpr,
-            squareSize * dpr,
-            squareSize * dpr,
-          );
+          const squareX = i * (squareSize + gridGap) * dpr;
+          const squareY = j * (squareSize + gridGap) * dpr;
+          const squareWidth = squareSize * dpr;
+          const squareHeight = squareSize * dpr;
+          
+          // Check if mouse is hovering over this square
+          const mouseX = mousePosition.x * dpr;
+          const mouseY = mousePosition.y * dpr;
+          const isHovered = mouseX >= squareX && mouseX <= squareX + squareWidth &&
+                           mouseY >= squareY && mouseY <= squareY + squareHeight;
+          
+          let opacity = squares[i * rows + j];
+          
+          // Apply hover effect
+          if (isHovered) {
+            opacity = Math.min(opacity + 0.4, 1.0); // Increase opacity on hover
+            ctx.fillStyle = `rgba(59, 130, 246, ${opacity})`; // Blue color on hover
+          } else {
+            ctx.fillStyle = `${memoizedColor}${opacity})`;
+          }
+          
+          ctx.fillRect(squareX, squareY, squareWidth, squareHeight);
         }
       }
     },
-    [memoizedColor, squareSize, gridGap],
+    [memoizedColor, squareSize, gridGap, mousePosition],
   );
 
   useEffect(() => {
@@ -167,6 +182,22 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
     intersectionObserver.observe(canvas);
 
+    // Mouse move handler for hover effects
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    };
+
+    const handleMouseLeave = () => {
+      setMousePosition({ x: -1, y: -1 });
+    };
+
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+
     if (isInView) {
       animationFrameId = requestAnimationFrame(animate);
     }
@@ -175,6 +206,8 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [setupCanvas, updateSquares, drawGrid, width, height, isInView]);
 
@@ -182,7 +215,7 @@ const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     <div ref={containerRef} className={`w-full h-full ${className}`}>
       <canvas
         ref={canvasRef}
-        className="pointer-events-none"
+        className="pointer-events-auto"
         style={{
           width: canvasSize.width,
           height: canvasSize.height,
