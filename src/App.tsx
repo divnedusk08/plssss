@@ -73,9 +73,9 @@ function Home() {
   }, [user, navigate]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-8 bg-white">
+    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
       {/* Logo and Title */}
-      <div className="flex flex-col items-center mb-8 mt-20 fade-in">
+      <div className="flex flex-col items-center mb-6 mt-12 fade-in">
         <div className="relative">
           <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
@@ -103,13 +103,13 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate('/login')}
-        className="mb-12 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
+        className="mb-8 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
       >
         Get Started
       </button>
 
       {/* How it works section */}
-      <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.2s' } as React.CSSProperties}>
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
@@ -134,7 +134,7 @@ function Home() {
       </div>
 
       {/* Contact Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-10 border-t-4 border-primary-dark fade-in">
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-6 border-t-4 border-primary-dark fade-in">
         <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
         <p className="text-gray-700 text-base font-inter text-hover-effect">
           Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
@@ -143,7 +143,7 @@ function Home() {
 
       {/* Not affiliated notice and copyright - centered between box and blue footer */}
       <div className="w-full flex justify-center">
-        <div className="text-gray-400 text-xs mt-12 mb-6 text-center max-w-lg flex flex-wrap items-center justify-center gap-2">
+        <div className="text-gray-400 text-xs mt-8 mb-4 text-center max-w-lg flex flex-wrap items-center justify-center gap-2">
           <span>Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a></span>
           <span className="hidden sm:inline">|</span>
           <span>© {new Date().getFullYear()} HourTrackr NJHS.</span>
