@@ -675,7 +675,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
         </div>
       </div>
       {/* Progress Bars for each Six Weeks */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
         {sixWeekPeriods.map((period) => {
           const periodLogs = logs.filter(log => {
             const logDate = new Date(log.date);
@@ -1652,7 +1652,7 @@ export default function WrappedApp() {
         <Router>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1 overflow-auto fade-in bg-white min-h-[120vh]">
+            <main className="flex-1 overflow-auto fade-in bg-white min-h-[105vh]">
               <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
             </main>
             <Footer />
