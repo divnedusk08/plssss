@@ -141,13 +141,13 @@ function Home() {
           Contact NJHS advisors or email
           <span className="flex items-center justify-center gap-2 relative">
             <a
-              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`}
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=dhriti.erusalagandi58@k12.leanderisd.org"
               className="text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer"
               target="_blank"
               rel="noopener noreferrer"
               title="Compose email in Gmail"
             >
-              {email}
+              dhriti.erusalagandi58@k12.leanderisd.org
             </a>
           </span>
         </p>
