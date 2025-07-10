@@ -143,7 +143,7 @@ function Home() {
 
       {/* Not affiliated notice and copyright - centered between box and blue footer */}
       <div className="w-full flex justify-center">
-        <div className="text-gray-400 text-xs mt-0 mb-0 text-center max-w-lg flex flex-wrap items-center justify-center gap-2">
+        <div className="text-gray-400 text-xs mt-2 mb-0 text-center max-w-lg flex flex-wrap items-center justify-center gap-2">
           <span>Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a></span>
           <span className="hidden sm:inline">|</span>
           <span>© {new Date().getFullYear()} HourTrackr NJHS.</span>
