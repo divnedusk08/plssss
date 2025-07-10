@@ -1652,7 +1652,7 @@ export default function WrappedApp() {
         <Router>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1 overflow-auto fade-in bg-white">
+            <main className="flex-1 overflow-auto fade-in bg-white min-h-[120vh]">
               <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
             </main>
             <Footer />
