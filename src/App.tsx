@@ -65,12 +65,20 @@ function Header() {
 function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [copied, setCopied] = React.useState(false);
 
   React.useEffect(() => {
     if (user) {
       navigate('/log', { replace: true });
     }
   }, [user, navigate]);
+
+  const email = 'dhriti.erusalagandi58@k12.leanderisd.org';
+  const handleCopy = () => {
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
@@ -136,8 +144,19 @@ function Home() {
       {/* Contact Section */}
       <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-6 border-t-4 border-primary-dark fade-in">
         <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
-        <p className="text-gray-700 text-base font-inter text-hover-effect">
-          Contact NJHS advisors or email <a href="mailto:dhriti.erusalagandi58@k12.leanderisd.org" className="text-primary underline hover:text-primary-dark transition-colors">dhriti.erusalagandi58@k12.leanderisd.org</a>
+        <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
+          Contact NJHS advisors or email
+          <span className="flex items-center justify-center gap-2">
+            <a href={`mailto:${email}`} className="text-primary underline hover:text-primary-dark transition-colors select-all">{email}</a>
+            <button
+              onClick={handleCopy}
+              className="ml-1 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-primary-dark text-xs font-semibold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+              title="Copy email"
+              type="button"
+            >
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
+          </span>
         </p>
       </div>
 
