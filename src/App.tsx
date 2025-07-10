@@ -66,6 +66,7 @@ function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [copied, setCopied] = React.useState(false);
+  const [showTooltip, setShowTooltip] = React.useState(false);
 
   React.useEffect(() => {
     if (user) {
@@ -146,16 +147,35 @@ function Home() {
         <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
         <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
           Contact NJHS advisors or email
-          <span className="flex items-center justify-center gap-2">
-            <button
+          <span className="flex items-center justify-center gap-2 relative">
+            <span
+              className="relative cursor-pointer group"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
               onClick={handleCopy}
-              className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-primary-dark text-xs font-semibold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
-              title="Copy email"
-              type="button"
+              tabIndex={0}
+              role="button"
+              aria-label="Copy email"
             >
-              {copied ? 'Copied!' : 'Copy'}
-            </button>
-            <a href={`mailto:${email}`} className="text-primary underline hover:text-primary-dark transition-colors select-all">{email}</a>
+              <a
+                href={`mailto:${email}`}
+                className="text-primary underline hover:text-primary-dark transition-colors select-all"
+                tabIndex={-1}
+                onClick={e => { e.preventDefault(); handleCopy(); }}
+              >
+                {email}
+              </a>
+              {showTooltip && !copied && (
+                <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded px-2 py-1 shadow z-10 whitespace-nowrap">
+                  Copy email
+                </span>
+              )}
+              {copied && (
+                <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-green-600 text-white text-xs rounded px-2 py-1 shadow z-10 whitespace-nowrap">
+                  Copied!
+                </span>
+              )}
+            </span>
           </span>
         </p>
       </div>
