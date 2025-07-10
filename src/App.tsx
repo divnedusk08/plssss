@@ -28,6 +28,11 @@ function SplashScreen({ className }: { className?: string }) {
 function Header() {
   const { user, signOut } = useAuth();
   const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com';
+  const location = useLocation();
+  const navLinkClass = (path: string) =>
+    location.pathname === path
+      ? 'bg-accent text-primary font-bold rounded-xl px-6 py-3 shadow'
+      : 'font-bold text-white text-fill-hover-yellow px-6 py-3 rounded-xl';
   return (
     <header className="sticky top-0 z-20 bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 shadow-lg">
       <nav className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
@@ -41,16 +46,15 @@ function Header() {
           <span className="font-montserrat text-2xl font-extrabold text-white drop-shadow">HourTrackr NJHS</span>
         </div>
         <div className="flex gap-4 items-center font-semibold">
-          
-          {user && <Link to="/log" className="font-bold text-white text-fill-hover-yellow">Log Hours</Link>}
-          {user && <Link to="/dashboard" className="font-bold text-white text-fill-hover-yellow">Dashboard</Link>}
-          {user && <Link to="/profile" className="font-bold text-white text-fill-hover-yellow">Profile</Link>}
-          <Link to="/contact" className="font-bold text-white text-fill-hover-yellow">Contact Us</Link>
-          {user && isSuperAdmin && <Link to="/admin" className="font-bold text-white text-fill-hover-yellow">Admin</Link>}
+          {user && <Link to="/log" className={navLinkClass('/log')}>Log Hours</Link>}
+          {user && <Link to="/dashboard" className={navLinkClass('/dashboard')}>Dashboard</Link>}
+          {user && <Link to="/profile" className={navLinkClass('/profile')}>Profile</Link>}
+          <Link to="/contact" className={navLinkClass('/contact')}>Contact Us</Link>
+          {user && isSuperAdmin && <Link to="/admin" className={navLinkClass('/admin')}>Admin</Link>}
           {user ? (
             <button onClick={signOut} className="ml-4 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition">Sign out</button>
           ) : (
-            <Link to="/login" className="ml-4 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition">Sign in</Link>
+            <Link to="/login" className={navLinkClass('/login') + ' ml-4 bg-accent text-primary-dark shadow hover:bg-accent-dark transition'}>Sign in</Link>
           )}
         </div>
       </nav>
