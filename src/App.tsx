@@ -31,11 +31,11 @@ function Header() {
   const location = useLocation();
   const navLinkClass = (path: string) =>
     location.pathname === path
-      ? 'bg-accent text-primary font-bold rounded-lg px-6 py-2 shadow'
-      : 'font-bold text-white text-fill-hover-yellow px-6 py-3 rounded-xl';
+      ? 'bg-accent text-primary font-bold rounded-lg px-4 py-1.5 shadow'
+      : 'font-bold text-white text-fill-hover-yellow px-4 py-1.5 rounded-xl';
   return (
     <header className="sticky top-0 z-20 bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 shadow-lg">
-      <nav className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
+      <nav className="max-w-5xl mx-auto flex items-center justify-between px-2 py-2">
         <div className="flex items-center gap-2">
           <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
@@ -54,7 +54,7 @@ function Header() {
           {user ? (
             <button onClick={signOut} className="ml-4 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition">Sign out</button>
           ) : (
-            <Link to="/login" className="bg-accent text-primary font-bold rounded-lg px-6 py-2 shadow ml-4">Sign in</Link>
+            <Link to="/login" className="bg-accent text-primary font-bold rounded-lg px-4 py-1.5 shadow ml-4">Sign in</Link>
           )}
         </div>
       </nav>
@@ -643,16 +643,16 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   const totalHours = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
   
   return (
-    <div className="max-w-7xl mx-auto my-6 p-4 bg-white rounded-2xl shadow-2xl">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-        <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat">Your Volunteer Hours</h2>
+    <div className="max-w-4xl mx-auto my-2 p-2 bg-white rounded-2xl shadow-2xl">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+        <h2 className="text-2xl font-extrabold text-primary-dark font-montserrat">Your Volunteer Hours</h2>
         <div className="flex flex-col items-end gap-2">
           <div className="text-gray-600 text-sm font-medium">Today: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
           <div className="flex gap-4">
             <button
               onClick={exportToPDF}
               disabled={isExporting}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2"
+              className="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2"
             >
               {isExporting ? (
                 <>
@@ -668,7 +668,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 </>
               )}
             </button>
-            <div className="bg-accent text-primary-dark font-bold px-6 py-2 rounded-lg shadow text-lg">
+            <div className="bg-accent text-primary-dark font-bold px-4 py-1 rounded-lg shadow text-base">
               Total Hours: {totalHours.toFixed(2)}
             </div>
           </div>
@@ -676,7 +676,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
       </div>
 
       {/* Progress Bars for each Six Weeks */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         {sixWeekPeriods.map((period) => {
           const periodLogs = logs.filter(log => {
             const logDate = new Date(log.date);
@@ -689,12 +689,12 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
           return (
             <div key={period.name} 
-            className="bg-white rounded-xl shadow-md p-4 border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow"
+            className="bg-white rounded-xl shadow-md p-2 border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow"
             onClick={() => navigate('/log', { state: { selectedPeriod: period } })}
             >
-              <h3 className="font-bold text-lg text-primary-dark mb-2">{period.name}</h3>
-              <p className="text-sm text-gray-600 mb-2">{period.startDate} - {period.endDate}</p>
-              <div className="flex justify-between items-center mb-2">
+              <h3 className="font-bold text-base text-primary-dark mb-1">{period.name}</h3>
+              <p className="text-sm text-gray-600 mb-1">{period.startDate} - {period.endDate}</p>
+              <div className="flex justify-between items-center mb-1">
                 <span className="text-sm font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
                 <span className="text-sm font-medium text-gray-600">{periodProgress.toFixed(1)}%</span>
               </div>
