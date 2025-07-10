@@ -89,7 +89,7 @@ function Home() {
             </svg>
           </div>
         </div>
-        <h1 className="text-3xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow">HourTrackr NJHS</h1>
+        <h1 className="text-4xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow">HourTrackr NJHS</h1>
         <div className="text-blue-900 text-lg font-montserrat mb-2">National Junior Honor Society</div>
       </div>
 
@@ -103,13 +103,13 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate('/login')}
-        className="mb-6 px-6 py-2 rounded-lg bg-primary text-white font-bold text-base hover:bg-primary-dark transition glow-on-hover"
+        className="mb-6 px-6 py-2 rounded-lg bg-primary text-white font-bold text-lg hover:bg-primary-dark transition glow-on-hover"
       >
         Get Started
       </button>
 
       {/* How it works section */}
-      <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+      <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-gray-50 rounded-xl shadow-xl p-4 flex flex-col items-center border-t-4 border-primary card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.2s' } as React.CSSProperties}>
           <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-2">
             <svg width="32" height="32" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
