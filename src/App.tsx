@@ -1389,7 +1389,7 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <a href={`mailto:${officer.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2">
+                  <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${officer.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" target="_blank" rel="noopener noreferrer" title="Compose email in Gmail">
                     {officer.email}
                   </a>
                 </li>
@@ -1413,7 +1413,7 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <a href={`mailto:${advisor.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2">
+                  <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${advisor.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" target="_blank" rel="noopener noreferrer" title="Compose email in Gmail">
                     {advisor.email}
                   </a>
                 </li>
