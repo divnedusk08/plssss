@@ -65,21 +65,12 @@ function Header() {
 function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [copied, setCopied] = React.useState(false);
-  const [showTooltip, setShowTooltip] = React.useState(false);
 
   React.useEffect(() => {
     if (user) {
       navigate('/log', { replace: true });
     }
   }, [user, navigate]);
-
-  const email = 'dhriti.erusalagandi58@k12.leanderisd.org';
-  const handleCopy = () => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
