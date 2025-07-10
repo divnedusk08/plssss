@@ -54,7 +54,7 @@ function Header() {
           {user ? (
             <button onClick={signOut} className="ml-4 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition">Sign out</button>
           ) : (
-            <Link to="/login" className={navLinkClass('/login') + ' ml-4 bg-accent text-primary-dark shadow hover:bg-accent-dark transition'}>Sign in</Link>
+            <Link to="/login" className={navLinkClass('/login') + ' ml-4'}>Sign in</Link>
           )}
         </div>
       </nav>
