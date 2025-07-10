@@ -148,34 +148,15 @@ function Home() {
         <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
           Contact NJHS advisors or email
           <span className="flex items-center justify-center gap-2 relative">
-            <span
-              className="relative cursor-pointer group"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-              onClick={handleCopy}
-              tabIndex={0}
-              role="button"
-              aria-label="Copy email"
+            <a
+              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`}
+              className="text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Compose email in Gmail"
             >
-              <a
-                href={`mailto:${email}`}
-                className="text-primary underline hover:text-primary-dark transition-colors select-all"
-                tabIndex={-1}
-                onClick={e => { e.preventDefault(); handleCopy(); }}
-              >
-                {email}
-              </a>
-              {showTooltip && !copied && (
-                <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-gray-800 text-white text-xs rounded px-2 py-1 shadow z-10 whitespace-nowrap">
-                  Copy email
-                </span>
-              )}
-              {copied && (
-                <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-green-600 text-white text-xs rounded px-2 py-1 shadow z-10 whitespace-nowrap">
-                  Copied!
-                </span>
-              )}
-            </span>
+              {email}
+            </a>
           </span>
         </p>
       </div>
