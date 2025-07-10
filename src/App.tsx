@@ -31,30 +31,30 @@ function Header() {
   const location = useLocation();
   const navLinkClass = (path: string) =>
     location.pathname === path
-      ? 'bg-accent text-primary font-bold rounded-lg px-4 py-1.5 shadow'
-      : 'font-bold text-white text-fill-hover-yellow px-4 py-1.5 rounded-xl';
+      ? 'bg-accent text-primary font-bold rounded-lg px-5 py-1.5 shadow text-base'
+      : 'font-bold text-white text-fill-hover-yellow px-5 py-1.5 rounded-xl text-base';
   return (
     <header className="sticky top-0 z-20 bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 shadow-lg">
-      <nav className="max-w-5xl mx-auto flex items-center justify-between px-2 py-2">
+      <nav className="max-w-4xl mx-auto flex items-center justify-between px-2 py-2">
         <div className="flex items-center gap-2">
-          <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="28" height="28" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
             <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
             <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
             <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
           </svg>
-          <span className="font-montserrat text-2xl font-extrabold text-white drop-shadow">HourTrackr NJHS</span>
+          <span className="font-montserrat text-xl font-extrabold text-white drop-shadow">HourTrackr NJHS</span>
         </div>
-        <div className="flex gap-4 items-center font-semibold">
+        <div className="flex gap-2 items-center font-semibold">
           {user && <Link to="/log" className={navLinkClass('/log')}>Log Hours</Link>}
           {user && <Link to="/dashboard" className={navLinkClass('/dashboard')}>Dashboard</Link>}
           {user && <Link to="/profile" className={navLinkClass('/profile')}>Profile</Link>}
           <Link to="/contact" className={navLinkClass('/contact')}>Contact Us</Link>
           {user && isSuperAdmin && <Link to="/admin" className={navLinkClass('/admin')}>Admin</Link>}
           {user ? (
-            <button onClick={signOut} className="ml-4 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition">Sign out</button>
+            <button onClick={signOut} className="ml-2 px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition text-base">Sign out</button>
           ) : (
-            <Link to="/login" className="bg-accent text-primary font-bold rounded-lg px-4 py-1.5 shadow ml-4">Sign in</Link>
+            <Link to="/login" className="bg-accent text-primary font-bold rounded-lg px-5 py-1.5 shadow ml-2 text-base">Sign in</Link>
           )}
         </div>
       </nav>
@@ -643,16 +643,16 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   const totalHours = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
   
   return (
-    <div className="max-w-4xl mx-auto my-2 p-2 bg-white rounded-2xl shadow-2xl">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+    <div className="max-w-5xl mx-auto my-4 p-3 bg-white rounded-2xl shadow-2xl">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
         <h2 className="text-2xl font-extrabold text-primary-dark font-montserrat">Your Volunteer Hours</h2>
         <div className="flex flex-col items-end gap-2">
-          <div className="text-gray-600 text-sm font-medium">Today: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-          <div className="flex gap-4">
+          <div className="text-gray-600 text-xs font-medium">Today: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+          <div className="flex gap-2">
             <button
               onClick={exportToPDF}
               disabled={isExporting}
-              className="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2"
+              className="px-3 py-1.5 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 text-sm"
             >
               {isExporting ? (
                 <>
@@ -668,15 +668,14 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 </>
               )}
             </button>
-            <div className="bg-accent text-primary-dark font-bold px-4 py-1 rounded-lg shadow text-base">
+            <div className="bg-accent text-primary-dark font-bold px-4 py-1.5 rounded-lg shadow text-base">
               Total Hours: {totalHours.toFixed(2)}
             </div>
           </div>
         </div>
       </div>
-
       {/* Progress Bars for each Six Weeks */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {sixWeekPeriods.map((period) => {
           const periodLogs = logs.filter(log => {
             const logDate = new Date(log.date);
@@ -689,18 +688,18 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
           return (
             <div key={period.name} 
-            className="bg-white rounded-xl shadow-md p-2 border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow"
+            className="bg-white rounded-xl shadow-md p-3 border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow mb-2"
             onClick={() => navigate('/log', { state: { selectedPeriod: period } })}
             >
               <h3 className="font-bold text-base text-primary-dark mb-1">{period.name}</h3>
-              <p className="text-sm text-gray-600 mb-1">{period.startDate} - {period.endDate}</p>
+              <p className="text-xs text-gray-600 mb-1">{period.startDate} - {period.endDate}</p>
               <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
-                <span className="text-sm font-medium text-gray-600">{periodProgress.toFixed(1)}%</span>
+                <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
+                <span className="text-xs font-medium text-gray-600">{periodProgress.toFixed(1)}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-4">
+              <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
-                  className={`h-4 rounded-full transition-all duration-500 ${periodProgress >= 100 ? 'bg-green-500' : 'bg-primary'}`}
+                  className={`h-3 rounded-full transition-all duration-500 ${periodProgress >= 100 ? 'bg-green-500' : 'bg-primary'}`}
                   style={{ width: `${periodProgress}%` }}
                 ></div>
               </div>
