@@ -31,7 +31,7 @@ function Header() {
   const location = useLocation();
   const navLinkClass = (path: string) =>
     location.pathname === path
-      ? 'bg-accent text-primary font-bold rounded-lg px-8 py-4 text-xl shadow'
+      ? 'bg-accent text-primary font-bold rounded-lg px-6 py-2 shadow'
       : 'font-bold text-white text-fill-hover-yellow px-6 py-3 rounded-xl';
   return (
     <header className="sticky top-0 z-20 bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 shadow-lg">
