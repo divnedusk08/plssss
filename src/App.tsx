@@ -65,6 +65,7 @@ function Header() {
 function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const email = 'dhriti.erusalagandi58@k12.leanderisd.org';
 
   React.useEffect(() => {
     if (user) {
