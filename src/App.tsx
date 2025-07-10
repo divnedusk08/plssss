@@ -73,7 +73,7 @@ function Home() {
   }, [user, navigate]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-2 py-2 bg-white">
+    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
       {/* Logo and Title */}
       <div className="flex flex-col items-center mb-4 mt-8 fade-in">
         <div className="relative">
