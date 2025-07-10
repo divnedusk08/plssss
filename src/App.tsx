@@ -147,15 +147,15 @@ function Home() {
         <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
           Contact NJHS advisors or email
           <span className="flex items-center justify-center gap-2">
-            <a href={`mailto:${email}`} className="text-primary underline hover:text-primary-dark transition-colors select-all">{email}</a>
             <button
               onClick={handleCopy}
-              className="ml-1 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-primary-dark text-xs font-semibold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-primary-dark text-xs font-semibold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
               title="Copy email"
               type="button"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
+            <a href={`mailto:${email}`} className="text-primary underline hover:text-primary-dark transition-colors select-all">{email}</a>
           </span>
         </p>
       </div>
@@ -1377,16 +1377,10 @@ function ContactUs() {
     { name: 'Kellie Bruce', email: 'kellie.bruce@leanderisd.org' },
   ];
 
-  const [copiedEmail, setCopiedEmail] = React.useState<string | null>(null);
-  const handleCopy = (email: string) => {
-    navigator.clipboard.writeText(email);
-    setCopiedEmail(email);
-    setTimeout(() => setCopiedEmail(null), 1500);
-  };
-
   return (
     <div className="max-w-4xl mx-auto mt-12 p-8 bg-white rounded-3xl shadow-2xl font-inter">
       <h2 className="text-4xl font-extrabold text-primary-dark font-montserrat mb-10 text-center">Contact Us</h2>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-primary hover:shadow-xl transition-all duration-300">
           <h3 className="text-2xl font-bold text-primary-dark mb-4 border-b-2 border-primary-light pb-2">NJHS Officers</h3>
@@ -1403,24 +1397,15 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <span className="flex items-center ml-2">
-                    <a href={`mailto:${officer.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
-                      {officer.email}
-                    </a>
-                    <button
-                      onClick={() => handleCopy(officer.email)}
-                      className="ml-2 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-primary-dark text-xs font-semibold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
-                      title="Copy email"
-                      type="button"
-                    >
-                      {copiedEmail === officer.email ? 'Copied!' : 'Copy'}
-                    </button>
-                  </span>
+                  <a href={`mailto:${officer.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2">
+                    {officer.email}
+                  </a>
                 </li>
               );
             })}
           </ul>
         </div>
+
         <div className="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-accent hover:shadow-xl transition-all duration-300">
           <h3 className="text-2xl font-bold text-primary-dark mb-4 border-b-2 border-primary-light pb-2">NJHS Advisors</h3>
           <ul className="space-y-4">
@@ -1436,25 +1421,16 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <span className="flex items-center ml-2">
-                    <a href={`mailto:${advisor.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis">
-                      {advisor.email}
-                    </a>
-                    <button
-                      onClick={() => handleCopy(advisor.email)}
-                      className="ml-2 px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-primary-dark text-xs font-semibold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
-                      title="Copy email"
-                      type="button"
-                    >
-                      {copiedEmail === advisor.email ? 'Copied!' : 'Copy'}
-                    </button>
-                  </span>
+                  <a href={`mailto:${advisor.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2">
+                    {advisor.email}
+                  </a>
                 </li>
               );
             })}
           </ul>
         </div>
       </div>
+
       <p className="text-center text-gray-600 mt-10 text-lg">
         For general inquiries, please reach out to the advisors or use the emails listed above.
       </p>
