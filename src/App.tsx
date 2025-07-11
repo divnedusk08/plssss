@@ -344,10 +344,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       setError('');
       setDashboardRefreshKey(prev => prev + 1); // Trigger dashboard refresh
       setHasAttemptedSubmit(false); // Reset after successful submit
-      // Redirect to dashboard after 1.5 seconds
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 1500);
+      navigate('/dashboard'); // Redirect immediately
     } catch (error: any) {
       setError(error.message || 'An unexpected error occurred.');
     } finally {
