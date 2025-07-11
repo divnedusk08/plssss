@@ -115,12 +115,12 @@ function Home() {
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
           className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
-          style={{ objectFit: 'contain', opacity: 0, animation: 'fadeIn 1.2s ease 0s forwards' }}
+          style={{ objectFit: 'contain' }}
         />
       </div>
 
       {/* How it works section */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" style={{ opacity: 0, animation: 'fadeIn 1.2s ease 0.4s forwards' }}>
         <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
