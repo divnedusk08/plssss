@@ -114,7 +114,7 @@ function Home() {
         <img
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-2xl border border-gray-200 w-[80vw]"
+          className="rounded-2xl shadow-2xl border border-gray-200 w-[80vw] max-w-[900px]"
           style={{ objectFit: 'contain' }}
         />
       </div>
@@ -1711,7 +1711,7 @@ export default function WrappedApp() {
         <SplashScreen className={isFadingOut ? 'fade-out' : ''} />
       ) : (
         <Router>
-          <div className="min-h-screen flex flex-col overflow-x-hidden bg-gradient-to-br from-blue-700 via-blue-400 to-blue-200" style={{ transform: 'scale(0.8)', transformOrigin: 'top center' }}>
+          <div className="min-h-screen flex flex-col">
             <Header />
             <main className="flex-1 overflow-auto fade-in bg-white min-h-[102vh]">
               <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
