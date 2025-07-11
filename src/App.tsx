@@ -380,7 +380,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center py-10 px-4 bg-gray-100">
+    <div className="min-h-[80vh] flex flex-col items-center py-10 px-4 bg-white">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
 
