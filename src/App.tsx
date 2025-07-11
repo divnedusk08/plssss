@@ -507,25 +507,25 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             </div>
           )}
           {stepIndex === 7 && (
-            <div className="bg-white rounded-xl p-6 shadow border border-gray-200">
-              <h3 className="text-xl font-bold mb-4 text-primary-dark">Review Your Submission</h3>
-              <div className="space-y-2 text-base">
-                <div><span className="font-semibold text-gray-700">First Name:</span> {firstName}</div>
-                <div><span className="font-semibold text-gray-700">Last Name:</span> {lastName}</div>
-                <div><span className="font-semibold text-gray-700">Organization:</span> {organization}</div>
-                <div><span className="font-semibold text-gray-700">Description:</span> {description}</div>
-                <div><span className="font-semibold text-gray-700">Proof of Service:</span> {proofOfService}</div>
-                <div><span className="font-semibold text-gray-700">Time Start:</span> {timeStart}</div>
-                <div><span className="font-semibold text-gray-700">Time End:</span> {timeEnd}</div>
-                <div><span className="font-semibold text-gray-700">Date:</span> {date}</div>
-                {additionalInformation && (
-                  <div><span className="font-semibold text-gray-700">Additional Info:</span> {additionalInformation}</div>
-                )}
-                <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-2 text-left">
-                  <p className="text-lg font-bold text-primary-dark">
-                    Total Hours: {calcHours()}
-                  </p>
-                </div>
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold mb-6 text-primary-dark text-center">Review Your Submission</h3>
+              <table className="w-full text-base mb-4">
+                <tbody>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">First Name:</td><td className="py-2">{firstName}</td></tr>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Last Name:</td><td className="py-2">{lastName}</td></tr>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Organization:</td><td className="py-2">{organization}</td></tr>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Description:</td><td className="py-2">{description}</td></tr>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Proof of Service:</td><td className="py-2">{proofOfService}</td></tr>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Time Start:</td><td className="py-2">{timeStart}</td></tr>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Time End:</td><td className="py-2">{timeEnd}</td></tr>
+                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Date:</td><td className="py-2">{date}</td></tr>
+                  {additionalInformation && (
+                    <tr><td className="font-semibold text-gray-700 py-2 pr-4">Additional Info:</td><td className="py-2">{additionalInformation}</td></tr>
+                  )}
+                </tbody>
+              </table>
+              <div className="bg-gray-100 rounded-lg p-4 border border-gray-200 text-center">
+                <span className="text-xl font-bold text-primary-dark">Total Hours: {calcHours()}</span>
               </div>
             </div>
           )}
