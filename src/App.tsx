@@ -1711,7 +1711,7 @@ export default function WrappedApp() {
         <SplashScreen className={isFadingOut ? 'fade-out' : ''} />
       ) : (
         <Router>
-          <div className="min-h-screen flex flex-col" style={{ transform: 'scale(0.8)', transformOrigin: 'top center', width: '125%' }}>
+          <div className="min-h-screen flex flex-col">
             <Header />
             <main className="flex-1 overflow-auto fade-in bg-white min-h-[102vh]">
               <AppRoutes setDashboardRefreshKey={setDashboardRefreshKey} dashboardRefreshKey={dashboardRefreshKey} />
