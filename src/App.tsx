@@ -69,7 +69,7 @@ function Home() {
   React.useEffect(() => {
     if (user) {
       navigate('/log', { replace: true });
-    }
+      }
   }, [user, navigate]);
 
   return (
@@ -145,6 +145,14 @@ function Home() {
               target="_blank"
               rel="noopener noreferrer"
               title="Compose email in Gmail"
+              onClick={(e) => {
+                e.preventDefault();
+                window.open(
+                  'https://mail.google.com/mail/?view=cm&fs=1&to=dhriti.erusalagandi58@k12.leanderisd.org',
+                  'gmail_compose',
+                  'width=800,height=600,scrollbars=yes,resizable=yes,top=100,left=100'
+                );
+              }}
             >
               dhriti.erusalagandi58@k12.leanderisd.org
             </a>
@@ -1389,7 +1397,21 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${officer.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" target="_blank" rel="noopener noreferrer" title="Compose email in Gmail">
+                  <a 
+                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${officer.email}`} 
+                    className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    title="Compose email in Gmail"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(
+                        `https://mail.google.com/mail/?view=cm&fs=1&to=${officer.email}`,
+                        'gmail_compose',
+                        'width=800,height=600,scrollbars=yes,resizable=yes,top=100,left=100'
+                      );
+                    }}
+                  >
                     {officer.email}
                   </a>
                 </li>
@@ -1413,7 +1435,21 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${advisor.email}`} className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" target="_blank" rel="noopener noreferrer" title="Compose email in Gmail">
+                  <a 
+                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${advisor.email}`} 
+                    className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    title="Compose email in Gmail"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(
+                        `https://mail.google.com/mail/?view=cm&fs=1&to=${advisor.email}`,
+                        'gmail_compose',
+                        'width=800,height=600,scrollbars=yes,resizable=yes,top=100,left=100'
+                      );
+                    }}
+                  >
                     {advisor.email}
                   </a>
                 </li>
@@ -1591,12 +1627,12 @@ function Profile() {
           </div>
           {/* Action Buttons */}
           <div className="flex gap-4">
-            <button
+                <button
               onClick={() => setIsEditing(!isEditing)}
-              className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-            >
+                  className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+                >
               {isEditing ? 'Cancel' : 'Edit Profile Picture'}
-            </button>
+                </button>
           </div>
         </div>
       </div>
