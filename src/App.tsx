@@ -110,11 +110,11 @@ function Home() {
       </button>
 
       {/* Sneak Peek Image */}
-      <div className="flex flex-col items-center mb-12 fade-in w-full">
+      <div className="flex flex-col items-center mb-12 fade-in">
         <img
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-2xl border border-gray-200 w-full max-w-7xl"
+          className="rounded-2xl shadow-2xl border border-gray-200 w-[80vw]"
           style={{ objectFit: 'contain' }}
         />
       </div>
