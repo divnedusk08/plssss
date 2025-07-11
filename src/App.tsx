@@ -380,7 +380,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
+    <div className="min-h-[80vh] flex flex-col items-center py-10 px-4 bg-white">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
 
@@ -508,18 +508,24 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           )}
           {stepIndex === 7 && (
             <div className="bg-white rounded-xl p-6 shadow border border-gray-200">
-              <label htmlFor="additionalInformation" className="block text-sm font-medium text-gray-700 mb-2">Additional Information (Optional)</label>
-              <textarea
-                id="additionalInformation"
-                rows={3}
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm mb-4"
-                value={additionalInformation}
-                onChange={(e) => setAdditionalInformation(e.target.value)}
-              ></textarea>
-              <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-2 text-left">
-                <p className="text-lg font-semibold text-primary-dark">
-                  Total Hours: {calcHours()}
-                </p>
+              <h3 className="text-xl font-bold mb-4 text-primary-dark">Review Your Submission</h3>
+              <div className="space-y-2 text-base">
+                <div><span className="font-semibold text-gray-700">First Name:</span> {firstName}</div>
+                <div><span className="font-semibold text-gray-700">Last Name:</span> {lastName}</div>
+                <div><span className="font-semibold text-gray-700">Organization:</span> {organization}</div>
+                <div><span className="font-semibold text-gray-700">Description:</span> {description}</div>
+                <div><span className="font-semibold text-gray-700">Proof of Service:</span> {proofOfService}</div>
+                <div><span className="font-semibold text-gray-700">Time Start:</span> {timeStart}</div>
+                <div><span className="font-semibold text-gray-700">Time End:</span> {timeEnd}</div>
+                <div><span className="font-semibold text-gray-700">Date:</span> {date}</div>
+                {additionalInformation && (
+                  <div><span className="font-semibold text-gray-700">Additional Info:</span> {additionalInformation}</div>
+                )}
+                <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-2 text-left">
+                  <p className="text-lg font-bold text-primary-dark">
+                    Total Hours: {calcHours()}
+                  </p>
+                </div>
               </div>
             </div>
           )}
