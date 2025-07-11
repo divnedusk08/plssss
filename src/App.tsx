@@ -240,7 +240,6 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
     return '';
   });
   const [additionalInformation, setAdditionalInformation] = React.useState(''); // New state for additional info
-  const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -328,7 +327,6 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
         });
 
       if (error) throw error;
-      setSubmitted(true);
       // Clear form after submission
       setOrganization('');
       setDescription('');
