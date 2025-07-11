@@ -507,16 +507,16 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             </div>
           )}
           {stepIndex === 7 && (
-            <div>
-              <label htmlFor="additionalInformation" className="block text-sm font-medium text-gray-700">Additional Information (Optional)</label>
+            <div className="bg-white rounded-xl p-6 shadow border border-gray-200">
+              <label htmlFor="additionalInformation" className="block text-sm font-medium text-gray-700 mb-2">Additional Information (Optional)</label>
               <textarea
                 id="additionalInformation"
                 rows={3}
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm mb-4"
                 value={additionalInformation}
                 onChange={(e) => setAdditionalInformation(e.target.value)}
               ></textarea>
-              <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-4 text-left">
+              <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-2 text-left">
                 <p className="text-lg font-semibold text-primary-dark">
                   Total Hours: {calcHours()}
                 </p>
