@@ -114,7 +114,7 @@ function Home() {
         <img
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-2xl border border-gray-200 w-[75vw] max-w-[1050px]"
+          className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
           style={{ objectFit: 'contain' }}
         />
       </div>
