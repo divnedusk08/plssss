@@ -139,23 +139,24 @@ function Home() {
         <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
           Contact NJHS advisors or email
           <span className="flex items-center justify-center gap-2 relative">
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=dhriti.erusalagandi58@k12.leanderisd.org"
-              className="text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Compose email in Gmail"
-              onClick={(e) => {
-                e.preventDefault();
-                window.open(
-                  'https://mail.google.com/mail/?view=cm&fs=1&to=dhriti.erusalagandi58@k12.leanderisd.org',
-                  'gmail_compose',
-                  'width=800,height=600,scrollbars=yes,resizable=yes,top=100,left=100'
-                );
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText('dhriti.erusalagandi58@k12.leanderisd.org');
+                // Show feedback
+                const button = document.activeElement as HTMLButtonElement;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.className = 'text-green-600 underline hover:text-green-700 transition-colors select-all cursor-pointer';
+                setTimeout(() => {
+                  button.textContent = originalText;
+                  button.className = 'text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer';
+                }, 2000);
               }}
+              className="text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer"
+              title="Copy email address"
             >
               dhriti.erusalagandi58@k12.leanderisd.org
-            </a>
+            </button>
           </span>
         </p>
       </div>
@@ -1397,23 +1398,24 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <a 
-                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${officer.email}`} 
-                    className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    title="Compose email in Gmail"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.open(
-                        `https://mail.google.com/mail/?view=cm&fs=1&to=${officer.email}`,
-                        'gmail_compose',
-                        'width=800,height=600,scrollbars=yes,resizable=yes,top=100,left=100'
-                      );
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(officer.email);
+                      // Show feedback
+                      const button = document.activeElement as HTMLButtonElement;
+                      const originalText = button.textContent;
+                      button.textContent = 'Copied!';
+                      button.className = 'text-green-600 hover:text-green-700 underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2';
+                      setTimeout(() => {
+                        button.textContent = originalText;
+                        button.className = 'text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2';
+                      }, 2000);
                     }}
+                    className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" 
+                    title="Copy email address"
                   >
                     {officer.email}
-                  </a>
+                  </button>
                 </li>
               );
             })}
@@ -1435,23 +1437,24 @@ function ContactUs() {
                       {lastName && <span className="text-base text-gray-600">{lastName}</span>}
                     </div>
                   </div>
-                  <a 
-                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${advisor.email}`} 
-                    className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    title="Compose email in Gmail"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.open(
-                        `https://mail.google.com/mail/?view=cm&fs=1&to=${advisor.email}`,
-                        'gmail_compose',
-                        'width=800,height=600,scrollbars=yes,resizable=yes,top=100,left=100'
-                      );
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(advisor.email);
+                      // Show feedback
+                      const button = document.activeElement as HTMLButtonElement;
+                      const originalText = button.textContent;
+                      button.textContent = 'Copied!';
+                      button.className = 'text-green-600 hover:text-green-700 underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2';
+                      setTimeout(() => {
+                        button.textContent = originalText;
+                        button.className = 'text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2';
+                      }, 2000);
                     }}
+                    className="text-primary hover:text-primary-dark underline transition-colors text-base font-medium flex-grow overflow-hidden whitespace-nowrap text-ellipsis ml-2" 
+                    title="Copy email address"
                   >
                     {advisor.email}
-                  </a>
+                  </button>
                 </li>
               );
             })}
