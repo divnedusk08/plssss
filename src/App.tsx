@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, us
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import sneakPeakImg from './assets/SneakPeak.png';
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -107,6 +108,17 @@ function Home() {
       >
         Get Started
       </button>
+
+      {/* Sneak Peek Image */}
+      <div className="flex flex-col items-center mb-8 fade-in">
+        <img
+          src={sneakPeakImg}
+          alt="Dashboard sneak peek"
+          className="rounded-2xl shadow-lg border border-gray-200 max-w-full md:max-w-2xl"
+          style={{ objectFit: 'contain' }}
+        />
+        <div className="mt-2 text-gray-600 text-base font-montserrat">Sneak peek of your dashboard!</div>
+      </div>
 
       {/* How it works section */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
