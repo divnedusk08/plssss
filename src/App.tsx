@@ -121,21 +121,21 @@ function Home() {
 
       {/* How it works section */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.2s' } as React.CSSProperties}>
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
           </div>
           <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Log Your Hours</h3>
           <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Submit hours easily. All submissions stored securely.</p>
         </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.4s' } as React.CSSProperties}>
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round"/></svg>
           </div>
           <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Track Progress</h3>
           <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">View total hours and history. Stay on top of requirements.</p>
         </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark card-animated fade-in hover:shadow-2xl hover:scale-[1.02] transition-all duration-300" style={{ '--animation-delay': '0.6s' } as React.CSSProperties}>
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <div className="w-20 h-20 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round"/></svg>
           </div>
