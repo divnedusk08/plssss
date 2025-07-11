@@ -361,15 +361,25 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
     'Date',
     'Review & Submit',
   ];
-  let currentStep = 0;
-  if (firstName) currentStep = 1;
-  if (lastName) currentStep = 2;
-  if (organization) currentStep = 3;
-  if (description) currentStep = 4;
-  if (proofOfService) currentStep = 5;
-  if (timeStart && timeEnd) currentStep = 6;
-  if (date) currentStep = 7;
-  if (firstName && lastName && organization && description && proofOfService && timeStart && timeEnd && date) currentStep = 7;
+  const [stepIndex, setStepIndex] = React.useState(0);
+
+  // Helper to go to next/prev step
+  const nextStep = () => setStepIndex((i) => Math.min(i + 1, steps.length - 1));
+  const prevStep = () => setStepIndex((i) => Math.max(i - 1, 0));
+
+  // Validation for each step
+  const isStepValid = () => {
+    switch (stepIndex) {
+      case 0: return !!firstName;
+      case 1: return !!lastName;
+      case 2: return !!organization;
+      case 3: return !!description;
+      case 4: return !!proofOfService;
+      case 5: return !!timeStart && !!timeEnd;
+      case 6: return !!date;
+      default: return true;
+    }
+  };
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center py-10 px-4 bg-gray-100">
@@ -377,7 +387,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
 
         {/* Stepper Progress Tracker */}
-        <LogHoursStepper steps={steps} currentStep={currentStep} />
+        <LogHoursStepper steps={steps} currentStep={stepIndex} />
 
         {error && (
           <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-center">
@@ -386,150 +396,165 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* First Name */}
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name<span className="text-red-500">*</span></label>
-            <input
-              type="text"
-              id="firstName"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Last Name */}
-          <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name<span className="text-red-500">*</span></label>
-            <input
-              type="text"
-              id="lastName"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Organization */}
-          <div>
-            <label htmlFor="organization" className="block text-sm font-medium text-gray-700">
-              Organization (What group or person or event did you help with? If you volunteered with other NJHS members, you would say Stiles NJHS.)<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="organization"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-              value={organization}
-              onChange={(e) => setOrganization(e.target.value)}
-              placeholder="e.g., Stiles NJHS"
-              required
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-              Description (tell us a little about what you did while you were there)<span className="text-red-500">*</span>
-            </label>
-            <textarea
-              id="description"
-              rows={3}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            ></textarea>
-          </div>
-
-          {/* Proof of Service */}
-          <div>
-            <label htmlFor="proofOfService" className="block text-sm font-medium text-gray-700">
-              Proof of Service (Representative email, phone number or organization contact information- If you volunteer with other NJHS members, you can say Mrs. Chenault/Mrs. Torres.)<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="proofOfService"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-              value={proofOfService}
-              onChange={(e) => setProofOfService(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Time Start & Finish */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Only show one question per step */}
+          {stepIndex === 0 && (
             <div>
-              <label htmlFor="timeStart" className="block text-sm font-medium text-gray-700">What time did you start & finish?<span className="text-red-500">*</span></label>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name<span className="text-red-500">*</span></label>
               <input
-                type="time"
-                id="timeStart"
+                type="text"
+                id="firstName"
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={timeStart}
-                onChange={(e) => setTimeStart(e.target.value)}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 required
               />
             </div>
+          )}
+          {stepIndex === 1 && (
             <div>
-              <label htmlFor="timeEnd" className="block text-sm font-medium text-gray-700 invisible">Time End</label> {/* Invisible label for alignment */}
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name<span className="text-red-500">*</span></label>
               <input
-                type="time"
-                id="timeEnd"
+                type="text"
+                id="lastName"
                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={timeEnd}
-                onChange={(e) => setTimeEnd(e.target.value)}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 required
               />
             </div>
-          </div>
-
-          {/* Date */}
-          <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
-            <input
-              type="date"
-              id="date"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Additional Information (Optional) */}
-          <div>
-            <label htmlFor="additionalInformation" className="block text-sm font-medium text-gray-700">Additional Information (Optional)</label>
-            <textarea
-              id="additionalInformation"
-              rows={3}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-              value={additionalInformation}
-              onChange={(e) => setAdditionalInformation(e.target.value)}
-            ></textarea>
-          </div>
-
-          {/* Total Hours Display */}
-          <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-4 text-left">
-            <p className="text-lg font-semibold text-primary-dark">
-              Total Hours: {calcHours()}
-            </p>
-          </div>
-
-          {/* Success message just above the submit button */}
-          {submitted && (
-            <div className="mb-4 p-4 bg-green-50 text-green-600 rounded-lg text-center">
-              Hours submitted successfully!
+          )}
+          {stepIndex === 2 && (
+            <div>
+              <label htmlFor="organization" className="block text-sm font-medium text-gray-700">
+                Organization (What group or person or event did you help with? If you volunteered with other NJHS members, you would say Stiles NJHS.)<span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="organization"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={organization}
+                onChange={(e) => setOrganization(e.target.value)}
+                placeholder="e.g., Stiles NJHS"
+                required
+              />
+            </div>
+          )}
+          {stepIndex === 3 && (
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                Description (tell us a little about what you did while you were there)<span className="text-red-500">*</span>
+              </label>
+              <textarea
+                id="description"
+                rows={3}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              ></textarea>
+            </div>
+          )}
+          {stepIndex === 4 && (
+            <div>
+              <label htmlFor="proofOfService" className="block text-sm font-medium text-gray-700">
+                Proof of Service (Representative email, phone number or organization contact information- If you volunteer with other NJHS members, you can say Mrs. Chenault/Mrs. Torres.)<span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="proofOfService"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={proofOfService}
+                onChange={(e) => setProofOfService(e.target.value)}
+                required
+              />
+            </div>
+          )}
+          {stepIndex === 5 && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="timeStart" className="block text-sm font-medium text-gray-700">What time did you start & finish?<span className="text-red-500">*</span></label>
+                <input
+                  type="time"
+                  id="timeStart"
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                  value={timeStart}
+                  onChange={(e) => setTimeStart(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="timeEnd" className="block text-sm font-medium text-gray-700 invisible">Time End</label> {/* Invisible label for alignment */}
+                <input
+                  type="time"
+                  id="timeEnd"
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                  value={timeEnd}
+                  onChange={(e) => setTimeEnd(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+          )}
+          {stepIndex === 6 && (
+            <div>
+              <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
+              <input
+                type="date"
+                id="date"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+            </div>
+          )}
+          {stepIndex === 7 && (
+            <div>
+              <label htmlFor="additionalInformation" className="block text-sm font-medium text-gray-700">Additional Information (Optional)</label>
+              <textarea
+                id="additionalInformation"
+                rows={3}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={additionalInformation}
+                onChange={(e) => setAdditionalInformation(e.target.value)}
+              ></textarea>
+              <div className="bg-gray-100 rounded-lg p-3 border border-gray-200 mt-4 text-left">
+                <p className="text-lg font-semibold text-primary-dark">
+                  Total Hours: {calcHours()}
+                </p>
+              </div>
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-2 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition"
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Hours'}
-          </button>
+          {/* Navigation Buttons */}
+          <div className="flex justify-between mt-8">
+            <button
+              type="button"
+              onClick={prevStep}
+              disabled={stepIndex === 0}
+              className="px-6 py-2 rounded-lg bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 transition disabled:opacity-50"
+            >
+              Back
+            </button>
+            {stepIndex < steps.length - 1 ? (
+              <button
+                type="button"
+                onClick={nextStep}
+                disabled={!isStepValid()}
+                className="px-6 py-2 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition disabled:opacity-50"
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={isSubmitting || !isStepValid()}
+                className="px-6 py-2 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition disabled:opacity-50"
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Hours'}
+              </button>
+            )}
+          </div>
         </form>
       </div>
     </div>
