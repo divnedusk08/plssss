@@ -509,23 +509,14 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           {stepIndex === 7 && (
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold mb-6 text-primary-dark text-center">Review Your Submission</h3>
-              <table className="w-full text-base mb-4">
-                <tbody>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">First Name:</td><td className="py-2">{firstName}</td></tr>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Last Name:</td><td className="py-2">{lastName}</td></tr>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Organization:</td><td className="py-2">{organization}</td></tr>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Description:</td><td className="py-2">{description}</td></tr>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Proof of Service:</td><td className="py-2">{proofOfService}</td></tr>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Time Start:</td><td className="py-2">{timeStart}</td></tr>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Time End:</td><td className="py-2">{timeEnd}</td></tr>
-                  <tr><td className="font-semibold text-gray-700 py-2 pr-4">Date:</td><td className="py-2">{date}</td></tr>
-                  {additionalInformation && (
-                    <tr><td className="font-semibold text-gray-700 py-2 pr-4">Additional Info:</td><td className="py-2">{additionalInformation}</td></tr>
-                  )}
-                </tbody>
-              </table>
-              <div className="bg-gray-100 rounded-lg p-4 border border-gray-200 text-center">
-                <span className="text-xl font-bold text-primary-dark">Total Hours: {calcHours()}</span>
+              
+              <div className="bg-gray-100 rounded-lg p-6 border border-gray-200 text-center mb-6">
+                <span className="text-3xl font-bold text-primary-dark">Total Hours: {calcHours()}</span>
+              </div>
+              
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
+                <p className="text-lg font-semibold text-blue-800 mb-2">Are you sure you want to submit?</p>
+                <p className="text-sm text-blue-600">Please review your information before submitting your volunteer hours.</p>
               </div>
             </div>
           )}
