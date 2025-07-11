@@ -117,7 +117,6 @@ function Home() {
           className="rounded-2xl shadow-2xl border border-gray-200 w-full max-w-5xl"
           style={{ objectFit: 'contain' }}
         />
-        <div className="mt-4 text-gray-600 text-lg font-montserrat font-semibold">Sneak peek of your dashboard!</div>
       </div>
 
       {/* How it works section */}
