@@ -185,18 +185,23 @@ function Home() {
 }
 
 // Stepper Progress Tracker for Log Hours
-function LogHoursStepper({ steps, currentStep }: { steps: string[]; currentStep: number }) {
+function LogHoursStepper({ steps, currentStep, onStepClick }: { steps: string[]; currentStep: number; onStepClick?: (idx: number) => void }) {
   return (
     <div className="flex flex-col items-center mb-8">
       <div className="flex w-full max-w-2xl justify-between items-center">
         {steps.map((step, idx) => (
           <div key={step} className="flex-1 flex flex-col items-center">
-            <div
-              className={`w-8 h-8 flex items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-300
-                ${idx < currentStep ? 'bg-primary text-white border-primary' : idx === currentStep ? 'bg-accent text-primary-dark border-accent' : 'bg-gray-200 text-gray-400 border-gray-300'}`}
+            <button
+              type="button"
+              disabled={onStepClick == null || idx > currentStep}
+              onClick={() => onStepClick && idx <= currentStep && onStepClick(idx)}
+              className={`w-8 h-8 flex items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-300 focus:outline-none
+                ${idx < currentStep ? 'bg-primary text-white border-primary' : idx === currentStep ? 'bg-accent text-primary-dark border-accent' : 'bg-gray-200 text-gray-400 border-gray-300'}
+                ${onStepClick && idx <= currentStep ? 'cursor-pointer hover:scale-110' : 'cursor-default'}`}
+              aria-label={`Go to step ${step}`}
             >
               {idx < currentStep ? '✓' : idx + 1}
-            </div>
+            </button>
             <div className={`mt-2 text-xs text-center font-semibold ${idx === currentStep ? 'text-primary-dark' : 'text-gray-500'}`}>{step}</div>
             {idx < steps.length - 1 && (
               <div className="h-1 w-full bg-gray-300 mt-1 mb-1">
@@ -242,6 +247,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   const [additionalInformation, setAdditionalInformation] = React.useState(''); // New state for additional info
   const [error, setError] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = React.useState(false);
 
   React.useEffect(() => {
     if (user) {
@@ -262,6 +268,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   }
 
   const handleSubmit = async () => {
+    setHasAttemptedSubmit(true);
     setError('');
     setIsSubmitting(true);
 
@@ -336,6 +343,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       setAdditionalInformation(''); // Clear new field
       setError('');
       setDashboardRefreshKey(prev => prev + 1); // Trigger dashboard refresh
+      setHasAttemptedSubmit(false); // Reset after successful submit
       // Redirect to dashboard after 1.5 seconds
       setTimeout(() => {
         navigate('/dashboard');
@@ -361,8 +369,14 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   const [stepIndex, setStepIndex] = React.useState(0);
 
   // Helper to go to next/prev step
-  const nextStep = () => setStepIndex((i) => Math.min(i + 1, steps.length - 1));
-  const prevStep = () => setStepIndex((i) => Math.max(i - 1, 0));
+  const nextStep = () => {
+    setStepIndex((i) => Math.min(i + 1, steps.length - 1));
+    setHasAttemptedSubmit(false);
+  };
+  const prevStep = () => {
+    setStepIndex((i) => Math.max(i - 1, 0));
+    setHasAttemptedSubmit(false);
+  };
 
   // Validation for each step
   const isStepValid = () => {
@@ -384,7 +398,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
 
         {/* Stepper Progress Tracker */}
-        <LogHoursStepper steps={steps} currentStep={stepIndex} />
+        <LogHoursStepper steps={steps} currentStep={stepIndex} onStepClick={(idx) => setStepIndex(idx)} />
 
         {error && (
           <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-center">
@@ -517,16 +531,16 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               <h3 className="text-2xl font-bold mb-6 text-primary-dark text-center">Review Your Submission</h3>
               
               <div className="bg-gray-100 rounded-lg p-6 border border-gray-200 text-center mb-6">
-                <span className="text-3xl font-bold text-primary-dark">
+                <span className="text-xl font-bold text-primary-dark">
                   Total Hours: {calcHours() || '0.00'}
                 </span>
-                {(!isSubmitting && (!timeStart || !timeEnd)) && (
+                {(!hasAttemptedSubmit && (!timeStart || !timeEnd)) && (
                   <p className="text-sm text-red-600 mt-2">Please enter start and end times</p>
                 )}
               </div>
               
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
-                <p className="text-lg font-semibold text-blue-800 mb-2">Are you sure you want to submit?</p>
+                <p className="text-base font-semibold text-blue-800 mb-2">Are you sure you want to submit?</p>
                 <p className="text-sm text-blue-600">Please review your information before submitting your volunteer hours.</p>
               </div>
             </div>
