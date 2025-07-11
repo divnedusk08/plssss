@@ -184,6 +184,33 @@ function Home() {
   );
 }
 
+// Stepper Progress Tracker for Log Hours
+function LogHoursStepper({ steps, currentStep }: { steps: string[]; currentStep: number }) {
+  return (
+    <div className="flex flex-col items-center mb-8">
+      <div className="flex w-full max-w-2xl justify-between items-center">
+        {steps.map((step, idx) => (
+          <div key={step} className="flex-1 flex flex-col items-center">
+            <div
+              className={`w-8 h-8 flex items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-300
+                ${idx < currentStep ? 'bg-primary text-white border-primary' : idx === currentStep ? 'bg-accent text-primary-dark border-accent' : 'bg-gray-200 text-gray-400 border-gray-300'}`}
+            >
+              {idx < currentStep ? '✓' : idx + 1}
+            </div>
+            <div className={`mt-2 text-xs text-center font-semibold ${idx === currentStep ? 'text-primary-dark' : 'text-gray-500'}`}>{step}</div>
+            {idx < steps.length - 1 && (
+              <div className="h-1 w-full bg-gray-300 mt-1 mb-1">
+                <div className={`h-1 transition-all duration-300 ${idx < currentStep ? 'bg-primary' : 'bg-gray-300'}`}></div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 text-sm text-gray-600">{Math.round((currentStep / (steps.length - 1)) * 100)}% complete</div>
+    </div>
+  );
+}
+
 function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>> }) {
   const { user } = useAuth();
   const location = useLocation();
@@ -323,10 +350,34 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
     }
   };
 
+  // Stepper logic
+  const steps = [
+    'First Name',
+    'Last Name',
+    'Organization',
+    'Description',
+    'Proof',
+    'Time',
+    'Date',
+    'Review & Submit',
+  ];
+  let currentStep = 0;
+  if (firstName) currentStep = 1;
+  if (lastName) currentStep = 2;
+  if (organization) currentStep = 3;
+  if (description) currentStep = 4;
+  if (proofOfService) currentStep = 5;
+  if (timeStart && timeEnd) currentStep = 6;
+  if (date) currentStep = 7;
+  if (firstName && lastName && organization && description && proofOfService && timeStart && timeEnd && date) currentStep = 7;
+
   return (
     <div className="min-h-[80vh] flex flex-col items-center py-10 px-4 bg-gray-100">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8">
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
+
+        {/* Stepper Progress Tracker */}
+        <LogHoursStepper steps={steps} currentStep={currentStep} />
 
         {error && (
           <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-center">
