@@ -74,7 +74,7 @@ function Home() {
   }, [user, navigate]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white">
+    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white" style={{ zoom: 1.15 }}>
       {/* Logo and Title */}
       <div className="flex flex-col items-center mb-6 mt-12 fade-in">
         <div className="relative">
@@ -114,10 +114,10 @@ function Home() {
         <img
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-lg border border-gray-200 max-w-full md:max-w-2xl"
-          style={{ objectFit: 'contain' }}
+          className="rounded-2xl shadow-2xl border border-gray-200 w-full max-w-4xl"
+          style={{ objectFit: 'contain', minHeight: '350px', minWidth: '700px' }}
         />
-        <div className="mt-2 text-gray-600 text-base font-montserrat">Sneak peek of your dashboard!</div>
+        <div className="mt-2 text-gray-600 text-lg font-montserrat font-semibold">Sneak peek of your dashboard!</div>
       </div>
 
       {/* How it works section */}
