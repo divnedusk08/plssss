@@ -110,7 +110,7 @@ function Home() {
       </button>
 
       {/* Sneak Peek Image */}
-      <div className="flex flex-col items-center mt-10 mb-14 fade-in">
+      <div className="flex flex-col items-center mt-4 mb-14 fade-in">
         <img
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
