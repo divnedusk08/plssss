@@ -520,7 +520,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                 <span className="text-3xl font-bold text-primary-dark">
                   Total Hours: {calcHours() || '0.00'}
                 </span>
-                {(!timeStart || !timeEnd) && (
+                {(!isSubmitting && (!timeStart || !timeEnd)) && (
                   <p className="text-sm text-red-600 mt-2">Please enter start and end times</p>
                 )}
               </div>
