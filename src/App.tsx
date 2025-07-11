@@ -391,7 +391,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center py-10 px-4 bg-white">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-12">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-12 min-h-[700px]">
         <h2 className="text-3xl font-extrabold text-primary-dark text-center font-montserrat mb-8">Log Volunteer Hours</h2>
 
         {/* Stepper Progress Tracker */}
