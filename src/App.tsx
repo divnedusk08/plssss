@@ -115,7 +115,7 @@ function Home() {
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
           className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
-          style={{ objectFit: 'contain' }}
+          style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
         />
       </div>
 
