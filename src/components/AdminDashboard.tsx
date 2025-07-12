@@ -217,8 +217,8 @@ export default function AdminDashboard() {
           // Replace with your actual period data/logic
           const periodName = `Six Weeks ${periodIdx}`;
           // Example: get accomplished and notAccomplished arrays for this period
-          const accomplished = [/* ... */]; // Fill with actual data
-          const notAccomplished = [/* ... */]; // Fill with actual data
+          const accomplished: string[] = [];
+          const notAccomplished: string[] = [];
           const [periodSearch, setPeriodSearch] = React.useState('');
           const filteredAccomplished = filterMembers(accomplished, periodSearch);
           const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
