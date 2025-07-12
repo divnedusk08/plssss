@@ -1136,7 +1136,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
-      <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin Dashboard: Volunteer Hour Compliance</h2>
+      <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin Dashboard: Volunteer Hour Progress</h2>
       
       {isLoading ? (
         <div className="flex justify-center items-center h-48">
