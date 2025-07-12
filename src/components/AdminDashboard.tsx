@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { VolunteerLog, User } from '../lib/supabase';
@@ -157,6 +157,13 @@ export default function AdminDashboard() {
   ];
   const COLORS = ['#4CAF50', '#F87171'];
 
+  // Helper: returns filtered members for a period based on search
+  function filterMembers(members: string[], query: string) {
+    if (!query) return members;
+    const q = query.trim().toLowerCase();
+    return members.filter(name => name.toLowerCase().includes(q));
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -176,7 +183,7 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h2>
-      {/* Student Search Bar */}
+      {/* Student Search Bar (optional, can remove if only per-period search is wanted) */}
       <div className="mb-6 flex flex-col sm:flex-row items-center gap-3">
         <input
           type="text"
@@ -213,6 +220,47 @@ export default function AdminDashboard() {
             />
           </PieChart>
         </ResponsiveContainer>
+      </div>
+      {/* Per-Period Cards (example for 6 periods) */}
+      <div className="space-y-12">
+        {[1,2,3,4,5,6].map((periodIdx) => {
+          // Replace with your actual period data/logic
+          const periodName = `Six Weeks ${periodIdx}`;
+          // Example: get accomplished and notAccomplished arrays for this period
+          const accomplished = [/* ... */]; // Fill with actual data
+          const notAccomplished = [/* ... */]; // Fill with actual data
+          return (
+            <div key={periodName} className="border border-gray-200 rounded-xl shadow-lg p-6">
+              <h3 className="text-2xl font-bold text-primary-dark mb-4">{periodName}</h3>
+              {/* Met Section */}
+              <div>
+                <h4 className="text-lg font-semibold text-green-700 mb-2">Met ({accomplished.length})</h4>
+                <div className="max-h-40 overflow-y-auto border border-green-200 rounded-md p-3 bg-green-50">
+                  {accomplished.length > 0 ? (
+                    <ul className="list-disc list-inside text-sm text-green-800">
+                      {accomplished.map(member => <li key={member}>{member}</li>)}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-500">No members met the goal for this period yet.</p>
+                  )}
+                </div>
+              </div>
+              {/* Not Met Section */}
+              <div>
+                <h4 className="text-lg font-semibold text-red-700 mb-2">Not Met ({notAccomplished.length})</h4>
+                <div className="max-h-40 overflow-y-auto border border-red-200 rounded-md p-3 bg-red-50">
+                  {notAccomplished.length > 0 ? (
+                    <ul className="list-disc list-inside text-sm text-red-800">
+                      {notAccomplished.map(member => <li key={member}>{member}</li>)}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-500">All members met the goal for this period!</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
       <div className="mb-8">
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
