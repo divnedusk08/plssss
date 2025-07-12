@@ -1151,8 +1151,8 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
           {sixWeekPeriods.map((period) => {
             const { accomplishedCount, notAccomplishedCount, accomplishedMembers, notAccomplishedMembers } = processPeriodData(period);
             const data = [
-              { name: 'Accomplished', value: accomplishedCount },
-              { name: 'Not Accomplished', value: notAccomplishedCount },
+              { name: 'Met', value: accomplishedCount },
+              { name: 'Not Met', value: notAccomplishedCount },
             ];
 
             return (
@@ -1189,26 +1189,26 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
                   </div>
                   <div className="w-full md:w-1/2 space-y-4">
                     <div>
-                      <h4 className="text-lg font-semibold text-green-700 mb-2">Accomplished ({accomplishedMembers.length})</h4>
+                      <h4 className="text-lg font-semibold text-green-700 mb-2">Met ({accomplishedMembers.length})</h4>
                       <div className="max-h-40 overflow-y-auto border border-green-200 rounded-md p-3 bg-green-50">
                         {accomplishedMembers.length > 0 ? (
                           <ul className="list-disc list-inside text-sm text-green-800">
                             {accomplishedMembers.map(member => <li key={member}>{member}</li>)}
                           </ul>
                         ) : (
-                          <p className="text-sm text-gray-500">No members accomplished the goal for this period yet.</p>
+                          <p className="text-sm text-gray-500">No members met the goal for this period yet.</p>
                         )}
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-lg font-semibold text-red-700 mb-2">Not Accomplished ({notAccomplishedMembers.length})</h4>
+                      <h4 className="text-lg font-semibold text-red-700 mb-2">Not Met ({notAccomplishedMembers.length})</h4>
                       <div className="max-h-40 overflow-y-auto border border-red-200 rounded-md p-3 bg-red-50">
                         {notAccomplishedMembers.length > 0 ? (
                           <ul className="list-disc list-inside text-sm text-red-800">
                             {notAccomplishedMembers.map(member => <li key={member}>{member}</li>)}
                           </ul>
                         ) : (
-                          <p className="text-sm text-gray-500">All members accomplished the goal for this period!</p>
+                          <p className="text-sm text-gray-500">All members met the goal for this period!</p>
                         )}
                       </div>
                     </div>
