@@ -23,7 +23,6 @@ export default function AdminDashboard() {
     organization: '',
     userId: '',
   });
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchUsers();
@@ -123,21 +122,9 @@ export default function AdminDashboard() {
   };
 
   // Filter logs and users by search query
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-  const filteredLogs = normalizedQuery
-    ? logs.filter(log => {
-        const name = `${log.user.first_name} ${log.user.last_name}`.toLowerCase();
-        const email = (log.user.email || '').toLowerCase();
-        return name.includes(normalizedQuery) || email.includes(normalizedQuery);
-      })
-    : logs;
-  const filteredUsers = normalizedQuery
-    ? users.filter(user => {
-        const name = `${user.first_name} ${user.last_name}`.toLowerCase();
-        const email = (user.email || '').toLowerCase();
-        return name.includes(normalizedQuery) || email.includes(normalizedQuery);
-      })
-    : users;
+  const normalizedQuery = ''; // No search query input, so always empty
+  const filteredLogs = logs;
+  const filteredUsers = users;
 
   // Calculate requirement met stats using filteredUsers and filteredLogs
   const requiredHours = 12; // 12 hours required per semester
