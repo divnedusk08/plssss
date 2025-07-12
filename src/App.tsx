@@ -94,16 +94,6 @@ function Home() {
         <div className="text-blue-900 text-xl font-montserrat mb-2">National Junior Honor Society</div>
       </div>
 
-      {/* Sneak Peek Image - ensure clear separation */}
-      <div className="flex flex-col items-center mt-4 mb-12">
-        <img
-          src={sneakPeakImg}
-          alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
-          style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
-        />
-      </div>
-
       {/* Tagline */}
       <div className="max-w-xl text-center mb-6 fade-in">
         <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
@@ -118,6 +108,16 @@ function Home() {
       >
         Get Started
       </button>
+
+      {/* Sneak Peek Image */}
+      <div className="flex flex-col items-center mt-4 mb-14">
+        <img
+          src={sneakPeakImg}
+          alt="Dashboard sneak peek"
+          className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
+          style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
+        />
+      </div>
 
       {/* How it works section */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" style={{ opacity: 0, animation: 'fadeIn 1.2s ease 0.4s forwards' }}>
