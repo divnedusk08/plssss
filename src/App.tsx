@@ -804,7 +804,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
       {/* Progress Bar for Required Hours (Yearly) */}
       <div className="mb-6">
         <div className="flex justify-between items-end mb-1">
-          <span className="text-lg font-bold text-primary-dark">Progress Toward Required Hours</span>
+          <span className="text-lg font-bold text-primary-dark">Progress Toward Total Required Hours</span>
           <span className="text-sm font-semibold text-gray-700">{totalHours.toFixed(2)} / {requiredHours} hours</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-5 shadow-inner">
