@@ -27,6 +27,29 @@ export default function AdminDashboard() {
   const [periodSearches, setPeriodSearches] = useState<string[]>(Array(6).fill(''));
   // Add dashboard-wide search state
   const [searchQuery, setSearchQuery] = useState('');
+  // Add this array at the top of the component (after useState declarations):
+  const njhsMembers: string[] = [
+    "Annie Addison", "Stephanie Adelowokan", "Nazila Allaudin", "Anvi Alleti", "Farhan Altaf", 
+    "Abigail Antony", "Rivaan Arvapalli", "Diya Babu", "Vrinda Balasani", "Kabir Baweja", 
+    "Lila Belanger", "Nihaarika Bhamidipati", "Sydney Bhattacharya", "Rithvik Bomidika", "Rohan Busa", 
+    "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
+    "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
+    "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
+    "Dhriti Erusalagandi", "Emery Erwin", "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
+    "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
+    "Jashwanth Jagadeesan", "Arnav Jain", "Anwitha Jeyakumar", "Sreenandana Kamattathil saril", "Maanya Katari", 
+    "Aiza Khan", "Arshiya Khanna", "Ryan Klassen", "Ashwika Konchada", "Lakshan Lakshminarayanan", 
+    "Samanvi Mane", "Esther Mathew", "Grace Mccloskey", "Cade Mehrens", "Harper Miller", 
+    "Harrison Miller", "Aarna Mishra", "Julia Moffitt", "Katelyn Moffitt", "Cade Morrison", 
+    "Kavya Mukherjee", "Ryan Nalam", "Venkata sravan reddy Naru", "Pravin Navin", "Benjamin Newton", 
+    "Reyansh Nighojkar", "James Orourke", "Soham Pachpande", "Connor Plante", "Satvik Prasad", 
+    "Pranav Pratheesh", "Adhrit Premkumar", "Bella Qiu", "Eeshaan Raj", "Diya Raveendran", 
+    "Vedant Rungta", "Anirudh Sathyan", "Brynn Schielein", "Yunseo Seo", "Ansh Shah", 
+    "Shubh Sharma", "Avikaa Shrivastava", "Ayush Singh", "Saanvi Singh", "Shreyasha Singh", 
+    "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
+    "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
+    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon"
+  ];
 
   useEffect(() => {
     fetchUsers();
@@ -230,8 +253,8 @@ export default function AdminDashboard() {
           // Replace with your actual period data/logic
           const periodName = `Six Weeks ${periodIdx}`;
           // Example: get accomplished and notAccomplished arrays for this period
-          const accomplished: string[] = [];
-          const notAccomplished: string[] = [];
+          const accomplished: string[] = njhsMembers;
+          const notAccomplished: string[] = njhsMembers;
           const periodSearch = periodSearches[periodIdx-1] || '';
           const setPeriodSearch = (val: string) => {
             setPeriodSearches(prev => {
