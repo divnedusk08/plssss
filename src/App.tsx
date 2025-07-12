@@ -766,7 +766,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   if (!user) return <Navigate to="/login" />;
   
   const totalHours = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
-  const requiredHours = 10; // Set required hours for the semester here
+      const requiredHours = 6; // Set required hours for the semester here
   const percent = Math.min((totalHours / requiredHours) * 100, 100);
   
   return (

@@ -122,7 +122,7 @@ export default function AdminDashboard() {
   };
 
   // Calculate requirement met stats
-  const requiredHours = 2; // Example: 2 hours required
+      const requiredHours = 6; // 6 hours required per semester
   const studentHours: { [userId: string]: number } = {};
   logs.forEach(log => {
     const start = new Date(`1970-01-01T${log.start_time}`);
