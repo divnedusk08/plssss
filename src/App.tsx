@@ -74,7 +74,7 @@ function Home() {
   }, [user, navigate]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white" style={{ zoom: 0.9 }}>
+    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white" style={{ zoom: 0.95 }}>
       {/* Logo and Title */}
       <div className="flex flex-col items-center mb-6 mt-12 fade-in">
         <div className="relative">
