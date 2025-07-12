@@ -122,7 +122,6 @@ export default function AdminDashboard() {
   };
 
   // Filter logs and users by search query
-  const normalizedQuery = ''; // No search query input, so always empty
   const filteredLogs = logs;
   const filteredUsers = users;
 
