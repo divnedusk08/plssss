@@ -266,16 +266,16 @@ export default function AdminDashboard() {
           const filteredAccomplished = filterMembers(accomplished, periodSearch);
           const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
           return (
-            <div key={periodName} className="border border-gray-200 rounded-xl shadow-lg p-6">
-              <h3 className="text-2xl font-bold text-primary-dark mb-4">{periodName}</h3>
+            <div key={periodName} className="border-4 border-pink-500 bg-yellow-100 rounded-xl shadow-lg p-6 mb-8">
+              <h3 className="text-3xl font-extrabold text-pink-700 mb-4">{periodName} (Search Bar Test)</h3>
               {/* Per-Period Search Bar */}
-              <div className="mb-4 flex flex-col sm:flex-row items-center gap-3">
+              <div className="mb-4 flex flex-col sm:flex-row items-center gap-3 bg-pink-200 p-4 rounded-lg">
                 <input
                   type="text"
                   value={periodSearch}
                   onChange={e => setPeriodSearch(e.target.value)}
                   placeholder={`Search students in ${periodName}...`}
-                  className="w-full sm:w-96 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-base"
+                  className="w-full sm:w-96 px-4 py-2 rounded-lg border-2 border-pink-500 shadow-sm focus:ring-pink-500 focus:border-pink-500 text-xl font-bold bg-white"
                 />
               </div>
               {/* Met Section */}
