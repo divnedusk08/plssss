@@ -766,6 +766,8 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   if (!user) return <Navigate to="/login" />;
   
   const totalHours = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
+  const requiredHours = 10; // Set required hours for the semester here
+  const percent = Math.min((totalHours / requiredHours) * 100, 100);
   
   return (
     <div className="max-w-5xl mx-auto my-4 p-3 bg-white rounded-2xl shadow-2xl">
@@ -969,6 +971,22 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
           </div>
         </div>
       )}
+      {/* Progress Bar for Required Hours */}
+      <div className="mb-6">
+        <div className="flex justify-between items-end mb-1">
+          <span className="text-lg font-bold text-primary-dark">Progress Toward Required Hours</span>
+          <span className="text-sm font-semibold text-gray-700">{totalHours.toFixed(2)} / {requiredHours} hours</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-5 shadow-inner">
+          <div
+            className={`h-5 rounded-full transition-all duration-500 ${percent >= 100 ? 'bg-green-500' : 'bg-primary'}`}
+            style={{ width: `${percent}%` }}
+          ></div>
+        </div>
+        {percent >= 100 && (
+          <div className="mt-2 text-green-700 font-semibold text-sm">Congratulations! You have met the required hours for this semester.</div>
+        )}
+      </div>
     </div>
   );
 }
