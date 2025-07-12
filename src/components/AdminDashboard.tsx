@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { VolunteerLog, User } from '../lib/supabase';
 import DatePicker from 'react-datepicker';
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
 type FilterState = {
   startDate: Date | null;
@@ -120,6 +121,24 @@ export default function AdminDashboard() {
     link.click();
   };
 
+  // Calculate requirement met stats
+  const requiredHours = 2; // Example: 2 hours required
+  const studentHours: { [userId: string]: number } = {};
+  logs.forEach(log => {
+    const start = new Date(`1970-01-01T${log.start_time}`);
+    const end = new Date(`1970-01-01T${log.end_time}`);
+    const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    studentHours[log.user.id] = (studentHours[log.user.id] || 0) + hours;
+  });
+  const totalStudents = users.length;
+  const metCount = users.filter(u => (studentHours[u.id] || 0) >= requiredHours).length;
+  const notMetCount = totalStudents - metCount;
+  const pieData = [
+    { name: 'Requirement Met', value: metCount },
+    { name: 'Not Met', value: notMetCount },
+  ];
+  const COLORS = ['#4CAF50', '#F87171'];
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -138,8 +157,36 @@ export default function AdminDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h2>
+      {/* Pie Chart Card */}
+      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 flex flex-col items-center">
+        <h3 className="text-xl font-bold text-primary-dark mb-4">Requirement Met Overview</h3>
+        <ResponsiveContainer width="100%" height={260} minWidth={320} minHeight={220}>
+          <PieChart>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              outerRadius={90}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(value) => `${value} students`} />
+            <Legend
+              verticalAlign="bottom"
+              iconType="circle"
+              wrapperStyle={{ fontWeight: 600, color: '#1e293b', fontSize: '1rem' }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900">Admin Dashboard</h2>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Start Date</label>
