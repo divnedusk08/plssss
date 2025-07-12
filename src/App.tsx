@@ -94,8 +94,8 @@ function Home() {
         <div className="text-blue-900 text-xl font-montserrat mb-2">National Junior Honor Society</div>
       </div>
 
-      {/* Sneak Peek Image - moved up */}
-      <div className="flex flex-col items-center mt-4 mb-10">
+      {/* Sneak Peek Image - ensure clear separation */}
+      <div className="flex flex-col items-center mt-4 mb-12">
         <img
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
