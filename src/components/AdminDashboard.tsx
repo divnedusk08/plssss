@@ -183,16 +183,6 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h2>
-      {/* Student Search Bar (optional, can remove if only per-period search is wanted) */}
-      <div className="mb-6 flex flex-col sm:flex-row items-center gap-3">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Search by student name or email..."
-          className="w-full sm:w-96 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-base"
-        />
-      </div>
       {/* Pie Chart Card */}
       <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 flex flex-col items-center">
         <h3 className="text-xl font-bold text-primary-dark mb-4">Progress Overview</h3>
@@ -229,16 +219,29 @@ export default function AdminDashboard() {
           // Example: get accomplished and notAccomplished arrays for this period
           const accomplished = [/* ... */]; // Fill with actual data
           const notAccomplished = [/* ... */]; // Fill with actual data
+          const [periodSearch, setPeriodSearch] = React.useState('');
+          const filteredAccomplished = filterMembers(accomplished, periodSearch);
+          const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
           return (
             <div key={periodName} className="border border-gray-200 rounded-xl shadow-lg p-6">
               <h3 className="text-2xl font-bold text-primary-dark mb-4">{periodName}</h3>
+              {/* Per-Period Search Bar */}
+              <div className="mb-4 flex flex-col sm:flex-row items-center gap-3">
+                <input
+                  type="text"
+                  value={periodSearch}
+                  onChange={e => setPeriodSearch(e.target.value)}
+                  placeholder={`Search students in ${periodName}...`}
+                  className="w-full sm:w-96 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-base"
+                />
+              </div>
               {/* Met Section */}
               <div>
-                <h4 className="text-lg font-semibold text-green-700 mb-2">Met ({accomplished.length})</h4>
+                <h4 className="text-lg font-semibold text-green-700 mb-2">Met ({filteredAccomplished.length})</h4>
                 <div className="max-h-40 overflow-y-auto border border-green-200 rounded-md p-3 bg-green-50">
-                  {accomplished.length > 0 ? (
+                  {filteredAccomplished.length > 0 ? (
                     <ul className="list-disc list-inside text-sm text-green-800">
-                      {accomplished.map(member => <li key={member}>{member}</li>)}
+                      {filteredAccomplished.map(member => <li key={member}>{member}</li>)}
                     </ul>
                   ) : (
                     <p className="text-sm text-gray-500">No members met the goal for this period yet.</p>
@@ -247,11 +250,11 @@ export default function AdminDashboard() {
               </div>
               {/* Not Met Section */}
               <div>
-                <h4 className="text-lg font-semibold text-red-700 mb-2">Not Met ({notAccomplished.length})</h4>
+                <h4 className="text-lg font-semibold text-red-700 mb-2">Not Met ({filteredNotAccomplished.length})</h4>
                 <div className="max-h-40 overflow-y-auto border border-red-200 rounded-md p-3 bg-red-50">
-                  {notAccomplished.length > 0 ? (
+                  {filteredNotAccomplished.length > 0 ? (
                     <ul className="list-disc list-inside text-sm text-red-800">
-                      {notAccomplished.map(member => <li key={member}>{member}</li>)}
+                      {filteredNotAccomplished.map(member => <li key={member}>{member}</li>)}
                     </ul>
                   ) : (
                     <p className="text-sm text-gray-500">All members met the goal for this period!</p>
