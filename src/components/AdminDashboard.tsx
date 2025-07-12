@@ -23,6 +23,8 @@ export default function AdminDashboard() {
     organization: '',
     userId: '',
   });
+  // Add per-period search state
+  const [periodSearches, setPeriodSearches] = useState<string[]>(Array(6).fill(''));
 
   useEffect(() => {
     fetchUsers();
@@ -205,7 +207,14 @@ export default function AdminDashboard() {
           // Example: get accomplished and notAccomplished arrays for this period
           const accomplished: string[] = [];
           const notAccomplished: string[] = [];
-          const [periodSearch, setPeriodSearch] = React.useState('');
+          const periodSearch = periodSearches[periodIdx-1] || '';
+          const setPeriodSearch = (val: string) => {
+            setPeriodSearches(prev => {
+              const copy = [...prev];
+              copy[periodIdx-1] = val;
+              return copy;
+            });
+          };
           const filteredAccomplished = filterMembers(accomplished, periodSearch);
           const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
           return (
