@@ -134,7 +134,7 @@ export default function AdminDashboard() {
   const metCount = users.filter(u => (studentHours[u.id] || 0) >= requiredHours).length;
   const notMetCount = totalStudents - metCount;
   const pieData = [
-    { name: 'Requirement Met', value: metCount },
+    { name: 'Met', value: metCount },
     { name: 'Not Met', value: notMetCount },
   ];
   const COLORS = ['#4CAF50', '#F87171'];
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h2>
       {/* Pie Chart Card */}
       <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 flex flex-col items-center">
-        <h3 className="text-xl font-bold text-primary-dark mb-4">Requirement Met Overview</h3>
+        <h3 className="text-xl font-bold text-primary-dark mb-4">Progress Overview</h3>
         <ResponsiveContainer width="100%" height={260} minWidth={320} minHeight={220}>
           <PieChart>
             <Pie
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
             <Legend
               verticalAlign="bottom"
               iconType="circle"
-              wrapperStyle={{ fontWeight: 600, color: '#1e293b', fontSize: '1rem' }}
+              wrapperStyle={{ fontWeight: 700, color: '#111827', fontSize: '1.1rem', letterSpacing: '0.02em' }}
             />
           </PieChart>
         </ResponsiveContainer>
