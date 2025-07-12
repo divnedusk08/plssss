@@ -4,7 +4,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './supabaseClient';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import sneakPeakImg from './assets/SneakPeak.png';
-import FadeInOnScroll from './components/FadeInOnScroll';
 
 function SplashScreen({ className }: { className?: string }) {
   return (
@@ -95,6 +94,16 @@ function Home() {
         <div className="text-blue-900 text-xl font-montserrat mb-2">National Junior Honor Society</div>
       </div>
 
+      {/* Sneak Peek Image - moved up */}
+      <div className="flex flex-col items-center mt-4 mb-10">
+        <img
+          src={sneakPeakImg}
+          alt="Dashboard sneak peek"
+          className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
+          style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
+        />
+      </div>
+
       {/* Tagline */}
       <div className="max-w-xl text-center mb-6 fade-in">
         <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
@@ -110,76 +119,58 @@ function Home() {
         Get Started
       </button>
 
-      {/* Sneak Peek Image */}
-      <div className="flex flex-col items-center mt-4 mb-14">
-        <img
-          src={sneakPeakImg}
-          alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
-          style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
-        />
-      </div>
-
       {/* How it works section */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <FadeInOnScroll>
-          <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
-            </div>
-            <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Log Your Hours</h3>
-            <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Submit hours easily. All submissions stored securely.</p>
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" style={{ opacity: 0, animation: 'fadeIn 1.2s ease 0.4s forwards' }}>
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
+          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
           </div>
-        </FadeInOnScroll>
-        <FadeInOnScroll>
-          <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-            <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-              <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round"/></svg>
-            </div>
-            <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Track Progress</h3>
-            <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">View total hours and history. Stay on top of requirements.</p>
+          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Log Your Hours</h3>
+          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Submit hours easily. All submissions stored securely.</p>
+        </div>
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
+          <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round"/></svg>
           </div>
-        </FadeInOnScroll>
-        <FadeInOnScroll>
-          <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-            <div className="w-20 h-20 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
-              <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round"/></svg>
-            </div>
-            <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Get Recognized</h3>
-            <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Earn recognition for service and leadership. Your impact matters!</p>
+          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Track Progress</h3>
+          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">View total hours and history. Stay on top of requirements.</p>
+        </div>
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
+          <div className="w-20 h-20 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
+            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round"/></svg>
           </div>
-        </FadeInOnScroll>
+          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Get Recognized</h3>
+          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Earn recognition for service and leadership. Your impact matters!</p>
+        </div>
       </div>
 
       {/* Contact Section */}
-      <FadeInOnScroll>
-        <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-6 border-t-4 border-primary-dark">
-          <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
-          <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
-            Contact NJHS advisors or email
-            <span className="flex items-center justify-center gap-2 relative">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText('dhriti.erusalagandi58@k12.leanderisd.org');
-                  // Show feedback
-                  const button = document.activeElement as HTMLButtonElement;
-                  const originalText = button.textContent;
-                  button.textContent = 'Copied!';
-                  button.className = 'text-green-600 underline hover:text-green-700 transition-colors select-all cursor-pointer';
-                  setTimeout(() => {
-                    button.textContent = originalText;
-                    button.className = 'text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer';
-                  }, 2000);
-                }}
-                className="text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer"
-                title="Copy email address"
-              >
-                dhriti.erusalagandi58@k12.leanderisd.org
-              </button>
-            </span>
-          </p>
-        </div>
-      </FadeInOnScroll>
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-6 border-t-4 border-primary-dark fade-in">
+        <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
+        <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
+          Contact NJHS advisors or email
+          <span className="flex items-center justify-center gap-2 relative">
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText('dhriti.erusalagandi58@k12.leanderisd.org');
+                // Show feedback
+                const button = document.activeElement as HTMLButtonElement;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.className = 'text-green-600 underline hover:text-green-700 transition-colors select-all cursor-pointer';
+                setTimeout(() => {
+                  button.textContent = originalText;
+                  button.className = 'text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer';
+                }, 2000);
+              }}
+              className="text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer"
+              title="Copy email address"
+            >
+              dhriti.erusalagandi58@k12.leanderisd.org
+            </button>
+          </span>
+        </p>
+      </div>
 
       {/* Not affiliated notice and copyright - centered between box and blue footer */}
       <div className="w-full flex justify-center">
