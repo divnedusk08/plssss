@@ -23,6 +23,7 @@ export default function AdminDashboard() {
     organization: '',
     userId: '',
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchUsers();
@@ -121,17 +122,34 @@ export default function AdminDashboard() {
     link.click();
   };
 
-  // Calculate requirement met stats
-      const requiredHours = 12; // 12 hours required per semester
+  // Filter logs and users by search query
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredLogs = normalizedQuery
+    ? logs.filter(log => {
+        const name = `${log.user.first_name} ${log.user.last_name}`.toLowerCase();
+        const email = (log.user.email || '').toLowerCase();
+        return name.includes(normalizedQuery) || email.includes(normalizedQuery);
+      })
+    : logs;
+  const filteredUsers = normalizedQuery
+    ? users.filter(user => {
+        const name = `${user.first_name} ${user.last_name}`.toLowerCase();
+        const email = (user.email || '').toLowerCase();
+        return name.includes(normalizedQuery) || email.includes(normalizedQuery);
+      })
+    : users;
+
+  // Calculate requirement met stats using filteredUsers and filteredLogs
+  const requiredHours = 12; // 12 hours required per semester
   const studentHours: { [userId: string]: number } = {};
-  logs.forEach(log => {
+  filteredLogs.forEach(log => {
     const start = new Date(`1970-01-01T${log.start_time}`);
     const end = new Date(`1970-01-01T${log.end_time}`);
     const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
     studentHours[log.user.id] = (studentHours[log.user.id] || 0) + hours;
   });
-  const totalStudents = users.length;
-  const metCount = users.filter(u => (studentHours[u.id] || 0) >= requiredHours).length;
+  const totalStudents = filteredUsers.length;
+  const metCount = filteredUsers.filter(u => (studentHours[u.id] || 0) >= requiredHours).length;
   const notMetCount = totalStudents - metCount;
   const pieData = [
     { name: 'Met', value: metCount },
@@ -158,6 +176,16 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h2>
+      {/* Student Search Bar */}
+      <div className="mb-6 flex flex-col sm:flex-row items-center gap-3">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          placeholder="Search by student name or email..."
+          className="w-full sm:w-96 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-base"
+        />
+      </div>
       {/* Pie Chart Card */}
       <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 flex flex-col items-center">
         <h3 className="text-xl font-bold text-primary-dark mb-4">Progress Overview</h3>
@@ -221,7 +249,7 @@ export default function AdminDashboard() {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             >
               <option value="">All Users</option>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <option key={user.id} value={user.id}>
                   {user.first_name} {user.last_name}
                 </option>
@@ -264,7 +292,7 @@ export default function AdminDashboard() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {logs.map((log) => {
+            {filteredLogs.map((log) => {
               const start = new Date(`1970-01-01T${log.start_time}`);
               const end = new Date(`1970-01-01T${log.end_time}`);
               const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
