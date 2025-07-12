@@ -1013,7 +1013,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     "Shubh Sharma", "Avikaa Shrivastava", "Ayush Singh", "Saanvi Singh", "Shreyasha Singh", 
     "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
     "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
-    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon", "divineduskdragon"
+    "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon"
   ];
 
   // Move fetchAllLogs to outer scope so it can be used in both useEffects
