@@ -247,12 +247,10 @@ export default function AdminDashboard() {
           </PieChart>
         </ResponsiveContainer>
       </div>
-      {/* Per-Period Cards (example for 6 periods) */}
+      {/* Per-Period Cards: Always Rendered! */}
       <div className="space-y-12">
         {[1,2,3,4,5,6].map((periodIdx) => {
-          // Replace with your actual period data/logic
           const periodName = `Six Weeks ${periodIdx}`;
-          // Example: get accomplished and notAccomplished arrays for this period
           const accomplished: string[] = njhsMembers;
           const notAccomplished: string[] = njhsMembers;
           const periodSearch = periodSearches[periodIdx-1] || '';
@@ -308,6 +306,7 @@ export default function AdminDashboard() {
           );
         })}
       </div>
+      {/* End Per-Period Cards */}
       <div className="mb-8">
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
