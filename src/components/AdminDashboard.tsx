@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { VolunteerLog, User } from '../lib/supabase';
 import DatePicker from 'react-datepicker';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import { SearchBar } from "./ui/search-bar";
 
 type FilterState = {
   startDate: Date | null;
@@ -268,12 +269,9 @@ export default function AdminDashboard() {
               <h3 className="text-3xl font-extrabold text-pink-700 mb-4">{periodName} (Search Bar Test)</h3>
               {/* Per-Period Search Bar */}
               <div className="mb-4 flex flex-col sm:flex-row items-center gap-3 bg-pink-200 p-4 rounded-lg">
-                <input
-                  type="text"
-                  value={periodSearch}
-                  onChange={e => setPeriodSearch(e.target.value)}
+                <SearchBar
                   placeholder={`Search students in ${periodName}...`}
-                  className="w-full sm:w-96 px-4 py-2 rounded-lg border-2 border-pink-500 shadow-sm focus:ring-pink-500 focus:border-pink-500 text-xl font-bold bg-white"
+                  onSearch={setPeriodSearch}
                 />
               </div>
               {/* Met Section */}
