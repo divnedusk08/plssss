@@ -99,35 +99,14 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
     }
   }, [isFocused])
 
-  const searchIconVariants = {
-    initial: { scale: 1 },
-    animate: {
-      rotate: isAnimating ? [0, -15, 15, -10, 10, 0] : 0,
-      scale: isAnimating ? [1, 1.3, 1] : 1,
-      transition: { duration: 0.6, ease: "easeInOut" },
-    },
-  }
+  const searchIconVariants = { initial: { scale: 1 }, animate: { rotate: 0, scale: 1, transition: { duration: 0.6 } } };
 
+  // Replace dynamic suggestionVariants with static objects
   const suggestionVariants = {
-    hidden: (i: number) => ({
-      opacity: 0,
-      y: -10,
-      scale: 0.95,
-      transition: { duration: 0.15, delay: i * 0.05 },
-    }),
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { type: "spring", stiffness: 300, damping: 15, delay: i * 0.07 },
-    }),
-    exit: (i: number) => ({
-      opacity: 0,
-      y: -5,
-      scale: 0.9,
-      transition: { duration: 0.1, delay: i * 0.03 },
-    }),
-  }
+    hidden: { opacity: 0, y: -10, scale: 0.95, transition: { duration: 0.15 } },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.2 } },
+    exit: { opacity: 0, y: -5, scale: 0.9, transition: { duration: 0.1 } },
+  };
 
   const particles = Array.from({ length: isFocused ? 18 : 0 }, (_, i) => (
     <motion.div
@@ -188,11 +167,8 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
       >
         <motion.div
           className={
-            // cn(
-            "flex items-center w-full rounded-full border relative overflow-hidden backdrop-blur-md",
-            // isFocused ? "border-transparent shadow-xl" : "border-gray-200 dark:border-gray-700 bg-white/30 dark:bg-gray-800/50"
-            // )
-            isFocused ? "border-transparent shadow-xl" : "border-gray-200 bg-white/30"
+            "flex items-center w-full rounded-full border relative overflow-hidden backdrop-blur-md " +
+            (isFocused ? "border-transparent shadow-xl" : "border-gray-200 bg-white/30")
           }
           animate={{
             boxShadow: isClicked
