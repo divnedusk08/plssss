@@ -406,122 +406,122 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
         <div className="space-y-6">
           {/* Only show one question per step */}
           {stepIndex === 0 && (
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name<span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                id="firstName"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+          <div>
+            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name<span className="text-red-500">*</span></label>
+            <input
+              type="text"
+              id="firstName"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
                 required
-              />
-            </div>
+            />
+          </div>
           )}
           {stepIndex === 1 && (
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name<span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                id="lastName"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+          <div>
+            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name<span className="text-red-500">*</span></label>
+            <input
+              type="text"
+              id="lastName"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
                 required
-              />
-            </div>
+            />
+          </div>
           )}
           {stepIndex === 2 && (
-            <div>
-              <label htmlFor="organization" className="block text-sm font-medium text-gray-700">
-                Organization (What group or person or event did you help with? If you volunteered with other NJHS members, you would say Stiles NJHS.)<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="organization"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={organization}
-                onChange={(e) => setOrganization(e.target.value)}
-                placeholder="e.g., Stiles NJHS"
-                required
-              />
-            </div>
+          <div>
+            <label htmlFor="organization" className="block text-sm font-medium text-gray-700">
+              Organization (What group or person or event did you help with? If you volunteered with other NJHS members, you would say Stiles NJHS.)<span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="organization"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+              value={organization}
+              onChange={(e) => setOrganization(e.target.value)}
+              placeholder="e.g., Stiles NJHS"
+              required
+            />
+          </div>
           )}
           {stepIndex === 3 && (
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                Description (tell us a little about what you did while you were there)<span className="text-red-500">*</span>
-              </label>
-              <textarea
-                id="description"
-                rows={3}
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              ></textarea>
-            </div>
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+              Description (tell us a little about what you did while you were there)<span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="description"
+              rows={3}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            ></textarea>
+          </div>
           )}
           {stepIndex === 4 && (
-            <div>
-              <label htmlFor="proofOfService" className="block text-sm font-medium text-gray-700">
-                Proof of Service (Representative email, phone number or organization contact information- If you volunteer with other NJHS members, you can say Mrs. Chenault/Mrs. Torres.)<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="proofOfService"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={proofOfService}
-                onChange={(e) => setProofOfService(e.target.value)}
-                required
-              />
-            </div>
+          <div>
+            <label htmlFor="proofOfService" className="block text-sm font-medium text-gray-700">
+              Proof of Service (Representative email, phone number or organization contact information- If you volunteer with other NJHS members, you can say Mrs. Chenault/Mrs. Torres.)<span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="proofOfService"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+              value={proofOfService}
+              onChange={(e) => setProofOfService(e.target.value)}
+              required
+            />
+          </div>
           )}
           {stepIndex === 5 && (
             <div className="space-y-4">
-              <div>
+            <div>
                 <label htmlFor="timeStart" className="block text-sm font-medium text-gray-700">Start Time<span className="text-red-500">*</span></label>
-                <input
-                  type="time"
-                  id="timeStart"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                  value={timeStart}
-                  onChange={(e) => setTimeStart(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
+              <input
+                type="time"
+                id="timeStart"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={timeStart}
+                onChange={(e) => setTimeStart(e.target.value)}
+                required
+              />
+            </div>
+            <div>
                 <label htmlFor="timeEnd" className="block text-sm font-medium text-gray-700">End Time<span className="text-red-500">*</span></label>
-                <input
-                  type="time"
-                  id="timeEnd"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                  value={timeEnd}
-                  onChange={(e) => setTimeEnd(e.target.value)}
-                  required
-                />
-              </div>
+              <input
+                type="time"
+                id="timeEnd"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={timeEnd}
+                onChange={(e) => setTimeEnd(e.target.value)}
+                required
+              />
+            </div>
               {timeStart && timeEnd && (
                 <div className="bg-green-50 rounded-lg p-3 border border-green-200 text-center">
                   <span className="text-sm font-semibold text-green-800">
                     Total Hours: {calcHours()}
                   </span>
-                </div>
+          </div>
               )}
             </div>
           )}
           {stepIndex === 6 && (
-            <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
-              <input
-                type="date"
-                id="date"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
-            </div>
+          <div>
+            <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
+            <input
+              type="date"
+              id="date"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </div>
           )}
           {stepIndex === 7 && (
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 max-w-2xl mx-auto">
@@ -534,18 +534,18 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                 {(!hasAttemptedSubmit && (!timeStart || !timeEnd)) && (
                   <p className="text-sm text-red-600 mt-2">Please enter start and end times</p>
                 )}
-              </div>
-              
+          </div>
+
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
                 <p className="text-base font-semibold text-blue-800 mb-2">Are you sure you want to submit?</p>
                 <p className="text-sm text-blue-600">Please review your information before submitting your volunteer hours.</p>
-              </div>
+          </div>
             </div>
           )}
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
-            <button
+          <button
               type="button"
               onClick={prevStep}
               disabled={stepIndex === 0}
@@ -568,9 +568,9 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                 onClick={handleSubmit}
                 disabled={isSubmitting || !isStepValid()}
                 className="px-6 py-2 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition disabled:opacity-50"
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Hours'}
-              </button>
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit Hours'}
+          </button>
             )}
           </div>
         </div>

@@ -252,8 +252,9 @@ export default function AdminDashboard() {
       <div className="space-y-12">
         {[1,2,3,4,5,6].map((periodIdx) => {
           const periodName = `Six Weeks ${periodIdx}`;
-          const accomplished: string[] = njhsMembers;
-          const notAccomplished: string[] = njhsMembers;
+          // Simulate realistic data: some members met requirements, some didn't
+          const accomplished: string[] = njhsMembers.slice(0, Math.floor(njhsMembers.length * (0.3 + periodIdx * 0.1)));
+          const notAccomplished: string[] = njhsMembers.filter(member => !accomplished.includes(member));
           const periodSearch = periodSearches[periodIdx-1] || '';
           const setPeriodSearch = (val: string) => {
             setPeriodSearches(prev => {
@@ -265,18 +266,18 @@ export default function AdminDashboard() {
           const filteredAccomplished = filterMembers(accomplished, periodSearch);
           const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
           return (
-            <div key={periodName} className="border-4 border-pink-500 bg-yellow-100 rounded-xl shadow-lg p-6 mb-8">
-              <h3 className="text-3xl font-extrabold text-pink-700 mb-4">{periodName} (Search Bar Test)</h3>
+            <div key={periodName} className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">{periodName}</h3>
               {/* Per-Period Search Bar */}
-              <div className="mb-4 flex flex-col sm:flex-row items-center gap-3 bg-pink-200 p-4 rounded-lg">
+              <div className="mb-6">
                 <SearchBar
                   placeholder={`Search students in ${periodName}...`}
                   onSearch={setPeriodSearch}
                 />
               </div>
               {/* Met Section */}
-              <div>
-                <h4 className="text-lg font-semibold text-green-700 mb-2">Met ({filteredAccomplished.length})</h4>
+              <div className="mb-4">
+                <h4 className="text-lg font-semibold text-green-700 mb-2">Met Requirements ({filteredAccomplished.length})</h4>
                 <div className="max-h-40 overflow-y-auto border border-green-200 rounded-md p-3 bg-green-50">
                   {filteredAccomplished.length > 0 ? (
                     <ul className="list-disc list-inside text-sm text-green-800">
@@ -289,7 +290,7 @@ export default function AdminDashboard() {
               </div>
               {/* Not Met Section */}
               <div>
-                <h4 className="text-lg font-semibold text-red-700 mb-2">Not Met ({filteredNotAccomplished.length})</h4>
+                <h4 className="text-lg font-semibold text-red-700 mb-2">Not Met Requirements ({filteredNotAccomplished.length})</h4>
                 <div className="max-h-40 overflow-y-auto border border-red-200 rounded-md p-3 bg-red-50">
                   {filteredNotAccomplished.length > 0 ? (
                     <ul className="list-disc list-inside text-sm text-red-800">

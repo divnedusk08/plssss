@@ -4,19 +4,30 @@ import type React from "react"
 import { useState, useRef, useEffect, useMemo } from "react"
 import { Search, CircleDot } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-// import { cn } from "@/lib/utils" // Uncomment if you have a cn utility
 
-const SUGGESTIONS = [
-  "React",
-  "Vue",
-  "Angular",
-  "Next.js",
-  "Svelte",
-  "TailwindCSS",
-  "TypeScript",
-  "JavaScript",
-  "Node.js",
-]
+// NJHS Member names for suggestions
+const NJHS_MEMBERS = [
+  "Annie Addison", "Stephanie Adelowokan", "Nazila Allaudin", "Anvi Alleti", "Farhan Altaf", 
+  "Abigail Antony", "Rivaan Arvapalli", "Diya Babu", "Vrinda Balasani", "Kabir Baweja", 
+  "Lila Belanger", "Nihaarika Bhamidipati", "Sydney Bhattacharya", "Rithvik Bomidika", "Rohan Busa", 
+  "Haime Cha", "Sarah Chakkumcal", "Braden Chambers", "Colin Chambers", "Shivi Chauhan", 
+  "Swara Chaukade", "Jing hao Cheng", "Atharv Choubey", "Saanvi Choubey", "Rafael De faria peixoto", 
+  "Dhruv Deepak", "Saketh Donikena", "Ansh Dubey", "Eashan Emani", 
+  "Dhriti Erusalagandi", "Emery Erwin", "Angelo Gauna", "Joann George", "Caleb Gore", "Kylie Hall", "Griffin Hartigan", 
+  "Ashur Hasnat", "Easton Heinrich", "Camden Henry", "Kaytlin Huerta", "Harshitha Indukuri", 
+  "Jashwanth Jagadeesan", "Arnav Jain", "Anwitha Jeyakumar", "Sreenandana Kamattathil saril", "Maanya Katari", 
+  "Aiza Khan", "Arshiya Khanna", "Ryan Klassen", "Ashwika Konchada", "Lakshan Lakshminarayanan", 
+  "Samanvi Mane", "Esther Mathew", "Grace Mccloskey", "Cade Mehrens", "Harper Miller", 
+  "Harrison Miller", "Aarna Mishra", "Julia Moffitt", "Katelyn Moffitt", "Cade Morrison", 
+  "Kavya Mukherjee", "Ryan Nalam", "Venkata sravan reddy Naru", "Pravin Navin", "Benjamin Newton", 
+  "Reyansh Nighojkar", "James Orourke", "Soham Pachpande", "Connor Plante", "Satvik Prasad", 
+  "Pranav Pratheesh", "Adhrit Premkumar", "Bella Qiu", "Eeshaan Raj", "Diya Raveendran", 
+  "Vedant Rungta", "Anirudh Sathyan", "Brynn Schielein", "Yunseo Seo", "Ansh Shah", 
+  "Shubh Sharma", "Avikaa Shrivastava", "Ayush Singh", "Saanvi Singh", "Shreyasha Singh", 
+  "Gia Singla", "Kate Smith", "Bailey Sparrow", "Tharun Sridhar", "Laasya Sunkara", 
+  "Kyra Suri", "Parker Swan", "Pavit Tamilselvan", "Truett Van daley", "Reyansh Vanga", 
+  "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon"
+];
 
 const GooeyFilter = () => (
   <svg style={{ position: "absolute", width: 0, height: 0 }} aria-hidden="true">
@@ -33,14 +44,15 @@ const GooeyFilter = () => (
 interface SearchBarProps {
   placeholder?: string
   onSearch?: (query: string) => void
+  suggestions?: string[]
 }
 
-const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
+const SearchBar = ({ placeholder = "Search...", onSearch, suggestions = NJHS_MEMBERS }: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [isAnimating, setIsAnimating] = useState(false)
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([])
   const [isClicked, setIsClicked] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
@@ -57,10 +69,12 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
     setSearchQuery(value)
 
     if (value.trim()) {
-      const filtered = SUGGESTIONS.filter((item) => item.toLowerCase().includes(value.toLowerCase()))
-      setSuggestions(filtered)
+      const filtered = suggestions.filter((item) => 
+        item.toLowerCase().includes(value.toLowerCase())
+      )
+      setFilteredSuggestions(filtered.slice(0, 8)) // Limit to 8 suggestions for better UX
     } else {
-      setSuggestions([])
+      setFilteredSuggestions([])
     }
   }
 
@@ -99,7 +113,14 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
     }
   }, [isFocused])
 
-  const searchIconVariants = { initial: { scale: 1 }, animate: { rotate: 0, scale: 1, transition: { duration: 0.6 } } };
+  const searchIconVariants = { 
+    initial: { scale: 1 }, 
+    animate: { 
+      rotate: isAnimating ? [0, -15, 15, -10, 10, 0] : 0, 
+      scale: isAnimating ? [1, 1.3, 1] : 1, 
+      transition: { duration: 0.6, ease: "easeInOut" as const } 
+    } 
+  };
 
   // Replace dynamic suggestionVariants with static objects
   const suggestionVariants = {
@@ -227,7 +248,8 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
               size={20}
               strokeWidth={isFocused ? 2.5 : 2}
               className={
-                isAnimating ? "text-purple-500" : isFocused ? "text-purple-600" : "text-gray-500"
+                "transition-all duration-300 " +
+                (isAnimating ? "text-purple-500" : isFocused ? "text-purple-600" : "text-gray-500")
               }
             />
           </motion.div>
@@ -241,8 +263,8 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             className={
-              "w-full py-3 bg-transparent outline-none placeholder:text-gray-400 font-medium text-base relative z-10" +
-              (isFocused ? " text-gray-800 tracking-wide" : " text-gray-600")
+              "w-full py-3 bg-transparent outline-none placeholder:text-gray-400 font-medium text-base relative z-10 " +
+              (isFocused ? "text-gray-800 tracking-wide" : "text-gray-600")
             }
           />
 
@@ -281,7 +303,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
       </motion.form>
 
       <AnimatePresence>
-        {isFocused && suggestions.length > 0 && (
+        {isFocused && filteredSuggestions.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 10, height: 0 }}
             animate={{ opacity: 1, y: 0, height: "auto" }}
@@ -295,10 +317,9 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
             }}
           >
             <div className="p-2">
-              {suggestions.map((suggestion, index) => (
+              {filteredSuggestions.map((suggestion, index) => (
                 <motion.div
                   key={suggestion}
-                  custom={index}
                   variants={suggestionVariants}
                   initial="hidden"
                   animate="visible"
