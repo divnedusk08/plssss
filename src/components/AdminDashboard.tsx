@@ -359,23 +359,23 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="overflow-x-auto mt-8">
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200 rounded-2xl overflow-hidden">
-            <thead className="bg-gradient-to-r from-indigo-100 to-purple-100 sticky top-0 z-10">
+      <div className="overflow-x-auto mt-12">
+        <div className="bg-white rounded-3xl shadow-2xl border-2 border-indigo-200 max-w-6xl mx-auto">
+          <table className="min-w-full divide-y divide-gray-200 rounded-3xl overflow-hidden text-lg">
+            <thead className="bg-gradient-to-r from-indigo-200 to-purple-200 sticky top-0 z-10">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">User</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Organization</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Description</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Hours</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Proof of Service</th>
+                <th className="px-8 py-6 text-left text-base font-extrabold text-gray-800 uppercase tracking-wider">Date</th>
+                <th className="px-8 py-6 text-left text-base font-extrabold text-gray-800 uppercase tracking-wider">User</th>
+                <th className="px-8 py-6 text-left text-base font-extrabold text-gray-800 uppercase tracking-wider">Organization</th>
+                <th className="px-8 py-6 text-left text-base font-extrabold text-gray-800 uppercase tracking-wider">Description</th>
+                <th className="px-8 py-6 text-left text-base font-extrabold text-gray-800 uppercase tracking-wider">Hours</th>
+                <th className="px-8 py-6 text-left text-base font-extrabold text-gray-800 uppercase tracking-wider">Proof of Service</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-12 text-gray-400 text-lg">No volunteer logs found.</td>
+                  <td colSpan={6} className="text-center py-16 text-gray-400 text-xl">No volunteer logs found.</td>
                 </tr>
               ) : (
                 filteredLogs.map((log, idx) => {
@@ -386,16 +386,16 @@ export default function AdminDashboard() {
                     <tr
                       key={log.id}
                       className={
-                        (idx % 2 === 0 ? 'bg-gray-50' : 'bg-white') +
-                        ' hover:bg-indigo-50 transition-colors duration-150'
+                        (idx % 2 === 0 ? 'bg-indigo-50' : 'bg-white') +
+                        ' hover:bg-purple-100 transition-colors duration-150'
                       }
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.user.first_name} {log.user.last_name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.organization}</td>
-                      <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate" title={log.description}>{log.description}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-indigo-700 font-semibold">{hours.toFixed(2)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.proof_of_service}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-900 font-semibold">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-900">{log.user.first_name} {log.user.last_name}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-900">{log.organization}</td>
+                      <td className="px-8 py-6 text-lg text-gray-900 max-w-xl truncate" title={log.description}>{log.description}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-lg text-indigo-700 font-bold">{hours.toFixed(2)}</td>
+                      <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-900">{log.proof_of_service}</td>
                     </tr>
                   );
                 })
