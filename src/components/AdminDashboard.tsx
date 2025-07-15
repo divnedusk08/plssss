@@ -359,68 +359,51 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                User
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Organization
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Description
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Hours
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Proof of Service
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredLogs.map((log) => {
-              const start = new Date(`1970-01-01T${log.start_time}`);
-              const end = new Date(`1970-01-01T${log.end_time}`);
-              const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-
-              return (
-                <tr key={log.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {format(new Date(log.date_of_service), 'MMM d, yyyy')}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {log.user.first_name} {log.user.last_name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {log.organization}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {log.description}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {hours.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {log.proof_of_service}
-                  </td>
+      <div className="overflow-x-auto mt-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 rounded-2xl overflow-hidden">
+            <thead className="bg-gradient-to-r from-indigo-100 to-purple-100 sticky top-0 z-10">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">User</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Organization</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Description</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Hours</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Proof of Service</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-100">
+              {filteredLogs.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-12 text-gray-400 text-lg">No volunteer logs found.</td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-
-      {logs.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No volunteer logs found.</p>
+              ) : (
+                filteredLogs.map((log, idx) => {
+                  const start = new Date(`1970-01-01T${log.start_time}`);
+                  const end = new Date(`1970-01-01T${log.end_time}`);
+                  const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+                  return (
+                    <tr
+                      key={log.id}
+                      className={
+                        (idx % 2 === 0 ? 'bg-gray-50' : 'bg-white') +
+                        ' hover:bg-indigo-50 transition-colors duration-150'
+                      }
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.user.first_name} {log.user.last_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.organization}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate" title={log.description}>{log.description}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-indigo-700 font-semibold">{hours.toFixed(2)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.proof_of_service}</td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
-      )}
+      </div>
     </div>
   );
 } 
