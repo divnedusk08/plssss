@@ -361,6 +361,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
     'Proof',
     'Time',
     'Date',
+    'Additional Info',
     'Review & Submit',
   ];
   const [stepIndex, setStepIndex] = React.useState(0);
@@ -385,6 +386,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       case 4: return !!proofOfService;
       case 5: return !!timeStart && !!timeEnd;
       case 6: return !!date;
+      // Additional Info is optional
       default: return true;
     }
   };
@@ -524,9 +526,23 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           </div>
           )}
           {stepIndex === 7 && (
+            <div>
+              <label htmlFor="additionalInformation" className="block text-sm font-medium text-gray-700">
+                Additional Information (Optional)
+              </label>
+              <textarea
+                id="additionalInformation"
+                rows={2}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                value={additionalInformation}
+                onChange={(e) => setAdditionalInformation(e.target.value)}
+                placeholder="Anything else you'd like to add? (Optional)"
+              ></textarea>
+            </div>
+          )}
+          {stepIndex === 8 && (
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold mb-6 text-primary-dark text-center">Review Your Submission</h3>
-              
               <div className="bg-gray-100 rounded-lg p-6 border border-gray-200 text-center mb-6">
                 <span className="text-xl font-bold text-primary-dark">
                   Total Hours: {calcHours() || '0.00'}
@@ -534,12 +550,11 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                 {(!hasAttemptedSubmit && (!timeStart || !timeEnd)) && (
                   <p className="text-sm text-red-600 mt-2">Please enter start and end times</p>
                 )}
-          </div>
-
+              </div>
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
                 <p className="text-base font-semibold text-blue-800 mb-2">Are you sure you want to submit?</p>
                 <p className="text-sm text-blue-600">Please review your information before submitting your volunteer hours.</p>
-          </div>
+              </div>
             </div>
           )}
 
