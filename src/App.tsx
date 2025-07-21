@@ -197,7 +197,7 @@ function LogHoursStepper({ steps, currentStep, onStepClick }: { steps: string[];
               onClick={() => onStepClick && idx <= currentStep && onStepClick(idx)}
               className={`w-8 h-8 flex items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-300 focus:outline-none
                 ${idx < currentStep ? 'bg-primary text-white border-primary' : idx === currentStep ? 'bg-accent text-primary-dark border-accent' : 'bg-gray-200 text-gray-400 border-gray-300'}
-                ${onStepClick && idx <= currentStep ? 'cursor-pointer hover:scale-110' : 'cursor-default'}`}
+                ${onStepClick && idx <= currentStep ? 'cursor-pointer hover:scale-110 hover:shadow-lg' : 'cursor-default'}`}
               aria-label={`Go to step ${step}`}
             >
               {idx < currentStep ? '✓' : idx + 1}
