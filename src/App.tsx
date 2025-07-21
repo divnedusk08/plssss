@@ -81,15 +81,6 @@ function Home() {
       </header>
       <main className="flex-1 flex flex-col items-center space-y-8">
         <button className="w-full max-w-xs py-4 text-lg font-bold rounded-xl bg-blue-600 text-white shadow-lg mb-4">Get Started</button>
-        {/* Sneak Peek Image (mobile) */}
-        <div className="flex flex-col items-center w-full mb-6">
-          <img
-            src={sneakPeakImg}
-            alt="Dashboard sneak peek"
-            className="rounded-2xl shadow-2xl border border-gray-200 w-full max-w-xs object-contain"
-            style={{ maxHeight: '220px' }}
-          />
-        </div>
         <div className="w-full max-w-xs mx-auto p-6 rounded-xl shadow-lg bg-gray-50 mb-6">
           {/* Card 1: Log Your Hours */}
           <div className="flex flex-col items-center">
