@@ -870,6 +870,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 <th className="py-2 px-2">Organization</th>
                 <th className="py-2 px-2">Description</th>
                 <th className="py-2 px-2">Hours</th>
+                <th className="py-2 px-2">Additional Info</th>
                 <th className="py-2 px-2">Actions</th>
               </tr>
             </thead>
@@ -887,6 +888,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                     <td className="py-2 px-2">{log.organization}</td>
                     <td className="py-2 px-2">{log.description}</td>
                     <td className="py-2 px-2 font-bold">{log.hours?.toFixed(2)}</td>
+                    <td className="py-2 px-2">{log.additional_info || ''}</td>
                     <td className="py-2 px-2">
                       <div className="flex gap-2">
                         <button
