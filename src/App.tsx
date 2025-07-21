@@ -70,11 +70,11 @@ function Home() {
   React.useEffect(() => {
     if (user) {
       navigate('/log', { replace: true });
-      }
+    }
   }, [user, navigate]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white" style={{ zoom: 0.95 }}>
+    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-2 sm:px-4 py-4 bg-white w-full">
       {/* Logo and Title */}
       <div className="flex flex-col items-center mb-6 mt-12 fade-in">
         <div className="relative">
@@ -90,13 +90,13 @@ function Home() {
             </svg>
           </div>
         </div>
-        <h1 className="text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-xl font-montserrat mb-2">National Junior Honor Society</div>
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow text-center">HourTrackr NJHS</h1>
+        <div className="text-blue-900 text-lg sm:text-xl font-montserrat mb-2 text-center">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
-      <div className="max-w-xl text-center mb-6 fade-in">
-        <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
+      <div className="max-w-xl text-center mb-6 fade-in px-2">
+        <p className="text-lg sm:text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
           Log and track your NJHS volunteer hours in one place.
         </p>
       </div>
@@ -104,48 +104,48 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate('/login')}
-        className="mb-8 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
+        className="mb-8 w-full max-w-xs px-8 py-4 rounded-xl bg-primary text-white font-bold text-lg sm:text-xl hover:bg-primary-dark transition glow-on-hover shadow-lg"
       >
         Get Started
       </button>
 
       {/* Sneak Peek Image */}
-      <div className="flex flex-col items-center mt-4 mb-14">
+      <div className="flex flex-col items-center mt-4 mb-14 w-full">
         <img
           src={sneakPeakImg}
           alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
+          className="rounded-2xl shadow-2xl border border-gray-200 w-full max-w-[420px] sm:w-[65vw] sm:max-w-[1050px]"
           style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
         />
       </div>
 
       {/* How it works section */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" style={{ opacity: 0, animation: 'fadeIn 1.2s ease 0.4s forwards' }}>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+      <div className="w-full flex flex-col items-center gap-6 mb-8 sm:grid sm:grid-cols-3 sm:gap-6" style={{ opacity: 0, animation: 'fadeIn 1.2s ease 0.4s forwards' }}>
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 w-full max-w-xs mx-auto">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
           </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Log Your Hours</h3>
+          <h3 className="font-bold text-primary-dark mb-2 text-base sm:text-lg font-montserrat text-hover-effect text-center">Log Your Hours</h3>
           <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Submit hours easily. All submissions stored securely.</p>
         </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-          <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 w-full max-w-xs mx-auto">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-accent/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round"/></svg>
           </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Track Progress</h3>
+          <h3 className="font-bold text-primary-dark mb-2 text-base sm:text-lg font-montserrat text-hover-effect text-center">Track Progress</h3>
           <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">View total hours and history. Stay on top of requirements.</p>
         </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-          <div className="w-20 h-20 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
+        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 w-full max-w-xs mx-auto">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
             <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round"/></svg>
           </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Get Recognized</h3>
+          <h3 className="font-bold text-primary-dark mb-2 text-base sm:text-lg font-montserrat text-hover-effect text-center">Get Recognized</h3>
           <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Earn recognition for service and leadership. Your impact matters!</p>
         </div>
       </div>
 
       {/* Contact Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-6 border-t-4 border-primary-dark fade-in">
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-6 border-t-4 border-primary-dark fade-in mx-auto">
         <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
         <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
           Contact NJHS advisors or email
