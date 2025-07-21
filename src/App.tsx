@@ -202,7 +202,7 @@ function LogHoursStepper({ steps, currentStep, onStepClick }: { steps: string[];
             >
               {idx < currentStep ? '✓' : idx + 1}
             </button>
-            <div className={`mt-2 text-[11px] text-center font-semibold h-5 whitespace-nowrap px-1 min-w-[60px] ${idx === currentStep ? 'text-primary-dark' : 'text-gray-500'}`}>{step}</div>
+            <div className={`mt-2 text-[11px] text-center font-semibold h-5 whitespace-nowrap px-1 w-24 ${idx === currentStep ? 'text-primary-dark' : 'text-gray-500'}`}>{step}</div>
             {idx < steps.length - 1 && (
               <div className="h-1 w-full bg-gray-300 mt-1 mb-1">
                 <div className={`h-1 transition-all duration-300 ${idx < currentStep ? 'bg-primary' : 'bg-gray-300'}`}></div>
