@@ -188,7 +188,7 @@ function Home() {
 function LogHoursStepper({ steps, currentStep, onStepClick }: { steps: string[]; currentStep: number; onStepClick?: (idx: number) => void }) {
   return (
     <div className="flex flex-col items-center mb-8">
-      <div className="flex w-full max-w-2xl justify-evenly items-center overflow-x-auto max-w-full">
+      <div className="flex w-full max-w-2xl items-center gap-x-2 overflow-x-auto max-w-full">
         {steps.map((step, idx) => (
           <div key={step} className="flex-1 flex flex-col items-center">
             <button
