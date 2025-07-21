@@ -607,6 +607,7 @@ type Log = {
   user_email?: string;
   user_uid?: string;
   status?: string;
+  additional_info?: string;
 };
 
 function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
