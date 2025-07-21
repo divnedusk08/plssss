@@ -188,7 +188,7 @@ function Home() {
 function LogHoursStepper({ steps, currentStep, onStepClick }: { steps: string[]; currentStep: number; onStepClick?: (idx: number) => void }) {
   return (
     <div className="flex flex-col items-center mb-8">
-      <div className="flex w-full max-w-2xl justify-between items-center">
+      <div className="flex w-full max-w-2xl justify-between items-center overflow-x-auto max-w-full">
         {steps.map((step, idx) => (
           <div key={step} className="flex-1 flex flex-col items-center">
             <button
@@ -202,7 +202,7 @@ function LogHoursStepper({ steps, currentStep, onStepClick }: { steps: string[];
             >
               {idx < currentStep ? '✓' : idx + 1}
             </button>
-            <div className={`mt-2 text-xs text-center font-semibold h-5 whitespace-nowrap px-2 min-w-[90px] ${idx === currentStep ? 'text-primary-dark' : 'text-gray-500'}`}>{step}</div>
+            <div className={`mt-2 text-[11px] text-center font-semibold h-5 whitespace-nowrap px-1 min-w-[60px] ${idx === currentStep ? 'text-primary-dark' : 'text-gray-500'}`}>{step}</div>
             {idx < steps.length - 1 && (
               <div className="h-1 w-full bg-gray-300 mt-1 mb-1">
                 <div className={`h-1 transition-all duration-300 ${idx < currentStep ? 'bg-primary' : 'bg-gray-300'}`}></div>
