@@ -30,6 +30,7 @@ function Header() {
   const { user, signOut } = useAuth();
   const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com';
   const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const navLinkClass = (path: string) =>
     location.pathname === path
       ? 'bg-accent text-primary font-bold rounded-lg px-5 py-1.5 shadow text-base'
@@ -46,7 +47,16 @@ function Header() {
           </svg>
           <span className="font-montserrat text-xl font-extrabold text-white drop-shadow">HourTrackr NJHS</span>
         </div>
-        <div className="flex gap-2 items-center font-semibold">
+        {/* Hamburger for mobile */}
+        <div className="sm:hidden">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 focus:outline-none">
+            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
+            </svg>
+          </button>
+        </div>
+        {/* Desktop nav */}
+        <div className="hidden sm:flex gap-2 items-center font-semibold">
           {user && <Link to="/log" className={navLinkClass('/log')}>Log Hours</Link>}
           {user && <Link to="/dashboard" className={navLinkClass('/dashboard')}>Dashboard</Link>}
           {user && <Link to="/profile" className={navLinkClass('/profile')}>Profile</Link>}
@@ -59,6 +69,21 @@ function Header() {
           )}
         </div>
       </nav>
+      {/* Mobile nav menu */}
+      {mobileMenuOpen && (
+        <div className="sm:hidden bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 px-4 pb-4 pt-2 flex flex-col gap-2 font-semibold">
+          {user && <Link to="/log" className={navLinkClass('/log') + ' w-full text-center py-2'} onClick={() => setMobileMenuOpen(false)}>Log Hours</Link>}
+          {user && <Link to="/dashboard" className={navLinkClass('/dashboard') + ' w-full text-center py-2'} onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>}
+          {user && <Link to="/profile" className={navLinkClass('/profile') + ' w-full text-center py-2'} onClick={() => setMobileMenuOpen(false)}>Profile</Link>}
+          <Link to="/contact" className={navLinkClass('/contact') + ' w-full text-center py-2'} onClick={() => setMobileMenuOpen(false)}>Contact Us</Link>
+          {user && isSuperAdmin && <Link to="/admin" className={navLinkClass('/admin') + ' w-full text-center py-2'} onClick={() => setMobileMenuOpen(false)}>Admin</Link>}
+          {user ? (
+            <button onClick={() => { setMobileMenuOpen(false); signOut(); }} className="w-full mt-2 px-4 py-2 rounded-lg bg-accent text-primary-dark font-bold shadow hover:bg-accent-dark transition text-base">Sign out</button>
+          ) : (
+            <Link to="/login" className="w-full mt-2 bg-accent text-primary font-bold rounded-lg px-5 py-2 shadow text-base text-center" onClick={() => setMobileMenuOpen(false)}>Sign in</Link>
+          )}
+        </div>
+      )}
     </header>
   );
 }
@@ -74,111 +99,41 @@ function Home() {
   }, [user, navigate]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-4 py-4 bg-white" style={{ zoom: 0.95 }}>
+    <div className="relative flex flex-col items-center justify-center min-h-[60vh] px-2 sm:px-4 py-4 bg-white" style={{ zoom: 0.95 }}>
       {/* Logo and Title */}
-      <div className="flex flex-col items-center mb-6 mt-12 fade-in">
+      <div className="flex flex-col items-center mb-6 mt-8 sm:mt-12 fade-in">
         <div className="relative">
-          <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
+          <svg width="80" height="80" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
             <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
             <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
             <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
           </svg>
           <div className="absolute inset-0 animate-ping-slow opacity-20">
-            <svg width="100" height="100" viewBox="0 0 64 64" fill="none">
+            <svg width="80" height="80" viewBox="0 0 64 64" fill="none">
               <circle cx="32" cy="32" r="32" fill="#FBBF24"/>
             </svg>
           </div>
         </div>
-        <h1 className="text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-xl font-montserrat mb-2">National Junior Honor Society</div>
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow text-center">HourTrackr NJHS</h1>
+        <div className="text-blue-900 text-lg sm:text-xl font-montserrat mb-2 text-center">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
       <div className="max-w-xl text-center mb-6 fade-in">
-        <p className="text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
+        <p className="text-lg sm:text-2xl text-gray-800 font-montserrat mb-2 text-hover-effect">
           Log and track your NJHS volunteer hours in one place.
         </p>
       </div>
-
       {/* Get Started Button */}
-      <button
-        onClick={() => navigate('/login')}
-        className="mb-8 px-8 py-4 rounded-lg bg-primary text-white font-bold text-xl hover:bg-primary-dark transition glow-on-hover"
-      >
-        Get Started
-      </button>
-
-      {/* Sneak Peek Image */}
-      <div className="flex flex-col items-center mt-4 mb-14">
-        <img
-          src={sneakPeakImg}
-          alt="Dashboard sneak peek"
-          className="rounded-2xl shadow-2xl border border-gray-200 w-[65vw] max-w-[1050px]"
-          style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
-        />
+      <div className="w-full flex justify-center mb-8">
+        <Link to="/log" className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary text-white font-bold text-lg sm:text-2xl shadow-lg hover:bg-primary-dark transition text-center">
+          Get Started
+        </Link>
       </div>
-
-      {/* How it works section */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" style={{ opacity: 0, animation: 'fadeIn 1.2s ease 0.4s forwards' }}>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 2v20M5 12h14" stroke="#2563EB" strokeWidth="2" strokeLinecap="round"/></svg>
-          </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Log Your Hours</h3>
-          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Submit hours easily. All submissions stored securely.</p>
-        </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-accent hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-          <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M3 17l6-6 4 4 8-8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round"/></svg>
-          </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Track Progress</h3>
-          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">View total hours and history. Stay on top of requirements.</p>
-        </div>
-        <div className="bg-gray-50 rounded-xl shadow-xl p-6 flex flex-col items-center border-t-4 border-primary-dark hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
-          <div className="w-20 h-20 bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
-            <svg width="40" height="40" fill="none" viewBox="0 0 24 24" className="torch-animated"><path d="M12 17l-5 3 1-5.5L3 9.5l5.5-.5L12 4l3.5 5 5.5.5-4 5 1 5.5z" stroke="#1e3a8a" strokeWidth="2" strokeLinejoin="round"/></svg>
-          </div>
-          <h3 className="font-bold text-primary-dark mb-2 text-lg font-montserrat text-hover-effect">Get Recognized</h3>
-          <p className="text-gray-600 text-sm font-inter text-center text-hover-effect">Earn recognition for service and leadership. Your impact matters!</p>
-        </div>
-      </div>
-
-      {/* Contact Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-center mt-6 border-t-4 border-primary-dark fade-in">
-        <h3 className="font-bold text-primary-dark mb-2 font-montserrat text-hover-effect">Need Help?</h3>
-        <p className="text-gray-700 text-base font-inter text-hover-effect flex flex-col items-center gap-2">
-          Contact NJHS advisors or email
-          <span className="flex items-center justify-center gap-2 relative">
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText('dhriti.erusalagandi58@k12.leanderisd.org');
-                // Show feedback
-                const button = document.activeElement as HTMLButtonElement;
-                const originalText = button.textContent;
-                button.textContent = 'Copied!';
-                button.className = 'text-green-600 underline hover:text-green-700 transition-colors select-all cursor-pointer';
-                setTimeout(() => {
-                  button.textContent = originalText;
-                  button.className = 'text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer';
-                }, 2000);
-              }}
-              className="text-primary underline hover:text-primary-dark transition-colors select-all cursor-pointer"
-              title="Copy email address"
-            >
-              dhriti.erusalagandi58@k12.leanderisd.org
-            </button>
-          </span>
-        </p>
-      </div>
-
-      {/* Not affiliated notice and copyright - centered between box and blue footer */}
+      {/* Sneak Peak Image */}
       <div className="w-full flex justify-center">
-        <div className="text-gray-400 text-xs mt-8 mb-4 text-center max-w-lg flex flex-wrap items-center justify-center gap-2">
-          <span>Not affiliated with National Junior Honor Society. <a href="https://www.njhs.us/" className="underline hover:text-accent">njhs.us</a></span>
-          <span className="hidden sm:inline">|</span>
-          <span>© {new Date().getFullYear()} HourTrackr NJHS.</span>
-        </div>
+        <img src={sneakPeakImg} alt="Sneak Peak" className="rounded-2xl shadow-lg max-w-full h-auto object-contain" style={{ maxHeight: 320 }} />
       </div>
     </div>
   );

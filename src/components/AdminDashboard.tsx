@@ -209,21 +209,21 @@ export default function AdminDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h2>
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Admin Dashboard</h2>
       {/* Dashboard-wide Search Bar */}
-      <div className="mb-6 flex flex-col sm:flex-row items-center gap-3">
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-center gap-3">
         <input
           type="text"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           placeholder="Search by student name or email..."
-          className="w-full sm:w-96 px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-base"
+          className="w-full sm:w-96 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
         />
       </div>
       {/* Pie Chart Card */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 flex flex-col items-center">
-        <h3 className="text-xl font-bold text-primary-dark mb-4">Progress Overview</h3>
-        <ResponsiveContainer width="100%" height={260} minWidth={320} minHeight={220}>
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 flex flex-col items-center">
+        <h3 className="text-lg sm:text-xl font-bold text-primary-dark mb-3 sm:mb-4">Progress Overview</h3>
+        <ResponsiveContainer width="100%" height={200} minWidth={280} minHeight={180}>
           <PieChart>
             <Pie
               data={pieData}
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
               cy="50%"
               labelLine={false}
               label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              outerRadius={90}
+              outerRadius={70}
               fill="#8884d8"
               dataKey="value"
             >
@@ -243,13 +243,13 @@ export default function AdminDashboard() {
             <Legend
               verticalAlign="bottom"
               iconType="circle"
-              wrapperStyle={{ fontWeight: 700, color: '#111827', fontSize: '1.1rem', letterSpacing: '0.02em' }}
+              wrapperStyle={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem', letterSpacing: '0.02em' }}
             />
           </PieChart>
         </ResponsiveContainer>
       </div>
       {/* Per-Period Cards: Always Rendered! */}
-      <div className="space-y-12">
+      <div className="space-y-6 sm:space-y-12">
         {[1,2,3,4,5,6].map((periodIdx) => {
           const periodName = `Six Weeks ${periodIdx}`;
           // Simulate realistic data: some members met requirements, some didn't
@@ -266,38 +266,38 @@ export default function AdminDashboard() {
           const filteredAccomplished = filterMembers(accomplished, periodSearch);
           const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
           return (
-            <div key={periodName} className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{periodName}</h3>
+            <div key={periodName} className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-200">
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">{periodName}</h3>
               {/* Per-Period Search Bar */}
-              <div className="mb-6">
+              <div className="mb-4 sm:mb-6">
                 <SearchBar
                   placeholder={`Search students in ${periodName}...`}
                   onSearch={setPeriodSearch}
                 />
               </div>
               {/* Met Section */}
-              <div className="mb-4">
-                <h4 className="text-lg font-semibold text-green-700 mb-2">Met Requirements ({filteredAccomplished.length})</h4>
-                <div className="max-h-40 overflow-y-auto border border-green-200 rounded-md p-3 bg-green-50">
+              <div className="mb-3 sm:mb-4">
+                <h4 className="text-base sm:text-lg font-semibold text-green-700 mb-2">Met Requirements ({filteredAccomplished.length})</h4>
+                <div className="max-h-32 sm:max-h-40 overflow-y-auto border border-green-200 rounded-md p-2 sm:p-3 bg-green-50">
                   {filteredAccomplished.length > 0 ? (
-                    <ul className="list-disc list-inside text-sm text-green-800">
+                    <ul className="list-disc list-inside text-xs sm:text-sm text-green-800">
                       {filteredAccomplished.map(member => <li key={member}>{member}</li>)}
                     </ul>
                   ) : (
-                    <p className="text-sm text-gray-500">No members met the goal for this period yet.</p>
+                    <p className="text-xs sm:text-sm text-gray-500">No members met the goal for this period yet.</p>
                   )}
                 </div>
               </div>
               {/* Not Met Section */}
               <div>
-                <h4 className="text-lg font-semibold text-red-700 mb-2">Not Met Requirements ({filteredNotAccomplished.length})</h4>
-                <div className="max-h-40 overflow-y-auto border border-red-200 rounded-md p-3 bg-red-50">
+                <h4 className="text-base sm:text-lg font-semibold text-red-700 mb-2">Not Met Requirements ({filteredNotAccomplished.length})</h4>
+                <div className="max-h-32 sm:max-h-40 overflow-y-auto border border-red-200 rounded-md p-2 sm:p-3 bg-red-50">
                   {filteredNotAccomplished.length > 0 ? (
-                    <ul className="list-disc list-inside text-sm text-red-800">
+                    <ul className="list-disc list-inside text-xs sm:text-sm text-red-800">
                       {filteredNotAccomplished.map(member => <li key={member}>{member}</li>)}
                     </ul>
                   ) : (
-                    <p className="text-sm text-gray-500">All members met the goal for this period!</p>
+                    <p className="text-xs sm:text-sm text-gray-500">All members met the goal for this period!</p>
                   )}
                 </div>
               </div>
@@ -306,14 +306,14 @@ export default function AdminDashboard() {
         })}
       </div>
       {/* End Per-Period Cards */}
-      <div className="mb-8">
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 sm:mb-8">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Start Date</label>
             <DatePicker
               selected={filters.startDate}
               onChange={(date) => setFilters({ ...filters, startDate: date })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
             />
           </div>
           <div>
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
             <DatePicker
               selected={filters.endDate}
               onChange={(date) => setFilters({ ...filters, endDate: date })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
             />
           </div>
           <div>
@@ -330,7 +330,7 @@ export default function AdminDashboard() {
               type="text"
               value={filters.organization}
               onChange={(e) => setFilters({ ...filters, organization: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
             />
           </div>
           <div>
@@ -338,7 +338,7 @@ export default function AdminDashboard() {
             <select
               value={filters.userId}
               onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
             >
               <option value="">All Users</option>
               {filteredUsers.map((user) => (
@@ -352,30 +352,30 @@ export default function AdminDashboard() {
         <div className="mt-4">
           <button
             onClick={exportToCSV}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Export to CSV
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto mt-16">
-        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl shadow-2xl border-l-8 border-indigo-400 w-full">
-          <table className="w-full divide-y divide-gray-200 rounded-3xl overflow-hidden text-xl">
+      <div className="overflow-x-auto mt-8 sm:mt-16">
+        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl sm:rounded-3xl shadow-xl border-l-8 border-indigo-400 w-full">
+          <table className="w-full divide-y divide-gray-200 rounded-xl sm:rounded-3xl overflow-hidden text-sm sm:text-xl">
             <thead className="bg-gradient-to-r from-indigo-200 to-purple-200 sticky top-0 z-10">
               <tr>
-                <th className="px-12 py-8 text-left text-2xl font-black text-indigo-900 uppercase tracking-widest">Date</th>
-                <th className="px-12 py-8 text-left text-2xl font-black text-indigo-900 uppercase tracking-widest">User</th>
-                <th className="px-12 py-8 text-left text-2xl font-black text-indigo-900 uppercase tracking-widest">Organization</th>
-                <th className="px-12 py-8 text-left text-2xl font-black text-indigo-900 uppercase tracking-widest">Description</th>
-                <th className="px-12 py-8 text-left text-2xl font-black text-indigo-900 uppercase tracking-widest">Hours</th>
-                <th className="px-12 py-8 text-left text-2xl font-black text-indigo-900 uppercase tracking-widest">Proof of Service</th>
+                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Date</th>
+                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">User</th>
+                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Organization</th>
+                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Description</th>
+                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Hours</th>
+                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Proof of Service</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-20 text-gray-400 text-2xl">No volunteer logs found.</td>
+                  <td colSpan={6} className="text-center py-12 sm:py-20 text-gray-400 text-lg sm:text-2xl">No volunteer logs found.</td>
                 </tr>
               ) : (
                 filteredLogs.map((log, idx) => {
@@ -390,12 +390,12 @@ export default function AdminDashboard() {
                         ' hover:bg-purple-100 transition-colors duration-150'
                       }
                     >
-                      <td className="px-12 py-8 whitespace-nowrap text-xl text-gray-900 font-bold">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
-                      <td className="px-12 py-8 whitespace-nowrap text-xl text-gray-900">{log.user.first_name} {log.user.last_name}</td>
-                      <td className="px-12 py-8 whitespace-nowrap text-xl text-gray-900">{log.organization}</td>
-                      <td className="px-12 py-8 text-xl text-gray-900 max-w-2xl truncate" title={log.description}>{log.description}</td>
-                      <td className="px-12 py-8 whitespace-nowrap text-xl text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
-                      <td className="px-12 py-8 whitespace-nowrap text-xl text-gray-900">{log.proof_of_service}</td>
+                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900 font-bold">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
+                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.user.first_name} {log.user.last_name}</td>
+                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.organization}</td>
+                      <td className="px-3 sm:px-12 py-4 sm:py-8 text-sm sm:text-xl text-gray-900 max-w-xs sm:max-w-2xl truncate" title={log.description}>{log.description}</td>
+                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
+                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.proof_of_service}</td>
                     </tr>
                   );
                 })
