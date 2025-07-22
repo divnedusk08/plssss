@@ -1717,9 +1717,8 @@ function Profile() {
   if (!user) return <Navigate to="/login" />;
 
   return (
-    <div className="bg-white min-h-screen flex flex-col items-center justify-start pt-12">
-      {/* Profile content here */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center bg-white"> {/* Changed to all white */}
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center">
         <h2 className="text-3xl font-extrabold mb-8 text-primary-dark text-center font-montserrat">Your Profile</h2>
         {error && (
           <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-center">
