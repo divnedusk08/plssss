@@ -533,7 +533,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           {stepIndex === 7 && (
           <div>
             <label htmlFor="additionalInformation" className="block text-sm font-medium text-gray-700">
-              Additional Info
+              Additional Information (Optional)
             </label>
             <input
               type="text"
