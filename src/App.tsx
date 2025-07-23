@@ -1752,13 +1752,15 @@ function Profile() {
                 {user?.email}
               </div>
               </div>
-                <button
-              className="bg-[#2563EB] text-white rounded-lg font-semibold shadow px-6 py-2 hover:bg-[#1d4ed8] transition text-center"
-              onClick={handleProfilePictureClick}
-              disabled={isUploading}
-                >
-              Edit Profile
-                </button>
+                <div className="flex justify-center mt-4">
+                  <button
+                    className="bg-[#2563EB] text-white rounded-lg font-semibold shadow px-6 py-2 hover:bg-[#1d4ed8] transition text-center"
+                    onClick={handleProfilePictureClick}
+                    disabled={isUploading}
+                  >
+                    Edit Profile
+                  </button>
+                </div>
           </div>
         </div>
       </div>
