@@ -1618,7 +1618,6 @@ function ContactUs() {
 function Profile() {
   const { user } = useAuth();
   const [profilePicture, setProfilePicture] = React.useState('');
-  const [isEditing, setIsEditing] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
   const [error, setError] = React.useState('');
   const fileInputRef = React.useRef<HTMLInputElement>(null);
