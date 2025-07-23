@@ -1717,70 +1717,48 @@ function Profile() {
   if (!user) return <Navigate to="/login" />;
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center bg-white"> {/* Changed to all white */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center">
+    <div className="flex justify-center items-center min-h-[80vh] bg-gradient-to-br from-blue-50 to-white">
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 font-inter">
         <h2 className="text-3xl font-extrabold mb-8 text-primary-dark text-center font-montserrat">Your Profile</h2>
         {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg text-center">
-            {error}
-          </div>
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-center">{error}</div>
         )}
-        <div className="flex flex-col items-center space-y-6">
-          {/* Profile Picture */}
-          <div 
-            className={`relative group w-32 h-32 rounded-full overflow-hidden cursor-pointer border-4 border-primary hover:border-primary-dark transition-all duration-300 flex items-center justify-center ${isUploading ? 'opacity-50' : ''}`}
-            tabIndex={0}
-            onClick={handleProfilePictureClick}
-          >
-            {profilePicture ? (
-              <img 
-                key={profilePicture}
-                src={profilePicture} 
+        <div className="flex flex-col items-center">
+          <div className="relative mb-6">
+            <img
+              src={profilePicture || '/default-profile.png'}
                 alt="Profile" 
-                className="w-full h-full object-cover"
-                onError={(e) => { 
-                  e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=2563EB&color=fff&size=128`;
-                }}
-              />
-            ) : (
-              <img 
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=2563EB&color=fff&size=128`} 
-                alt="Default Profile" 
-                className="w-full h-full object-cover"
-              />
-            )}
-            {/* PATCH: Un-hide file input for direct testing */}
+              className="w-32 h-32 rounded-full object-cover border-4 border-primary shadow-lg cursor-pointer hover:scale-105 transition-transform duration-200"
+              onClick={handleProfilePictureClick}
+              style={{ background: '#f3f4f6' }}
+            />
             <input
               type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
               accept="image/*"
-              style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleFileChange}
+              disabled={isUploading}
             />
             {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 rounded-full">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
               </div>
             )}
           </div>
-          {/* Profile Information */}
-          <div className="w-full space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-primary-dark mb-1">Email</label>
-              <input
-                value={user.email}
-                disabled
-                className="w-full px-3 py-2 border rounded-lg bg-gray-100"
-              />
-            </div>
-          </div>
-          {/* Action Buttons */}
-          <div className="flex gap-4">
+          <div className="w-full max-w-md mx-auto">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <div className="w-full px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-center text-base font-semibold border border-gray-200">
+                {user?.email}
+              </div>
+              </div>
                 <button
-              onClick={() => setIsEditing(!isEditing)}
-                  className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+              className="w-full py-2 px-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition mt-2"
+              onClick={handleProfilePictureClick}
+              disabled={isUploading}
                 >
-              {isEditing ? 'Cancel' : 'Edit Profile Picture'}
+              Edit Profile Picture
                 </button>
           </div>
         </div>
