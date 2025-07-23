@@ -1753,11 +1753,11 @@ function Profile() {
               </div>
               </div>
                 <button
-              className="w-full py-2 px-4 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark transition mt-2"
+              className="bg-[#2563EB] text-white rounded-lg font-semibold shadow px-6 py-2 hover:bg-[#1d4ed8] transition text-center"
               onClick={handleProfilePictureClick}
               disabled={isUploading}
                 >
-              Edit Profile Picture
+              Edit Profile
                 </button>
           </div>
         </div>
