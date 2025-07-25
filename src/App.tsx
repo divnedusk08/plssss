@@ -91,7 +91,7 @@ function Home() {
           </div>
         </div>
         <h1 className="text-3xl md:text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow text-center">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-base md:text-lg font-montserrat mb-2 text-center">National Junior Honor Society</div>
+        <div className="text-blue-900 text-base md:text-xl font-montserrat mb-2 text-center">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
