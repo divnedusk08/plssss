@@ -90,8 +90,8 @@ function Home() {
             </svg>
           </div>
         </div>
-        <h1 className="text-2xl md:text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow text-center">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-base md:text-xl font-montserrat mb-2 text-center">National Junior Honor Society</div>
+        <h1 className="text-3xl md:text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow text-center">HourTrackr NJHS</h1>
+        <div className="text-blue-900 text-lg md:text-xl font-montserrat mb-2 text-center">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
@@ -104,7 +104,7 @@ function Home() {
       {/* Get Started Button */}
       <button
         onClick={() => navigate('/login')}
-        className="mb-6 md:mb-8 px-6 md:px-8 py-3 md:py-4 rounded-lg bg-primary text-white font-bold text-lg md:text-xl hover:bg-primary-dark transition glow-on-hover"
+        className="mb-6 md:mb-8 px-6 md:px-8 py-3 md:py-4 rounded-lg bg-primary text-white font-bold text-xl md:text-xl hover:bg-primary-dark transition glow-on-hover"
       >
         Get Started
       </button>
