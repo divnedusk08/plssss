@@ -524,21 +524,34 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               <input
                 type="date"
                 id="date"
-                className="mt-1 block w-full px-4 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer"
+                className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
-                min="2020-01-01"
-                max="2030-12-31"
-                placeholder="Click to select date"
               />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
             </div>
-            <p className="mt-1 text-xs text-gray-500">📅 Click the date field above to open the calendar picker</p>
+            {date && (
+              <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center justify-center">
+                  <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-sm font-semibold text-blue-800">
+                    Selected Date: {new Date(date).toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
           )}
           {stepIndex === 7 && (
