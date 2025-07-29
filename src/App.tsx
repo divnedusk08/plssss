@@ -641,12 +641,25 @@ type Log = {
 
 function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [logs, setLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [editingLog, setEditingLog] = React.useState<Log | null>(null);
-  const [isExporting, setIsExporting] = React.useState(false);
+  const [editingField, setEditingField] = React.useState<string>('');
+  const [editingValue, setEditingValue] = React.useState<string>('');
+
+  // Helper function to format dates nicely
+  const formatDateRange = (startDate: string, endDate: string) => {
+    const formatDate = (dateStr: string) => {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
+    };
+    return `${formatDate(startDate)} → ${formatDate(endDate)}`;
+  };
 
   // Define 6-week periods
   const sixWeekPeriods = [
@@ -1008,7 +1021,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
             onClick={() => navigate('/log', { state: { selectedPeriod: period } })}
             >
               <h3 className="font-bold text-base text-primary-dark mb-1">{period.name}</h3>
-              <p className="text-xs text-gray-600 mb-1">{period.startDate} - {period.endDate}</p>
+              <p className="text-xs text-gray-600 mb-1">{formatDateRange(period.startDate, period.endDate)}</p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
                 <span className="text-xs font-medium text-gray-600">{periodProgress.toFixed(1)}%</span>
@@ -1174,6 +1187,19 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Helper function to format dates nicely
+  const formatDateRange = (startDate: string, endDate: string) => {
+    const formatDate = (dateStr: string) => {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
+    };
+    return `${formatDate(startDate)} → ${formatDate(endDate)}`;
+  };
 
   // Define sixWeekPeriods for use in processPeriodData and rendering
   const sixWeekPeriods = [
@@ -1351,7 +1377,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
             return (
               <div key={period.name} className="border border-gray-200 rounded-xl shadow-lg p-6">
-                <h3 className="text-2xl font-bold text-primary-dark mb-4">{period.name} ({period.startDate} - {period.endDate})</h3>
+                <h3 className="text-2xl font-bold text-primary-dark mb-4">{period.name} ({formatDateRange(period.startDate, period.endDate)})</h3>
                 <p className="text-gray-700 mb-4">Target Hours: {period.targetHours}</p>
 
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
