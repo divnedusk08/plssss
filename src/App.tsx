@@ -896,7 +896,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
         return (
           <div className="mb-6 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
             <h3 className="text-lg font-bold text-red-800 mb-2">🚨 URGENT DEADLINES</h3>
-            {urgentAlerts.map(({ period, periodHours, status }) => (
+            {urgentAlerts.map(({ period, status }) => (
               <div key={period.name} className="text-red-700 font-semibold text-sm mb-1">
                 {status.status === 'overdue' 
                   ? `⚠️ ${period.name}: DEADLINE PASSED - You still need ${status.hoursNeeded} hours`
