@@ -523,11 +523,15 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             <input
               type="date"
               id="date"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
+              min="2020-01-01"
+              max="2030-12-31"
+              placeholder="Click to select date"
             />
+            <p className="mt-1 text-xs text-gray-500">Click the field above to open the calendar picker</p>
           </div>
           )}
           {stepIndex === 7 && (
