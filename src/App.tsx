@@ -657,32 +657,55 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   const DeadlineAlert = ({ period, periodHours }: { period: any, periodHours: number }) => {
     const status = getDeadlineStatus(period, periodHours);
     
-    if (status.status === 'completed') return null;
+    if (status.status === 'completed') {
+      return (
+        <div className="flex items-center justify-center mt-2">
+          <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <span className="ml-2 text-sm font-semibold text-green-600">Completed</span>
+        </div>
+      );
+    }
     
-    const getAlertMessage = () => {
-      if (status.status === 'overdue') {
-        return `⚠️ DEADLINE PASSED: You missed the ${period.name} deadline. You still need ${status.hoursNeeded} hours.`;
-      } else if (status.status === 'urgent') {
-        return `🚨 URGENT: ${period.name} deadline in ${status.daysRemaining} days! You need ${status.hoursNeeded} more hours.`;
-      } else if (status.status === 'warning') {
-        return `⚠️ WARNING: ${period.name} deadline in ${status.daysRemaining} days. You need ${status.hoursNeeded} more hours.`;
-      } else {
-        return `📅 ${period.name} deadline in ${status.daysRemaining} days. You need ${status.hoursNeeded} more hours.`;
+    const getCircleColor = () => {
+      switch (status.color) {
+        case 'red': return 'text-red-600';
+        case 'yellow': return 'text-yellow-600';
+        case 'blue': return 'text-blue-600';
+        default: return 'text-gray-600';
       }
     };
 
-    const getAlertColor = () => {
+    const getCircleBgColor = () => {
       switch (status.color) {
-        case 'red': return 'bg-red-100 border-red-400 text-red-800';
-        case 'yellow': return 'bg-yellow-100 border-yellow-400 text-yellow-800';
-        case 'blue': return 'bg-blue-100 border-blue-400 text-blue-800';
-        default: return 'bg-gray-100 border-gray-400 text-gray-800';
+        case 'red': return 'bg-red-50';
+        case 'yellow': return 'bg-yellow-50';
+        case 'blue': return 'bg-blue-50';
+        default: return 'bg-gray-50';
       }
     };
 
     return (
-      <div className={`p-3 rounded-lg border-2 ${getAlertColor()} mb-3 font-semibold text-sm`}>
-        {getAlertMessage()}
+      <div className={`mt-2 p-2 ${getCircleBgColor()} rounded-lg border`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className={`w-8 h-8 rounded-full border-2 ${getCircleColor()} flex items-center justify-center text-xs font-bold`}>
+              {status.daysRemaining}
+            </div>
+            <div className="ml-2">
+              <div className="text-xs font-semibold">Days Left</div>
+              <div className="text-xs text-gray-600">Need {status.hoursNeeded}h</div>
+            </div>
+          </div>
+          <div className="text-xs font-semibold text-gray-600">
+            {status.status === 'overdue' ? 'OVERDUE' : 
+             status.status === 'urgent' ? 'URGENT' : 
+             status.status === 'warning' ? 'WARNING' : 'PENDING'}
+          </div>
+        </div>
       </div>
     );
   };
@@ -894,16 +917,36 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
         if (urgentAlerts.length === 0) return null;
 
         return (
-          <div className="mb-6 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
-            <h3 className="text-lg font-bold text-red-800 mb-2">🚨 URGENT DEADLINES</h3>
-            {urgentAlerts.map(({ period, status }) => (
-              <div key={period.name} className="text-red-700 font-semibold text-sm mb-1">
-                {status.status === 'overdue' 
-                  ? `⚠️ ${period.name}: DEADLINE PASSED - You still need ${status.hoursNeeded} hours`
-                  : `🚨 ${period.name}: ${status.daysRemaining} days left - You need ${status.hoursNeeded} more hours`
-                }
+          <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl shadow-sm">
+            <div className="flex items-center mb-3">
+              <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
               </div>
-            ))}
+              <h3 className="text-lg font-bold text-red-800">Urgent Deadlines</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {urgentAlerts.map(({ period, status }) => (
+                <div key={period.name} className="flex items-center p-3 bg-white rounded-lg border border-red-200">
+                  <div className={`w-10 h-10 rounded-full border-2 ${status.color === 'red' ? 'border-red-500 text-red-600' : 'border-orange-500 text-orange-600'} flex items-center justify-center text-sm font-bold mr-3`}>
+                    {status.daysRemaining}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-gray-800">{period.name}</div>
+                    <div className="text-xs text-gray-600">
+                      {status.status === 'overdue' 
+                        ? `Overdue - Need ${status.hoursNeeded}h`
+                        : `${status.daysRemaining} days left - Need ${status.hoursNeeded}h`
+                      }
+                    </div>
+                  </div>
+                  <div className={`text-xs font-bold px-2 py-1 rounded ${status.status === 'overdue' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}`}>
+                    {status.status === 'overdue' ? 'OVERDUE' : 'URGENT'}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         );
       })()}
