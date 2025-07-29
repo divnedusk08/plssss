@@ -650,12 +650,12 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
   // Define 6-week periods
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-14', endDate: '2025-09-23', targetHours: 2 },
-    { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-24', endDate: '2025-11-04', targetHours: 2 },
-    { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-20', targetHours: 2 },
-    { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-07', endDate: '2026-02-18', targetHours: 2 },
-    { name: 'Six Weeks 5 (2025-2026)', startDate: '2026-02-19', endDate: '2026-04-08', targetHours: 2 },
-    { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-09', endDate: '2026-05-23', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-13', endDate: '2025-09-26', targetHours: 2 },
+    { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-29', endDate: '2025-11-07', targetHours: 2 },
+    { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-10', endDate: '2025-12-19', targetHours: 2 },
+    { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-05', endDate: '2026-02-20', targetHours: 2 },
+    { name: 'Six Weeks 5 (2025-2026)', startDate: '2026-02-23', endDate: '2026-04-17', targetHours: 2 },
+    { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-20', endDate: '2026-05-29', targetHours: 2 },
   ];
 
   // Deadline alert functions
@@ -1177,12 +1177,12 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   // Define sixWeekPeriods for use in processPeriodData and rendering
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-14', endDate: '2025-09-23', targetHours: 2 },
-    { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-24', endDate: '2025-11-04', targetHours: 2 },
-    { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-20', targetHours: 2 },
-    { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-07', endDate: '2026-02-18', targetHours: 2 },
-    { name: 'Six Weeks 5 (2025-2026)', startDate: '2026-02-19', endDate: '2026-04-08', targetHours: 2 },
-    { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-09', endDate: '2026-05-23', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-13', endDate: '2025-09-26', targetHours: 2 },
+    { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-29', endDate: '2025-11-07', targetHours: 2 },
+    { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-10', endDate: '2025-12-19', targetHours: 2 },
+    { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-05', endDate: '2026-02-20', targetHours: 2 },
+    { name: 'Six Weeks 5 (2025-2026)', startDate: '2026-02-23', endDate: '2026-04-17', targetHours: 2 },
+    { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-20', endDate: '2026-05-29', targetHours: 2 },
   ];
 
   // Define njhsMembers array for member matching
