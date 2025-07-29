@@ -9,7 +9,7 @@ function SplashScreen({ className }: { className?: string }) {
   return (
     <div className={`flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-primary via-primary-dark to-blue-200 ${className}`}>
       <div className="mb-4 drop-shadow-lg">
-        <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-intro-animated">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className="torch-intro-animated">
           {/* White circle background for contrast */}
           <circle cx="50" cy="50" r="40" fill="#fff" />
           {/* Torch body */}
@@ -78,14 +78,14 @@ function Home() {
       {/* Logo and Title */}
       <div className="flex flex-col items-center mb-4 md:mb-6 mt-8 md:mt-12 fade-in">
         <div className="relative">
-          <svg width="100" height="100" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
+          <svg width="90" height="90" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
             <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
             <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
             <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
           </svg>
           <div className="absolute inset-0 animate-ping-slow opacity-20">
-            <svg width="100" height="100" viewBox="0 0 64 64" fill="none">
+            <svg width="90" height="90" viewBox="0 0 64 64" fill="none">
               <circle cx="32" cy="32" r="32" fill="#FBBF24"/>
             </svg>
           </div>
