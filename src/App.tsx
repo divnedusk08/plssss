@@ -520,18 +520,25 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           {stepIndex === 6 && (
           <div>
             <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
-            <input
-              type="date"
-              id="date"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-              min="2020-01-01"
-              max="2030-12-31"
-              placeholder="Click to select date"
-            />
-            <p className="mt-1 text-xs text-gray-500">Click the field above to open the calendar picker</p>
+            <div className="relative">
+              <input
+                type="date"
+                id="date"
+                className="mt-1 block w-full px-4 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+                min="2020-01-01"
+                max="2030-12-31"
+                placeholder="Click to select date"
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </div>
+            <p className="mt-1 text-xs text-gray-500">📅 Click the date field above to open the calendar picker</p>
           </div>
           )}
           {stepIndex === 7 && (
