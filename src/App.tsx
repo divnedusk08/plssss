@@ -634,6 +634,59 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
     { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-09', endDate: '2026-05-23', targetHours: 2 },
   ];
 
+  // Deadline alert functions
+  const getDeadlineStatus = (period: any, periodHours: number) => {
+    const today = new Date();
+    const deadline = new Date(period.endDate);
+    const daysRemaining = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    const hoursNeeded = period.targetHours - periodHours;
+    
+    if (daysRemaining < 0) {
+      return { status: 'overdue', daysRemaining: 0, hoursNeeded, color: 'red' };
+    } else if (daysRemaining <= 7 && hoursNeeded > 0) {
+      return { status: 'urgent', daysRemaining, hoursNeeded, color: 'red' };
+    } else if (daysRemaining <= 14 && hoursNeeded > 0) {
+      return { status: 'warning', daysRemaining, hoursNeeded, color: 'yellow' };
+    } else if (hoursNeeded > 0) {
+      return { status: 'pending', daysRemaining, hoursNeeded, color: 'blue' };
+    } else {
+      return { status: 'completed', daysRemaining, hoursNeeded: 0, color: 'green' };
+    }
+  };
+
+  const DeadlineAlert = ({ period, periodHours }: { period: any, periodHours: number }) => {
+    const status = getDeadlineStatus(period, periodHours);
+    
+    if (status.status === 'completed') return null;
+    
+    const getAlertMessage = () => {
+      if (status.status === 'overdue') {
+        return `⚠️ DEADLINE PASSED: You missed the ${period.name} deadline. You still need ${status.hoursNeeded} hours.`;
+      } else if (status.status === 'urgent') {
+        return `🚨 URGENT: ${period.name} deadline in ${status.daysRemaining} days! You need ${status.hoursNeeded} more hours.`;
+      } else if (status.status === 'warning') {
+        return `⚠️ WARNING: ${period.name} deadline in ${status.daysRemaining} days. You need ${status.hoursNeeded} more hours.`;
+      } else {
+        return `📅 ${period.name} deadline in ${status.daysRemaining} days. You need ${status.hoursNeeded} more hours.`;
+      }
+    };
+
+    const getAlertColor = () => {
+      switch (status.color) {
+        case 'red': return 'bg-red-100 border-red-400 text-red-800';
+        case 'yellow': return 'bg-yellow-100 border-yellow-400 text-yellow-800';
+        case 'blue': return 'bg-blue-100 border-blue-400 text-blue-800';
+        default: return 'bg-gray-100 border-gray-400 text-gray-800';
+      }
+    };
+
+    return (
+      <div className={`p-3 rounded-lg border-2 ${getAlertColor()} mb-3 font-semibold text-sm`}>
+        {getAlertMessage()}
+      </div>
+    );
+  };
+
   React.useEffect(() => {
     if (!user) return;
     
@@ -822,6 +875,38 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
           </div>
         </div>
       </div>
+      {/* Urgent Deadline Alerts Banner */}
+      {(() => {
+        const urgentAlerts = sixWeekPeriods
+          .map(period => {
+            const periodLogs = logs.filter(log => {
+              const logDate = new Date(log.date);
+              const startDate = new Date(period.startDate);
+              const endDate = new Date(period.endDate);
+              return logDate >= startDate && logDate <= endDate;
+            });
+            const periodHours = periodLogs.reduce((sum, log) => sum + (log.hours || 0), 0);
+            const status = getDeadlineStatus(period, periodHours);
+            return { period, periodHours, status };
+          })
+          .filter(({ status }) => status.status === 'urgent' || status.status === 'overdue');
+
+        if (urgentAlerts.length === 0) return null;
+
+        return (
+          <div className="mb-6 p-4 bg-red-50 border-2 border-red-300 rounded-lg">
+            <h3 className="text-lg font-bold text-red-800 mb-2">🚨 URGENT DEADLINES</h3>
+            {urgentAlerts.map(({ period, periodHours, status }) => (
+              <div key={period.name} className="text-red-700 font-semibold text-sm mb-1">
+                {status.status === 'overdue' 
+                  ? `⚠️ ${period.name}: DEADLINE PASSED - You still need ${status.hoursNeeded} hours`
+                  : `🚨 ${period.name}: ${status.daysRemaining} days left - You need ${status.hoursNeeded} more hours`
+                }
+              </div>
+            ))}
+          </div>
+        );
+      })()}
       {/* Progress Bar for Required Hours (Yearly) */}
       <div className="mb-6">
         <div className="flex justify-between items-end mb-1">
@@ -867,6 +952,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                   style={{ width: `${periodProgress}%` }}
                 ></div>
               </div>
+              <DeadlineAlert period={period} periodHours={periodHours} />
             </div>
           );
         })}
