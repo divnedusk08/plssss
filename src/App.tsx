@@ -641,12 +641,12 @@ type Log = {
 
 function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [logs, setLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [editingLog, setEditingLog] = React.useState<Log | null>(null);
-  const [editingField, setEditingField] = React.useState<string>('');
-  const [editingValue, setEditingValue] = React.useState<string>('');
+  const [isExporting, setIsExporting] = React.useState(false);
 
   // Helper function to format dates nicely
   const formatDateRange = (startDate: string, endDate: string) => {
