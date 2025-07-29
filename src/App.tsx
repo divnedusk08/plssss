@@ -78,20 +78,20 @@ function Home() {
       {/* Logo and Title */}
       <div className="flex flex-col items-center mb-4 md:mb-6 mt-8 md:mt-12 fade-in">
         <div className="relative">
-          <svg width="72" height="72" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
+          <svg width="120" height="120" viewBox="0 0 64 64" fill="none" className="torch-animated" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="32" fill="#FBBF24" fillOpacity="0.15" />
             <path d="M32 8C28 16 36 20 32 28C36 24 44 20 32 8Z" fill="#FBBF24"/>
             <rect x="29" y="28" width="6" height="24" rx="3" fill="#2563EB"/>
             <rect x="27" y="52" width="10" height="4" rx="2" fill="#FBBF24"/>
           </svg>
           <div className="absolute inset-0 animate-ping-slow opacity-20">
-            <svg width="72" height="72" viewBox="0 0 64 64" fill="none">
+            <svg width="120" height="120" viewBox="0 0 64 64" fill="none">
               <circle cx="32" cy="32" r="32" fill="#FBBF24"/>
             </svg>
           </div>
         </div>
         <h1 className="text-3xl md:text-5xl font-extrabold text-primary-dark font-montserrat mt-2 mb-1 drop-shadow text-center">HourTrackr NJHS</h1>
-        <div className="text-blue-900 text-base md:text-xl font-montserrat mb-2 text-center">National Junior Honor Society</div>
+        <div className="text-blue-900 text-lg md:text-xl font-montserrat mb-2 text-center">National Junior Honor Society</div>
       </div>
 
       {/* Tagline */}
