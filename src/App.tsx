@@ -590,19 +590,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                   year: 'numeric' 
                 })}
               </p>
-              {currentPeriod.name.includes('Six Weeks 1') && (
-                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
-                  <div className="flex items-center">
-                    <svg className="w-4 h-4 text-yellow-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-xs font-semibold text-yellow-700">Special Period</span>
-                  </div>
-                  <p className="text-xs text-yellow-600 mt-1">
-                    This period includes summer volunteer hours from May 24 through September 19.
-                  </p>
-                </div>
-              )}
+
             </div>
             <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
             <div className="relative">
