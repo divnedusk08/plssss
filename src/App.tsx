@@ -227,6 +227,29 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   const navigate = useNavigate();
   const selectedPeriod = location.state?.selectedPeriod; // Get the selected period from navigation state
 
+  // Define six-week periods (same as in Dashboard)
+  const sixWeekPeriods = [
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-13', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
+    { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
+    { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
+    { name: 'Six Weeks 5 (2025-2026)', startDate: '2026-02-17', endDate: '2026-04-10', targetHours: 2 },
+    { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-12', endDate: '2026-05-29', targetHours: 2 },
+  ];
+
+  // Function to get the current period based on today's date
+  const getCurrentPeriod = () => {
+    const today = new Date();
+    return sixWeekPeriods.find(period => {
+      const startDate = new Date(period.startDate);
+      const endDate = new Date(period.endDate);
+      return today >= startDate && today <= endDate;
+    });
+  };
+
+  // Get the current period (either from navigation or based on today's date)
+  const currentPeriod = selectedPeriod || getCurrentPeriod();
+
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
   const [organization, setOrganization] = React.useState('');
@@ -236,10 +259,10 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   const [timeEnd, setTimeEnd] = React.useState('');
   const [date, setDate] = React.useState(() => {
     // Pre-fill date if a period is selected and it's current/future
-    if (selectedPeriod) {
+    if (currentPeriod) {
       const today = new Date();
-      const periodStartDate = new Date(selectedPeriod.startDate);
-      const periodEndDate = new Date(selectedPeriod.endDate);
+      const periodStartDate = new Date(currentPeriod.startDate);
+      const periodEndDate = new Date(currentPeriod.endDate);
 
       if (today >= periodStartDate && today <= periodEndDate) {
         return today.toISOString().split('T')[0];
@@ -262,6 +285,36 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   }, [user]);
 
   if (!user) return <Navigate to="/login" />;
+
+  // If no current period is available, show an error
+  if (!currentPeriod) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-10 px-4 bg-white">
+        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl p-12 text-center">
+          <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8">No Active Period</h2>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
+            <p className="text-yellow-800 mb-4">
+              There is no active six-week period for today's date ({new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}).
+            </p>
+            <p className="text-yellow-700 text-sm">
+              You can only log hours during active six-week periods. Please check the dashboard for available periods.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition"
+          >
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   function calcHours() {
     if (!timeStart || !timeEnd) return '';
@@ -291,13 +344,13 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
     }
 
     // Validate date against selected period if applicable
-    if (selectedPeriod) {
+    if (currentPeriod) {
       const enteredDate = new Date(date);
-      const periodStartDate = new Date(selectedPeriod.startDate);
-      const periodEndDate = new Date(selectedPeriod.endDate);
+      const periodStartDate = new Date(currentPeriod.startDate);
+      const periodEndDate = new Date(currentPeriod.endDate);
 
       if (enteredDate < periodStartDate || enteredDate > periodEndDate) {
-        setError(`Date must be within ${selectedPeriod.startDate} and ${selectedPeriod.endDate} for ${selectedPeriod.name}.`);
+        setError(`Date must be within ${currentPeriod.startDate} and ${currentPeriod.endDate} for ${currentPeriod.name}.`);
         setIsSubmitting(false);
         return;
       }
@@ -314,7 +367,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       time_end: timeEnd,
       date,
       hours: parseFloat(hours),
-      period_name: selectedPeriod ? selectedPeriod.name : null,
+      period_name: currentPeriod ? currentPeriod.name : null,
       additional_info: additionalInformation, // Include new field
     });
 
@@ -519,6 +572,25 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           )}
           {stepIndex === 6 && (
           <div>
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center mb-2">
+                <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-sm font-semibold text-blue-800">Current Period: {currentPeriod.name}</span>
+              </div>
+              <p className="text-xs text-blue-700">
+                You can only log hours for dates between {new Date(currentPeriod.startDate).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  year: 'numeric' 
+                })} and {new Date(currentPeriod.endDate).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  year: 'numeric' 
+                })}
+              </p>
+            </div>
             <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
             <div className="relative">
               <input
@@ -527,6 +599,8 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                 className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+                min={currentPeriod.startDate}
+                max={currentPeriod.endDate}
                 required
               />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -1015,12 +1089,49 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
           const periodHours = periodLogs.reduce((sum, log) => sum + (log.hours || 0), 0);
           const periodProgress = Math.min((periodHours / period.targetHours) * 100, 100);
 
+          // Check if this period is currently active
+          const today = new Date();
+          const periodStartDate = new Date(period.startDate);
+          const periodEndDate = new Date(period.endDate);
+          const isCurrentPeriod = today >= periodStartDate && today <= periodEndDate;
+          const isFuturePeriod = today < periodStartDate;
+          const isPastPeriod = today > periodEndDate;
+
           return (
             <div key={period.name} 
-            className="bg-white rounded-xl shadow-md p-3 border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow mb-2"
-            onClick={() => navigate('/log', { state: { selectedPeriod: period } })}
+            className={`bg-white rounded-xl shadow-md p-3 border mb-2 transition-all ${
+              isCurrentPeriod 
+                ? 'border-green-300 cursor-pointer hover:shadow-lg hover:border-green-400' 
+                : isFuturePeriod 
+                ? 'border-gray-200 cursor-not-allowed opacity-60' 
+                : 'border-gray-200 cursor-pointer hover:shadow-lg'
+            }`}
+            onClick={() => {
+              if (isFuturePeriod) return; // Don't allow clicking on future periods
+              navigate('/log', { state: { selectedPeriod: period } });
+            }}
             >
-              <h3 className="font-bold text-base text-primary-dark mb-1">{period.name}</h3>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="font-bold text-base text-primary-dark">{period.name}</h3>
+                {isCurrentPeriod && (
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+                    <span className="text-xs font-semibold text-green-600">ACTIVE</span>
+                  </div>
+                )}
+                {isFuturePeriod && (
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full mr-1"></div>
+                    <span className="text-xs font-semibold text-gray-500">FUTURE</span>
+                  </div>
+                )}
+                {isPastPeriod && (
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full mr-1"></div>
+                    <span className="text-xs font-semibold text-blue-600">PAST</span>
+                  </div>
+                )}
+              </div>
               <p className="text-xs text-gray-600 mb-1">{formatDateRange(period.startDate, period.endDate)}</p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
