@@ -1163,7 +1163,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 )}
               </div>
               <p className="text-xs text-gray-600 mb-1">
-                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 24 to Sep 19' : formatDateRange(period.startDate, period.endDate)}
+                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 24 to Aug 13' : formatDateRange(period.startDate, period.endDate)}
               </p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
