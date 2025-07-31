@@ -345,7 +345,9 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
     // Validate date against selected period if applicable
     if (currentPeriod) {
-      const enteredDate = new Date(date);
+      // Parse the date string properly to avoid timezone issues
+      const [year, month, day] = date.split('-').map(Number);
+      const enteredDate = new Date(year, month - 1, day);
       const periodStartDate = new Date(currentPeriod.startDate);
       const periodEndDate = new Date(currentPeriod.endDate);
 
@@ -574,16 +576,16 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           <div>
             <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date you did your service:<span className="text-red-500">*</span></label>
             <div className="relative">
-              <input
-                type="date"
-                id="date"
+            <input
+              type="date"
+              id="date"
                 className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
                 min={currentPeriod.startDate}
                 max={currentPeriod.endDate}
-                required
-              />
+              required
+            />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -597,12 +599,17 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   <span className="text-sm font-semibold text-blue-800">
-                    Selected Date: {new Date(date).toLocaleDateString('en-US', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
+                    Selected Date: {(() => {
+                      // Parse the date string properly to avoid timezone issues
+                      const [year, month, day] = date.split('-').map(Number);
+                      const parsedDate = new Date(year, month - 1, day);
+                      return parsedDate.toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      });
+                    })()}
                   </span>
                 </div>
               </div>
@@ -706,7 +713,9 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
   // Helper function to format dates nicely
   const formatDateRange = (startDate: string, endDate: string) => {
     const formatDate = (dateStr: string) => {
-      const date = new Date(dateStr);
+      // Parse the date string properly to avoid timezone issues
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
       return date.toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric', 
@@ -1283,7 +1292,9 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   // Helper function to format dates nicely
   const formatDateRange = (startDate: string, endDate: string) => {
     const formatDate = (dateStr: string) => {
-      const date = new Date(dateStr);
+      // Parse the date string properly to avoid timezone issues
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
       return date.toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric', 
@@ -1373,9 +1384,13 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
     // 1. Filter logs for this period only
     const logsInPeriod = allLogs.filter(log => {
-      const logDate = new Date(log.date);
-      const startDate = new Date(period.startDate);
-      const endDate = new Date(period.endDate);
+      // Parse the date string properly to avoid timezone issues
+      const [logYear, logMonth, logDay] = log.date.split('-').map(Number);
+      const logDate = new Date(logYear, logMonth - 1, logDay);
+      const [startYear, startMonth, startDay] = period.startDate.split('-').map(Number);
+      const startDate = new Date(startYear, startMonth - 1, startDay);
+      const [endYear, endMonth, endDay] = period.endDate.split('-').map(Number);
+      const endDate = new Date(endYear, endMonth - 1, endDay);
       // Include logs that are approved or have no status (null/undefined) for backward compatibility
       return logDate >= startDate && logDate <= endDate && (log.status === 'approved' || !log.status);
     });
@@ -1387,9 +1402,13 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     
     // Debug: Show all logs and their status
     allLogs.forEach(log => {
-      const logDate = new Date(log.date);
-      const startDate = new Date(period.startDate);
-      const endDate = new Date(period.endDate);
+      // Parse the date string properly to avoid timezone issues
+      const [logYear, logMonth, logDay] = log.date.split('-').map(Number);
+      const logDate = new Date(logYear, logMonth - 1, logDay);
+      const [startYear, startMonth, startDay] = period.startDate.split('-').map(Number);
+      const startDate = new Date(startYear, startMonth - 1, startDay);
+      const [endYear, endMonth, endDay] = period.endDate.split('-').map(Number);
+      const endDate = new Date(endYear, endMonth - 1, endDay);
       const inPeriod = logDate >= startDate && logDate <= endDate;
       const statusOk = log.status === 'approved' || !log.status;
       console.log(`  Log: ${log.first_name} ${log.last_name} - Date: ${log.date} - Status: "${log.status}" - In period: ${inPeriod} - Status OK: ${statusOk}`);
@@ -2024,13 +2043,13 @@ function Profile() {
               </div>
               </div>
                 <div className="flex justify-center mt-4">
-                  <button
+                <button
                     className="bg-[#2563EB] text-white rounded-lg font-semibold shadow px-6 py-2 hover:bg-[#1d4ed8] transition text-center"
-                    onClick={handleProfilePictureClick}
-                    disabled={isUploading}
-                  >
+              onClick={handleProfilePictureClick}
+              disabled={isUploading}
+                >
                     Edit Profile
-                  </button>
+                </button>
                 </div>
           </div>
         </div>
