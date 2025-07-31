@@ -1109,18 +1109,20 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
           const isCurrentPeriod = today >= periodStartDate && today <= periodEndDate;
           const isFuturePeriod = today < periodStartDate;
           const isPastPeriod = today > periodEndDate;
+          
+          // Special handling for Six Weeks 1 - always accessible
+          const isSixWeeks1 = period.name === 'Six Weeks 1 (2025-2026)';
+          const isAccessible = isCurrentPeriod || isPastPeriod || isSixWeeks1;
 
           return (
             <div key={period.name} 
             className={`bg-white rounded-xl shadow-md p-3 border mb-2 transition-all ${
-              isCurrentPeriod 
+              isAccessible 
                 ? 'border-green-300 cursor-pointer hover:shadow-lg hover:border-green-400' 
-                : isFuturePeriod 
-                ? 'border-gray-200 cursor-not-allowed opacity-60' 
-                : 'border-gray-200 cursor-pointer hover:shadow-lg'
+                : 'border-gray-200 cursor-not-allowed opacity-60'
             }`}
             onClick={() => {
-              if (isFuturePeriod) return; // Don't allow clicking on future periods
+              if (!isAccessible) return; // Don't allow clicking on inaccessible periods
               navigate('/log', { state: { selectedPeriod: period } });
             }}
             >
@@ -1132,7 +1134,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                     <span className="text-xs font-semibold text-green-600">ACTIVE</span>
                   </div>
                 )}
-                {isFuturePeriod && (
+                {isFuturePeriod && !isSixWeeks1 && (
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-gray-400 rounded-full mr-1"></div>
                     <span className="text-xs font-semibold text-gray-500">FUTURE</span>
@@ -1142,6 +1144,12 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-blue-400 rounded-full mr-1"></div>
                     <span className="text-xs font-semibold text-blue-600">PAST</span>
+                  </div>
+                )}
+                {isSixWeeks1 && isFuturePeriod && (
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+                    <span className="text-xs font-semibold text-green-600">AVAILABLE</span>
                   </div>
                 )}
               </div>
