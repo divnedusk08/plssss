@@ -229,7 +229,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
   // Define six-week periods (same as in Dashboard)
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-13', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-08-13', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -240,11 +240,18 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
   // Function to get the current period based on today's date
   const getCurrentPeriod = () => {
     const today = new Date();
-    return sixWeekPeriods.find(period => {
+    // Always include Six Weeks 1 (first period) regardless of current date
+    const sixWeeks1 = sixWeekPeriods[0];
+    
+    // Check if today falls within any active period
+    const activePeriod = sixWeekPeriods.find(period => {
       const startDate = new Date(period.startDate);
       const endDate = new Date(period.endDate);
       return today >= startDate && today <= endDate;
     });
+    
+    // Return active period if found, otherwise return Six Weeks 1
+    return activePeriod || sixWeeks1;
   };
 
   // Get the current period (either from navigation or based on today's date)
@@ -286,7 +293,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
   if (!user) return <Navigate to="/login" />;
 
-  // If no current period is available, show an error
+  // If no current period is available, show an error (this should never happen now since Six Weeks 1 is always available)
   if (!currentPeriod) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center py-10 px-4 bg-white">
@@ -351,10 +358,18 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       const periodStartDate = new Date(currentPeriod.startDate);
       const periodEndDate = new Date(currentPeriod.endDate);
 
-      if (enteredDate < periodStartDate || enteredDate > periodEndDate) {
-        setError(`Date must be within ${currentPeriod.startDate} and ${currentPeriod.endDate} for ${currentPeriod.name}.`);
-        setIsSubmitting(false);
-        return;
+      // Allow Six Weeks 1 even when outside the time period
+      const isSixWeeks1 = currentPeriod.name === 'Six Weeks 1 (2025-2026)';
+      const today = new Date();
+      const isOutsidePeriod = today < periodStartDate || today > periodEndDate;
+      
+      // Only validate date range if it's not Six Weeks 1 or if we're within the period
+      if (!isSixWeeks1 || !isOutsidePeriod) {
+        if (enteredDate < periodStartDate || enteredDate > periodEndDate) {
+          setError(`Date must be within ${currentPeriod.startDate} and ${currentPeriod.endDate} for ${currentPeriod.name}.`);
+          setIsSubmitting(false);
+          return;
+        }
       }
     }
 
@@ -727,7 +742,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
   // Define 6-week periods
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-13', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-08-13', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -1306,7 +1321,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   // Define sixWeekPeriods for use in processPeriodData and rendering
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-08-13', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-08-13', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
