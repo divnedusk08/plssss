@@ -1095,6 +1095,15 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
         {sixWeekPeriods.map((period) => {
           const periodLogs = logs.filter(log => {
             const logDate = new Date(log.date);
+            
+            // Special handling for Six Weeks 1 - use full date range
+            if (period.name === 'Six Weeks 1 (2025-2026)') {
+              const sixWeeks1Start = new Date('2025-05-24');
+              const sixWeeks1End = new Date('2025-09-19');
+              return logDate >= sixWeeks1Start && logDate <= sixWeeks1End;
+            }
+            
+            // For other periods, use their normal date ranges
             const startDate = new Date(period.startDate);
             const endDate = new Date(period.endDate);
             return logDate >= startDate && logDate <= endDate;
