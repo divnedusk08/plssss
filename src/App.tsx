@@ -360,8 +360,6 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
       // Allow Six Weeks 1 even when outside the time period
       const isSixWeeks1 = currentPeriod.name === 'Six Weeks 1 (2025-2026)';
-      const today = new Date();
-      const isOutsidePeriod = today < periodStartDate || today > periodEndDate;
       
       // For Six Weeks 1, allow the full range from May 24 to Sep 19
       if (isSixWeeks1) {
