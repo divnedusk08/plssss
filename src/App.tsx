@@ -363,8 +363,18 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       const today = new Date();
       const isOutsidePeriod = today < periodStartDate || today > periodEndDate;
       
-      // Only validate date range if it's not Six Weeks 1 or if we're within the period
-      if (!isSixWeeks1 || !isOutsidePeriod) {
+      // For Six Weeks 1, allow the full range from May 24 to Sep 19
+      if (isSixWeeks1) {
+        const sixWeeks1FullStart = new Date('2025-05-24');
+        const sixWeeks1FullEnd = new Date('2025-09-19');
+        
+        if (enteredDate < sixWeeks1FullStart || enteredDate > sixWeeks1FullEnd) {
+          setError(`Date must be within May 24, 2025 and September 19, 2025 for Six Weeks 1.`);
+          setIsSubmitting(false);
+          return;
+        }
+      } else {
+        // For other periods, use the normal validation
         if (enteredDate < periodStartDate || enteredDate > periodEndDate) {
           setError(`Date must be within ${currentPeriod.startDate} and ${currentPeriod.endDate} for ${currentPeriod.name}.`);
           setIsSubmitting(false);
@@ -597,8 +607,8 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                 className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-                min={currentPeriod.startDate}
-                max={currentPeriod.endDate}
+                min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-24' : currentPeriod.startDate}
+                max={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-09-19' : currentPeriod.endDate}
               required
             />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -1137,7 +1147,9 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                   </div>
                 )}
               </div>
-              <p className="text-xs text-gray-600 mb-1">{formatDateRange(period.startDate, period.endDate)}</p>
+              <p className="text-xs text-gray-600 mb-1">
+                {period.name === 'Six Weeks 1 (2025-2026)' ? 'Aug 13 to Sep 19' : formatDateRange(period.startDate, period.endDate)}
+              </p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
                 <span className="text-xs font-medium text-gray-600">{periodProgress.toFixed(1)}%</span>
