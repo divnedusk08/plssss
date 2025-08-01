@@ -54,7 +54,7 @@ export default function AdminDashboard() {
 
   // Define period date ranges
   const periodRanges = [
-    { name: "Six Weeks 1", start: new Date("2023-05-24"), end: new Date("2023-09-19") }, // Flexible first period
+    { name: "Six Weeks 1", start: new Date("2025-05-24"), end: new Date("2025-09-19") }, // Flexible first period
     { name: "Six Weeks 2", start: new Date("2023-09-20"), end: new Date("2023-10-31") },
     { name: "Six Weeks 3", start: new Date("2023-11-01"), end: new Date("2023-12-15") },
     { name: "Six Weeks 4", start: new Date("2023-12-16"), end: new Date("2024-02-15") },
@@ -471,5 +471,4 @@ export default function AdminDashboard() {
         </div>
       </div>
     );
-  } 
-}
+  }
