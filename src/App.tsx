@@ -28,7 +28,7 @@ function SplashScreen({ className }: { className?: string }) {
 
 function Header() {
   const { user, signOut } = useAuth();
-  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com';
+  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com' || user?.email === 'dhriti.erusalagandi58@k12.leanderisd.org';
   const location = useLocation();
   const navLinkClass = (path: string) =>
     location.pathname === path
@@ -1325,8 +1325,8 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
 function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const { user } = useAuth();
-  // Only allow divineduskdragon08@gmail.com to access the admin dashboard
-  if (!user || user.email !== 'divineduskdragon08@gmail.com') return <Navigate to="/dashboard" />;
+  // Allow specific emails to access the admin dashboard
+  if (!user || (user.email !== 'divineduskdragon08@gmail.com' && user.email !== 'dhriti.erusalagandi58@k12.leanderisd.org')) return <Navigate to="/dashboard" />;
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -2102,7 +2102,7 @@ function Profile() {
 
 function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>>, dashboardRefreshKey: number }) {
   const { loading, user } = useAuth();
-  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com';
+  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com' || user?.email === 'dhriti.erusalagandi58@k12.leanderisd.org';
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-primary-light text-xl font-semibold font-montserrat text-primary-dark">Loading...</div>;
   return (
     <Routes>
