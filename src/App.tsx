@@ -550,7 +550,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           {stepIndex === 4 && (
           <div>
             <label htmlFor="proofOfService" className="block text-sm font-medium text-gray-700">
-              Proof of Service (Representative email, phone number or organization contact information- If you volunteer with other NJHS members, you can say Mrs. Chenault/Mrs. Torres.)<span className="text-red-500">*</span>
+              Proof of Service (Representative email, phone number or organization contact information- If you volunteer with other NJHS members, you can say Ms. Currie/Ms. Bruce.)<span className="text-red-500">*</span>
             </label>
             <input
               type="text"
