@@ -54,7 +54,7 @@ export default function AdminDashboard() {
 
   // Define period date ranges
   const periodRanges = [
-    { name: "Six Weeks 1", start: new Date("2025-05-24"), end: new Date("2025-09-19") }, // Flexible first period
+    { name: "Six Weeks 1 (2025-2026)", start: new Date("2025-08-13"), end: new Date("2025-09-19") }, // First period
     { name: "Six Weeks 2", start: new Date("2023-09-20"), end: new Date("2023-10-31") },
     { name: "Six Weeks 3", start: new Date("2023-11-01"), end: new Date("2023-12-15") },
     { name: "Six Weeks 4", start: new Date("2023-12-16"), end: new Date("2024-02-15") },
@@ -205,11 +205,42 @@ export default function AdminDashboard() {
   function getUsersInPeriod(periodIndex: number) {
     const period = periodRanges[periodIndex];
     
+    // Debug log for period dates
+    console.log(`Period ${periodIndex}: ${period.name}`, {
+      periodStart: period.start.toISOString(),
+      periodEnd: period.end.toISOString()
+    });
+    
     // Filter logs that fall within this period's date range
     const periodLogs = logs.filter(log => {
+      // Create date objects and normalize to remove time component
       const logDate = new Date(log.date_of_service);
-      return logDate >= period.start && logDate <= period.end;
+      logDate.setHours(0, 0, 0, 0);
+      
+      const periodStart = new Date(period.start);
+      periodStart.setHours(0, 0, 0, 0);
+      
+      const periodEnd = new Date(period.end);
+      periodEnd.setHours(23, 59, 59, 999); // End of day
+      
+      const isInPeriod = logDate >= periodStart && logDate <= periodEnd;
+      
+      // Debug log for each log date comparison
+      if (periodIndex === 0) { // Only log for the first period to avoid console spam
+        console.log(`Log date check for period ${periodIndex}:`, {
+          logDate: logDate.toISOString(),
+          logDateRaw: log.date_of_service,
+          periodStart: periodStart.toISOString(),
+          periodEnd: periodEnd.toISOString(),
+          isInPeriod
+        });
+      }
+      
+      return isInPeriod;
     });
+    
+    // Debug log for filtered logs
+    console.log(`Period ${periodIndex} logs:`, periodLogs.length);
     
     // Get unique users from these logs
     const userMap = new Map<string, { name: string, hours: number }>();
@@ -237,15 +268,18 @@ export default function AdminDashboard() {
       .map(user => user.name);
       
     // For not accomplished, we need to check against the full NJHS member list
-    const notAccomplished = njhsMembers.filter(member => 
-      !accomplished.includes(member) && 
-      !userArray.some(u => u.name === member && u.hours < periodRequiredHours)
+    // First, get members who haven't submitted any logs for this period
+    const noSubmission = njhsMembers.filter(member => 
+      !userArray.some(u => u.name === member)
     );
     
-    // Add members who submitted but didn't meet requirements
+    // Then, get members who submitted but didn't meet requirements
     const submittedButNotMet = userArray
       .filter(user => user.hours < periodRequiredHours)
       .map(user => user.name);
+      
+    // Combine both groups for the not accomplished list
+    const notAccomplished = [...noSubmission, ...submittedButNotMet];
       
     return {
       accomplished,
