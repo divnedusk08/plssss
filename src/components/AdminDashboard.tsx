@@ -52,6 +52,16 @@ export default function AdminDashboard() {
     "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon"
   ];
 
+  // Define period date ranges
+  const periodRanges = [
+    { name: "Six Weeks 1", start: new Date("2023-05-24"), end: new Date("2023-09-19") }, // Flexible first period
+    { name: "Six Weeks 2", start: new Date("2023-09-20"), end: new Date("2023-10-31") },
+    { name: "Six Weeks 3", start: new Date("2023-11-01"), end: new Date("2023-12-15") },
+    { name: "Six Weeks 4", start: new Date("2023-12-16"), end: new Date("2024-02-15") },
+    { name: "Six Weeks 5", start: new Date("2024-02-16"), end: new Date("2024-04-15") },
+    { name: "Six Weeks 6", start: new Date("2024-04-16"), end: new Date("2024-05-31") }
+  ];
+
   useEffect(() => {
     fetchUsers();
     fetchLogs();
@@ -191,6 +201,58 @@ export default function AdminDashboard() {
     return members.filter(name => name.toLowerCase().includes(q));
   }
 
+  // Get users who have submitted logs in a specific period
+  function getUsersInPeriod(periodIndex: number) {
+    const period = periodRanges[periodIndex];
+    
+    // Filter logs that fall within this period's date range
+    const periodLogs = logs.filter(log => {
+      const logDate = new Date(log.date_of_service);
+      return logDate >= period.start && logDate <= period.end;
+    });
+    
+    // Get unique users from these logs
+    const userMap = new Map<string, { name: string, hours: number }>();
+    
+    periodLogs.forEach(log => {
+      const userName = `${log.user.first_name} ${log.user.last_name}`;
+      const start = new Date(`1970-01-01T${log.start_time}`);
+      const end = new Date(`1970-01-01T${log.end_time}`);
+      const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      
+      if (userMap.has(userName)) {
+        const current = userMap.get(userName)!;
+        userMap.set(userName, { name: userName, hours: current.hours + hours });
+      } else {
+        userMap.set(userName, { name: userName, hours });
+      }
+    });
+    
+    // Convert to array and separate into met/not met requirements
+    const userArray = Array.from(userMap.values());
+    const periodRequiredHours = 2; // 2 hours required per period
+    
+    const accomplished = userArray
+      .filter(user => user.hours >= periodRequiredHours)
+      .map(user => user.name);
+      
+    // For not accomplished, we need to check against the full NJHS member list
+    const notAccomplished = njhsMembers.filter(member => 
+      !accomplished.includes(member) && 
+      !userArray.some(u => u.name === member && u.hours < periodRequiredHours)
+    );
+    
+    // Add members who submitted but didn't meet requirements
+    const submittedButNotMet = userArray
+      .filter(user => user.hours < periodRequiredHours)
+      .map(user => user.name);
+      
+    return {
+      accomplished,
+      notAccomplished: [...notAccomplished, ...submittedButNotMet]
+    };
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -248,30 +310,30 @@ export default function AdminDashboard() {
           </PieChart>
         </ResponsiveContainer>
       </div>
-      {/* Per-Period Cards: Always Rendered! */}
+      {/* Per-Period Cards: Using actual data! */}
       <div className="space-y-6 sm:space-y-12">
-        {[1,2,3,4,5,6].map((periodIdx) => {
-          const periodName = `Six Weeks ${periodIdx}`;
-          // Simulate realistic data: some members met requirements, some didn't
-          const accomplished: string[] = njhsMembers.slice(0, Math.floor(njhsMembers.length * (0.3 + periodIdx * 0.1)));
-          const notAccomplished: string[] = njhsMembers.filter(member => !accomplished.includes(member));
-          const periodSearch = periodSearches[periodIdx-1] || '';
+        {periodRanges.map((period, periodIdx) => {
+          const { accomplished, notAccomplished } = getUsersInPeriod(periodIdx);
+          const periodSearch = periodSearches[periodIdx] || '';
           const setPeriodSearch = (val: string) => {
             setPeriodSearches(prev => {
               const copy = [...prev];
-              copy[periodIdx-1] = val;
+              copy[periodIdx] = val;
               return copy;
             });
           };
           const filteredAccomplished = filterMembers(accomplished, periodSearch);
           const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
           return (
-            <div key={periodName} className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-200">
-              <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">{periodName}</h3>
+            <div key={period.name} className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-200">
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">{period.name}</h3>
+              <p className="text-sm text-gray-500 mb-2">
+                {format(period.start, 'MMM d, yyyy')} - {format(period.end, 'MMM d, yyyy')}
+              </p>
               {/* Per-Period Search Bar */}
               <div className="mb-4 sm:mb-6">
                 <SearchBar
-                  placeholder={`Search students in ${periodName}...`}
+                  placeholder={`Search students in ${period.name}...`}
                   onSearch={setPeriodSearch}
                 />
               </div>
@@ -306,104 +368,108 @@ export default function AdminDashboard() {
         })}
       </div>
       {/* End Per-Period Cards */}
-      <div className="mb-6 sm:mb-8">
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Start Date</label>
-            <DatePicker
-              selected={filters.startDate}
-              onChange={(date) => setFilters({ ...filters, startDate: date })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">End Date</label>
-            <DatePicker
-              selected={filters.endDate}
-              onChange={(date) => setFilters({ ...filters, endDate: date })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Organization</label>
-            <input
-              type="text"
-              value={filters.organization}
-              onChange={(e) => setFilters({ ...filters, organization: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">User</label>
-            <select
-              value={filters.userId}
-              onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-            >
-              <option value="">All Users</option>
-              {filteredUsers.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.first_name} {user.last_name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="mt-4">
-          <button
-            onClick={exportToCSV}
-            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Export to CSV
-          </button>
-        </div>
-      </div>
+      
+      {/* ... rest of the component ... */}
 
-      <div className="overflow-x-auto mt-8 sm:mt-16">
-        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl sm:rounded-3xl shadow-xl border-l-8 border-indigo-400 w-full">
-          <table className="w-full divide-y divide-gray-200 rounded-xl sm:rounded-3xl overflow-hidden text-sm sm:text-xl">
-            <thead className="bg-gradient-to-r from-indigo-200 to-purple-200 sticky top-0 z-10">
-              <tr>
-                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Date</th>
-                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">User</th>
-                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Organization</th>
-                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Description</th>
-                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Hours</th>
-                <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Proof of Service</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-100">
-              {filteredLogs.length === 0 ? (
+        <div className="mb-6 sm:mb-8">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Start Date</label>
+              <DatePicker
+                selected={filters.startDate}
+                onChange={(date) => setFilters({ ...filters, startDate: date })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">End Date</label>
+              <DatePicker
+                selected={filters.endDate}
+                onChange={(date) => setFilters({ ...filters, endDate: date })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Organization</label>
+              <input
+                type="text"
+                value={filters.organization}
+                onChange={(e) => setFilters({ ...filters, organization: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">User</label>
+              <select
+                value={filters.userId}
+                onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+              >
+                <option value="">All Users</option>
+                {filteredUsers.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.first_name} {user.last_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="mt-4">
+            <button
+              onClick={exportToCSV}
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Export to CSV
+            </button>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto mt-8 sm:mt-16">
+          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl sm:rounded-3xl shadow-xl border-l-8 border-indigo-400 w-full">
+            <table className="w-full divide-y divide-gray-200 rounded-xl sm:rounded-3xl overflow-hidden text-sm sm:text-xl">
+              <thead className="bg-gradient-to-r from-indigo-200 to-purple-200 sticky top-0 z-10">
                 <tr>
-                  <td colSpan={6} className="text-center py-12 sm:py-20 text-gray-400 text-lg sm:text-2xl">No volunteer logs found.</td>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Date</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">User</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Organization</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Description</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Hours</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Proof of Service</th>
                 </tr>
-              ) : (
-                filteredLogs.map((log, idx) => {
-                  const start = new Date(`1970-01-01T${log.start_time}`);
-                  const end = new Date(`1970-01-01T${log.end_time}`);
-                  const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-                  return (
-                    <tr
-                      key={log.id}
-                      className={
-                        (idx % 2 === 0 ? 'bg-indigo-100' : 'bg-white') +
-                        ' hover:bg-purple-100 transition-colors duration-150'
-                      }
-                    >
-                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900 font-bold">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
-                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.user.first_name} {log.user.last_name}</td>
-                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.organization}</td>
-                      <td className="px-3 sm:px-12 py-4 sm:py-8 text-sm sm:text-xl text-gray-900 max-w-xs sm:max-w-2xl truncate" title={log.description}>{log.description}</td>
-                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
-                      <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.proof_of_service}</td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-100">
+                {filteredLogs.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="text-center py-12 sm:py-20 text-gray-400 text-lg sm:text-2xl">No volunteer logs found.</td>
+                  </tr>
+                ) : (
+                  filteredLogs.map((log, idx) => {
+                    const start = new Date(`1970-01-01T${log.start_time}`);
+                    const end = new Date(`1970-01-01T${log.end_time}`);
+                    const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+                    return (
+                      <tr
+                        key={log.id}
+                        className={
+                          (idx % 2 === 0 ? 'bg-indigo-100' : 'bg-white') +
+                          ' hover:bg-purple-100 transition-colors duration-150'
+                        }
+                      >
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900 font-bold">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.user.first_name} {log.user.last_name}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.organization}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 text-sm sm:text-xl text-gray-900 max-w-xs sm:max-w-2xl truncate" title={log.description}>{log.description}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.proof_of_service}</td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  );
-} 
+    );
+  } 
+}
