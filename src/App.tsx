@@ -1325,8 +1325,6 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
 function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const { user } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
   
   // Define all admin emails (NJHS Officers and Advisors)
   const adminEmails = [
