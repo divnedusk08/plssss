@@ -78,6 +78,11 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Debug: Log all logs when they change
+  useEffect(() => {
+    console.log('All logs in database:', logs);
+  }, [logs]);
+
   const fetchUsers = async () => {
     try {
       const { data, error } = await supabase
@@ -246,7 +251,11 @@ export default function AdminDashboard() {
           logDateRaw: log.date_of_service,
           periodStart: periodStart.toISOString(),
           periodEnd: periodEnd.toISOString(),
-          isInPeriod
+          isInPeriod,
+          userName: `${log.user.first_name} ${log.user.last_name}`,
+          logDateTimestamp: logDate.getTime(),
+          periodStartTimestamp: periodStart.getTime(),
+          periodEndTimestamp: periodEnd.getTime()
         });
       }
       
@@ -273,6 +282,11 @@ export default function AdminDashboard() {
       }
     });
     
+    // Debug log for user hours
+    if (periodIndex === 0) {
+      console.log('User hours for Six Weeks 1:', Array.from(userMap.entries()));
+    }
+    
     // Convert to array and separate into met/not met requirements
     const userArray = Array.from(userMap.values());
     const periodRequiredHours = 2; // 2 hours required per period
@@ -292,12 +306,12 @@ export default function AdminDashboard() {
       .filter(user => user.hours < periodRequiredHours)
       .map(user => user.name);
       
-    // Combine both groups for the not accomplished list
+    // Combine both groups for the not accomplished list (FIXED: removed duplication)
     const notAccomplished = [...noSubmission, ...submittedButNotMet];
       
     return {
       accomplished,
-      notAccomplished: [...notAccomplished, ...submittedButNotMet]
+      notAccomplished
     };
   }
 
