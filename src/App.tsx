@@ -1325,11 +1325,29 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
 function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const { user } = useAuth();
-  // Allow specific emails to access the admin dashboard
-  if (!user || (user.email !== 'divineduskdragon08@gmail.com' && user.email !== 'dhriti.erusalagandi58@k12.leanderisd.org')) return <Navigate to="/dashboard" />;
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Define all admin emails (NJHS Officers and Advisors)
+  const adminEmails = [
+    'divineduskdragon08@gmail.com',
+    'dhriti.erusalagandi58@k12.leanderisd.org',
+    'kavya.mukherjee18@k12.leanderisd.org',
+    'aarna.mishra63@k12.leanderisd.org',
+    'adhrit.premkumar33@k12.leanderisd.org',
+    'arshiya.khanna47@k12.leanderisd.org',
+    'sreenandana.kamattathilsaril62@k12.leanderisd.org',
+    'karen.currie@leanderisd.org',
+    'kellie.bruce@leanderisd.org'
+  ];
+  
+  const isSuperAdmin = user && adminEmails.includes(user.email);
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Check admin access
+  if (!user || !isSuperAdmin) return <Navigate to="/dashboard" />;
 
   // Helper function to format dates nicely
   const formatDateRange = (startDate: string, endDate: string) => {
@@ -2102,7 +2120,22 @@ function Profile() {
 
 function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>>, dashboardRefreshKey: number }) {
   const { loading, user } = useAuth();
-  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com' || user?.email === 'dhriti.erusalagandi58@k12.leanderisd.org';
+  
+  // Define all admin emails (NJHS Officers and Advisors)
+  const adminEmails = [
+    'divineduskdragon08@gmail.com',
+    'dhriti.erusalagandi58@k12.leanderisd.org',
+    'kavya.mukherjee18@k12.leanderisd.org',
+    'aarna.mishra63@k12.leanderisd.org',
+    'adhrit.premkumar33@k12.leanderisd.org',
+    'arshiya.khanna47@k12.leanderisd.org',
+    'sreenandana.kamattathilsaril62@k12.leanderisd.org',
+    'karen.currie@leanderisd.org',
+    'kellie.bruce@leanderisd.org'
+  ];
+  
+  const isSuperAdmin = user && adminEmails.includes(user.email);
+  
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-primary-light text-xl font-semibold font-montserrat text-primary-dark">Loading...</div>;
   return (
     <Routes>
