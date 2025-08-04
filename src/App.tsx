@@ -229,7 +229,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
   // Define six-week periods (same as in Dashboard)
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -750,7 +750,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
   // Define 6-week periods
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -1163,7 +1163,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 )}
               </div>
               <p className="text-xs text-gray-600 mb-1">
-                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 24, 2025 → Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
+                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 9, 2025 → Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
               </p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
@@ -1364,7 +1364,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   // Define sixWeekPeriods for use in processPeriodData and rendering
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -1869,7 +1869,7 @@ function ContactUs() {
 
   const njhsAdvisors = [
     { name: 'Karen Currie', email: 'karen.currie@leanderisd.org' },
-    { name: 'Kellie Bruce', email: 'kellie.bruce@leanderisd.org' },
+    { name: 'Kellie Bruce', email: 'kellie.bruce@leanderisd.org', },
   ];
 
   return (
