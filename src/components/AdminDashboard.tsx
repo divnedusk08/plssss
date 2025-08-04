@@ -72,8 +72,9 @@ export default function AdminDashboard() {
   // Add periodic refresh for real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
+      console.log('Auto-refreshing admin data...');
       fetchLogs();
-    }, 30000); // Refresh every 30 seconds
+    }, 15000); // Refresh every 15 seconds for more frequent updates
 
     return () => clearInterval(interval);
   }, []);
@@ -81,6 +82,11 @@ export default function AdminDashboard() {
   // Debug: Log all logs when they change
   useEffect(() => {
     console.log('All logs in database:', logs);
+    console.log('Total number of logs:', logs.length);
+    if (logs.length > 0) {
+      console.log('Sample log:', logs[0]);
+      console.log('All user names:', logs.map(log => `${log.user.first_name} ${log.user.last_name}`));
+    }
   }, [logs]);
 
   const fetchUsers = async () => {
@@ -100,6 +106,8 @@ export default function AdminDashboard() {
   const fetchLogs = async () => {
     try {
       setRefreshing(true);
+      console.log('Fetching logs from Supabase...');
+      
       let query = supabase
         .from('volunteer_log')
         .select(`
@@ -108,6 +116,8 @@ export default function AdminDashboard() {
         `)
         .order('date_of_service', { ascending: false });
 
+      // Remove any filters that might be limiting the data
+      // Only apply filters if they are explicitly set
       if (filters.startDate) {
         query = query.gte('date_of_service', filters.startDate.toISOString());
       }
@@ -124,6 +134,10 @@ export default function AdminDashboard() {
       const { data, error } = await query;
 
       if (error) throw error;
+      
+      console.log('Fetched logs from Supabase:', data);
+      console.log('Number of logs fetched:', data?.length || 0);
+      
       setLogs(data || []);
       setLastUpdated(new Date());
     } catch (error) {
@@ -337,6 +351,9 @@ export default function AdminDashboard() {
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Admin Dashboard: Volunteer Hour Progress</h2>
         <button
           onClick={() => {
+            console.log('Manual refresh triggered');
+            setLogs([]); // Clear current logs
+            setUsers([]); // Clear current users
             fetchLogs();
             fetchUsers();
           }}
@@ -348,12 +365,12 @@ export default function AdminDashboard() {
           <svg className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          {refreshing ? 'Refreshing...' : 'Refresh'}
+          {refreshing ? 'Refreshing...' : 'Refresh All Data'}
         </button>
       </div>
       {lastUpdated && (
         <p className="text-sm text-gray-500 mb-4">
-          Last updated: {lastUpdated.toLocaleTimeString()}
+          Last updated: {lastUpdated.toLocaleTimeString()} | Total logs: {logs.length} | Total users: {users.length}
         </p>
       )}
       {/* Dashboard-wide Search Bar */}

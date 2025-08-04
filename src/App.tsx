@@ -604,9 +604,10 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             <input
               type="date"
               id="date"
-                className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              onClick={(e) => e.currentTarget.showPicker?.()}
                 min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-09' : currentPeriod.startDate}
                 max={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-09-19' : currentPeriod.endDate}
               required
