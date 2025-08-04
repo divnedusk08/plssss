@@ -566,41 +566,27 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             <div className="space-y-4">
             <div>
                 <label htmlFor="timeStart" className="block text-sm font-medium text-gray-700">Start Time<span className="text-red-500">*</span></label>
-              <div className="relative">
-                <input
-                  type="time"
-                  id="timeStart"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
-                  value={timeStart}
-                  onChange={(e) => setTimeStart(e.target.value)}
-                  onClick={(e) => e.currentTarget.showPicker?.()}
-                  required
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
+              <input
+                type="time"
+                id="timeStart"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
+                value={timeStart}
+                onChange={(e) => setTimeStart(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                required
+              />
             </div>
             <div>
                 <label htmlFor="timeEnd" className="block text-sm font-medium text-gray-700">End Time<span className="text-red-500">*</span></label>
-              <div className="relative">
-                <input
-                  type="time"
-                  id="timeEnd"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
-                  value={timeEnd}
-                  onChange={(e) => setTimeEnd(e.target.value)}
-                  onClick={(e) => e.currentTarget.showPicker?.()}
-                  required
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-              </div>
+              <input
+                type="time"
+                id="timeEnd"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
+                value={timeEnd}
+                onChange={(e) => setTimeEnd(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                required
+              />
             </div>
               {timeStart && timeEnd && (
                 <div className="bg-green-50 rounded-lg p-3 border border-green-200 text-center">

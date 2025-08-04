@@ -116,20 +116,13 @@ export default function VolunteerLogForm() {
           <label htmlFor="start_time" className="block text-base sm:text-lg font-bold text-indigo-900 mb-2">
             Start Time
           </label>
-          <div className="relative">
-            <input
-              type="time"
-              id="start_time"
-              {...register('start_time')}
-              className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6 cursor-pointer hover:border-indigo-400 transition-colors"
-              onClick={(e) => e.currentTarget.showPicker?.()}
-            />
-            <div className="absolute inset-y-0 right-0 pr-4 sm:pr-6 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
+          <input
+            type="time"
+            id="start_time"
+            {...register('start_time')}
+            className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6 cursor-pointer hover:border-indigo-400 transition-colors"
+            onClick={(e) => e.currentTarget.showPicker?.()}
+          />
           {errors.start_time && (
             <p className="mt-2 text-sm sm:text-base text-red-600 font-semibold">{errors.start_time.message}</p>
           )}
@@ -139,20 +132,13 @@ export default function VolunteerLogForm() {
           <label htmlFor="end_time" className="block text-base sm:text-lg font-bold text-indigo-900 mb-2">
             End Time
           </label>
-          <div className="relative">
-            <input
-              type="time"
-              id="end_time"
-              {...register('end_time')}
-              className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6 cursor-pointer hover:border-indigo-400 transition-colors"
-              onClick={(e) => e.currentTarget.showPicker?.()}
-            />
-            <div className="absolute inset-y-0 right-0 pr-4 sm:pr-6 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
+          <input
+            type="time"
+            id="end_time"
+            {...register('end_time')}
+            className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6 cursor-pointer hover:border-indigo-400 transition-colors"
+            onClick={(e) => e.currentTarget.showPicker?.()}
+          />
           {errors.end_time && (
             <p className="mt-2 text-sm sm:text-base text-red-600 font-semibold">{errors.end_time.message}</p>
           )}
