@@ -1347,6 +1347,13 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
+  // Debug: Log admin access
+  React.useEffect(() => {
+    console.log('Admin function: User email:', user?.email);
+    console.log('Admin function: Is super admin:', isSuperAdmin);
+    console.log('Admin function: Admin emails list:', adminEmails);
+  }, [user, isSuperAdmin]);
+
   // Check admin access
   if (!user || !isSuperAdmin) return <Navigate to="/dashboard" />;
 
@@ -1403,17 +1410,28 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   // Move fetchAllLogs to outer scope so it can be used in both useEffects
   const fetchAllLogs = React.useCallback(async () => {
     try {
+      console.log('Admin function: Fetching logs from Supabase...');
+      
       const { data, error: fetchError } = await supabase
         .from('volunteer_log')
-        .select('*')
-        .order('date', { ascending: false });
+        .select(`
+          *,
+          user:users(*)
+        `)
+        .order('date_of_service', { ascending: false });
 
       if (fetchError) {
+        console.error('Admin function: Error fetching logs:', fetchError);
         setError(fetchError.message);
         return;
       }
+      
+      console.log('Admin function: Fetched logs:', data);
+      console.log('Admin function: Number of logs:', data?.length || 0);
+      
       setAllLogs(data || []);
     } catch (err) {
+      console.error('Admin function: Unexpected error:', err);
       setError('An unexpected error occurred');
     } finally {
       setIsLoading(false);
@@ -1425,6 +1443,16 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     setError(null);
     fetchAllLogs();
   }, [dashboardRefreshKey, fetchAllLogs]);
+
+  // Add periodic refresh for real-time updates
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('Admin function: Auto-refreshing data...');
+      fetchAllLogs();
+    }, 10000); // Refresh every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [fetchAllLogs]);
 
   React.useEffect(() => {
     const subscription = supabase
@@ -1528,7 +1556,25 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
-      <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin Dashboard: Volunteer Hour Progress</h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat text-center">Admin Dashboard: Volunteer Hour Progress</h2>
+        <button
+          onClick={() => {
+            console.log('Admin function: Manual refresh triggered');
+            setIsLoading(true);
+            fetchAllLogs();
+          }}
+          disabled={isLoading}
+          className={`px-4 py-2 bg-primary text-white rounded-lg transition-colors flex items-center gap-2 ${
+            isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-dark'
+          }`}
+        >
+          <svg className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          {isLoading ? 'Refreshing...' : 'Refresh Data'}
+        </button>
+      </div>
       
       {isLoading ? (
         <div className="flex justify-center items-center h-48">
