@@ -205,42 +205,6 @@ export default function AdminDashboard() {
     ? njhsMembers.filter(name => name.toLowerCase().includes(normalizedQuery))
     : njhsMembers;
 
-  // Calculate requirement met stats using filteredUsers and filteredLogs
-  const requiredHours = 12; // 12 hours required per semester
-  const studentHours: { [email: string]: number } = {};
-  filteredLogs.forEach(log => {
-    // Handle time_range parsing safely
-    const timeRange = log.time_range || '';
-    const timeParts = timeRange.split('-');
-    const startTime = timeParts[0] || '';
-    const endTime = timeParts[1] || '';
-    
-    let hours = 0;
-    if (startTime && endTime) {
-      try {
-        const start = new Date(`1970-01-01T${startTime}`);
-        const end = new Date(`1970-01-01T${endTime}`);
-        hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-      } catch (e) {
-        console.error('Error parsing time range:', timeRange, e);
-      }
-    }
-    
-    const userKey = log.user_email || log.user_uid;
-    studentHours[userKey] = (studentHours[userKey] || 0) + hours;
-  });
-  
-  // For now, we can't easily match njhsMembers to actual logs without email mapping
-  // So let's just show stats for users who have submitted logs
-  const usersWithLogs = Object.keys(studentHours);
-  const metCount = usersWithLogs.filter(userKey => (studentHours[userKey] || 0) >= requiredHours).length;
-  const notMetCount = usersWithLogs.length - metCount;
-  
-  const pieData = [
-    { name: 'Met Requirements', value: metCount, color: '#4CAF50' },
-    { name: 'Not Met', value: notMetCount, color: '#F44336' }
-  ];
-
   const COLORS = ['#4CAF50', '#F44336']; // Green for met, Red for not met
 
   // Helper: returns filtered members for a period based on search
@@ -436,34 +400,6 @@ export default function AdminDashboard() {
           placeholder="Search by student name or email..."
           className="w-full sm:w-96 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
         />
-      </div>
-      {/* Pie Chart Card */}
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 flex flex-col items-center">
-        <h3 className="text-lg sm:text-xl font-bold text-primary-dark mb-3 sm:mb-4">Progress Overview</h3>
-        <ResponsiveContainer width="100%" height={200} minWidth={280} minHeight={180}>
-          <PieChart>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              outerRadius={70}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {pieData.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip formatter={(value) => `${value} students`} />
-            <Legend
-              verticalAlign="bottom"
-              iconType="circle"
-              wrapperStyle={{ fontWeight: 700, color: '#111827', fontSize: '0.9rem', letterSpacing: '0.02em' }}
-            />
-          </PieChart>
-        </ResponsiveContainer>
       </div>
       {/* Per-Period Cards: Using actual data! */}
       <div className="space-y-6 sm:space-y-12">
