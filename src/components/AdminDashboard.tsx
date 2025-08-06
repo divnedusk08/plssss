@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
-import DatePicker from 'react-datepicker';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
@@ -26,13 +25,6 @@ type VolunteerLogFromDB = {
   updated_at?: string;
 };
 
-type FilterState = {
-  startDate: Date | null;
-  endDate: Date | null;
-  organization: string;
-  userId: string;
-}
-
 export default function AdminDashboard() {
   const { user } = useAuth();
   
@@ -45,12 +37,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [filters, setFilters] = useState<FilterState>({
-    startDate: null,
-    endDate: null,
-    organization: '',
-    userId: '',
-  });
   // Add per-period search state
   const [periodSearches, setPeriodSearches] = useState<string[]>(Array(6).fill(''));
   // Add this array at the top of the component (after useState declarations):
@@ -111,20 +97,6 @@ export default function AdminDashboard() {
         .select('*')
         .order('date', { ascending: false });
 
-      // Apply filters if they are explicitly set
-      if (filters.startDate) {
-        query = query.gte('date', filters.startDate.toISOString().split('T')[0]);
-      }
-      if (filters.endDate) {
-        query = query.lte('date', filters.endDate.toISOString().split('T')[0]);
-      }
-      if (filters.organization) {
-        query = query.eq('organization', filters.organization);
-      }
-      if (filters.userId) {
-        query = query.eq('user_email', filters.userId);
-      }
-
       const { data, error } = await query;
 
       if (error) throw error;
@@ -140,52 +112,6 @@ export default function AdminDashboard() {
       setLoading(false);
       setRefreshing(false);
     }
-  };
-
-  const exportToCSV = () => {
-    const headers = ['Date', 'Name', 'Organization', 'Description', 'Start Time', 'End Time', 'Hours', 'Proof', 'Additional Info'];
-
-    const csvData = logs.map(log => {
-      // Handle time_range parsing safely
-      const timeRange = log.time_range || '';
-      const timeParts = timeRange.split('-');
-      const startTime = timeParts[0] || '';
-      const endTime = timeParts[1] || '';
-      
-      let hours = 0;
-      if (startTime && endTime) {
-        try {
-          const start = new Date(`1970-01-01T${startTime}`);
-          const end = new Date(`1970-01-01T${endTime}`);
-          hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-        } catch (e) {
-          console.error('Error parsing time range:', timeRange, e);
-        }
-      }
-
-      return [
-        format(new Date(log.date), 'MM/dd/yyyy'),
-        `${log.first_name} ${log.last_name}`,
-        log.organization,
-        log.description,
-        startTime,
-        endTime,
-        hours.toFixed(2),
-        log.proof_of_service,
-        log.additional_info || '',
-      ];
-    });
-
-    const csvContent = [
-      headers.join(','),
-      ...csvData.map(row => row.join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `volunteer_logs_${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    link.click();
   };
 
   // Filter logs and users by search query
@@ -484,59 +410,6 @@ export default function AdminDashboard() {
       {/* End Per-Period Cards */}
       
       {/* ... rest of the component ... */}
-
-        <div className="mb-6 sm:mb-8">
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Start Date</label>
-              <DatePicker
-                selected={filters.startDate}
-                onChange={(date) => setFilters({ ...filters, startDate: date })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">End Date</label>
-              <DatePicker
-                selected={filters.endDate}
-                onChange={(date) => setFilters({ ...filters, endDate: date })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Organization</label>
-              <input
-                type="text"
-                value={filters.organization}
-                onChange={(e) => setFilters({ ...filters, organization: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">User</label>
-              <select
-                value={filters.userId}
-                onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-              >
-                <option value="">All Users</option>
-                {njhsMembers.map((user) => (
-                  <option key={user} value={user}>
-                    {user}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="mt-4">
-            <button
-              onClick={exportToCSV}
-              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Export to CSV
-            </button>
-          </div>
-        </div>
 
         <div className="overflow-x-auto mt-8 sm:mt-16">
           <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl sm:rounded-3xl shadow-xl border-l-8 border-indigo-400 w-full">
