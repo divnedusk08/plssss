@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './lib/supabase';
-import sneakPeakImg from './assets/LogHoursInterface.png';
+import logHoursInterfaceImg from './assets/LogHoursInterface.png';
 import AdminDashboard from './components/AdminDashboard';
 import './index.css';
 
@@ -113,8 +113,8 @@ function Home() {
       {/* Sneak Peek Image */}
       <div className="flex flex-col items-center mt-2 md:mt-4 mb-8 md:mb-14 w-full">
         <img
-          src={sneakPeakImg}
-          alt="Dashboard sneak peek"
+          src={`${logHoursInterfaceImg}?v=${Date.now()}`}
+          alt="Log Volunteer Hours interface preview"
           className="rounded-2xl shadow-2xl border border-gray-200 w-full max-w-xs sm:max-w-md md:w-[65vw] md:max-w-[1050px]"
           style={{ objectFit: 'contain', opacity: 0, transform: 'translateY(32px)', animation: 'fadeInUp 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0s forwards' }}
         />
