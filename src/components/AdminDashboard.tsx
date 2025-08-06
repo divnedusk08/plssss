@@ -36,8 +36,6 @@ export default function AdminDashboard() {
   const [logs, setLogs] = useState<VolunteerLogFromDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  // Add per-period search state
   const [periodSearches, setPeriodSearches] = useState<string[]>(Array(6).fill(''));
   // Add this array at the top of the component (after useState declarations):
   const njhsMembers: string[] = [
@@ -89,7 +87,7 @@ export default function AdminDashboard() {
 
   const fetchLogs = async () => {
     try {
-      setRefreshing(true);
+      setLoading(true);
       console.log('Fetching logs from Supabase...');
       
       let query = supabase
@@ -110,7 +108,6 @@ export default function AdminDashboard() {
       setError('Failed to fetch volunteer logs');
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
@@ -259,6 +256,70 @@ export default function AdminDashboard() {
     };
   }
 
+  // Export to CSV function
+  const [isExporting, setIsExporting] = useState(false);
+
+  const exportToCSV = () => {
+    setIsExporting(true);
+    try {
+      // Create CSV headers
+      const headers = ['Date', 'User', 'Organization', 'Description', 'Hours', 'Proof of Service', 'Submitted At'];
+      
+      // Create CSV rows
+      const rows = logs.map(log => {
+        // Calculate hours from time_range
+        const timeRange = log.time_range || '';
+        const timeParts = timeRange.split('-');
+        const startTime = timeParts[0] || '';
+        const endTime = timeParts[1] || '';
+        
+        let hours = 0;
+        if (startTime && endTime) {
+          try {
+            const start = new Date(`1970-01-01T${startTime}`);
+            const end = new Date(`1970-01-01T${endTime}`);
+            hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+          } catch (e) {
+            console.error('Error parsing time range:', timeRange, e);
+          }
+        }
+
+        const submittedAt = log.created_at ? format(new Date(log.created_at), 'MMM d, yyyy h:mm a') : 'Not tracked';
+        
+        return [
+          format(new Date(log.date), 'MMM d, yyyy'),
+          `${log.first_name} ${log.last_name}`,
+          log.organization,
+          `"${log.description.replace(/"/g, '""')}"`, // Escape quotes in description
+          hours.toFixed(2),
+          log.proof_of_service,
+          submittedAt
+        ];
+      });
+
+      // Combine headers and rows
+      const csvContent = [headers, ...rows]
+        .map(row => row.join(','))
+        .join('\n');
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `volunteer_hours_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      alert('Failed to export CSV. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -276,24 +337,29 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-4 sm:mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Admin Dashboard: Volunteer Hour Progress</h2>
+    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-primary-dark font-montserrat mb-4 sm:mb-0">
+          Admin Dashboard: Volunteer Hour Progress
+        </h1>
         <button
-          onClick={() => {
-            console.log('Manual refresh triggered');
-            setLogs([]); // Clear current logs
-            fetchLogs();
-          }}
-          disabled={refreshing}
-          className={`px-4 py-2 bg-indigo-600 text-white rounded-lg transition-colors flex items-center gap-2 ${
-            refreshing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-700'
-          }`}
+          onClick={exportToCSV}
+          disabled={isExporting || logs.length === 0}
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <svg className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          {refreshing ? 'Refreshing...' : 'Refresh All Data'}
+          {isExporting ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              Exporting...
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export to CSV
+            </>
+          )}
         </button>
       </div>
       {/* Per-Period Cards: Using actual data! */}
