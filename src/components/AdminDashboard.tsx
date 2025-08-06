@@ -543,12 +543,12 @@ export default function AdminDashboard() {
             <table className="w-full divide-y divide-gray-200 rounded-xl sm:rounded-3xl overflow-hidden text-sm sm:text-xl">
               <thead className="bg-gradient-to-r from-indigo-200 to-purple-200 sticky top-0 z-10">
                 <tr>
-                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Date</th>
-                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">User</th>
-                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Organization</th>
-                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Description</th>
-                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Hours</th>
-                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-2xl font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Proof of Service</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Date</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">User</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Organization</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Description</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Hours</th>
+                  <th className="px-3 sm:px-12 py-4 sm:py-8 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wider sm:tracking-widest">Proof of Service</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
