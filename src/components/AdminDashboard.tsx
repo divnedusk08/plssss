@@ -53,8 +53,6 @@ export default function AdminDashboard() {
   });
   // Add per-period search state
   const [periodSearches, setPeriodSearches] = useState<string[]>(Array(6).fill(''));
-  // Add dashboard-wide search state
-  const [searchQuery, setSearchQuery] = useState('');
   // Add this array at the top of the component (after useState declarations):
   const njhsMembers: string[] = [
     "Annie Addison", "Stephanie Adelowokan", "Nazila Allaudin", "Anvi Alleti", "Farhan Altaf", 
@@ -191,18 +189,6 @@ export default function AdminDashboard() {
   };
 
   // Filter logs and users by search query
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-  const filteredLogs = normalizedQuery
-    ? logs.filter(log => {
-        const name = `${log.first_name} ${log.last_name}`.toLowerCase();
-         const email = (log.user_email || '').toLowerCase();
-        return name.includes(normalizedQuery) || email.includes(normalizedQuery);
-      })
-    : logs;
-  const filteredUsers = normalizedQuery
-    ? njhsMembers.filter(name => name.toLowerCase().includes(normalizedQuery))
-    : njhsMembers;
-
   const COLORS = ['#4CAF50', '#F44336']; // Green for met, Red for not met
 
   // Helper: returns filtered members for a period based on search
@@ -384,16 +370,6 @@ export default function AdminDashboard() {
           {refreshing ? 'Refreshing...' : 'Refresh All Data'}
         </button>
       </div>
-      {/* Dashboard-wide Search Bar */}
-      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-center gap-3">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Search by student name or email..."
-          className="w-full sm:w-96 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
-        />
-      </div>
       {/* Per-Period Cards: Using actual data! */}
       <div className="space-y-6 sm:space-y-12">
         {sixWeekPeriods.map((period, periodIdx) => {
@@ -544,7 +520,7 @@ export default function AdminDashboard() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
               >
                 <option value="">All Users</option>
-                {filteredUsers.map((user) => (
+                {njhsMembers.map((user) => (
                   <option key={user} value={user}>
                     {user}
                   </option>
@@ -576,12 +552,12 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
-                {filteredLogs.length === 0 ? (
+                {logs.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="text-center py-12 sm:py-20 text-gray-400 text-lg sm:text-2xl">No volunteer logs found.</td>
                   </tr>
                 ) : (
-                  filteredLogs.map((log, idx) => {
+                  logs.map((log, idx) => {
                     // Handle time_range parsing safely
                     const timeRange = log.time_range || '';
                     const timeParts = timeRange.split('-');
