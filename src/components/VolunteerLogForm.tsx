@@ -165,7 +165,7 @@ export default function VolunteerLogForm() {
           minDate={new Date('2025-05-09')} // Allow dates from May 9, 2025 onwards
           maxDate={new Date('2026-05-29')} // Up to the end of Six Weeks 6
           filterDate={(date) => !isDateBlocked(date)} // Exclude blocked dates (return false to filter out)
-          className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6"
+          className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 hover:border-indigo-400 hover:shadow-lg transition-all duration-200 cursor-pointer text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6"
         />
         {errors.date_of_service && (
           <p className="mt-2 text-sm sm:text-base text-red-600 font-semibold">{errors.date_of_service.message}</p>

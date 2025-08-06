@@ -621,7 +621,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             <input
               type="date"
               id="date"
-                className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary hover:border-primary hover:shadow-md transition-all duration-200 cursor-pointer sm:text-sm"
               value={date}
               onChange={(e) => {
                 const selectedDate = e.target.value;
@@ -634,6 +634,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               }}
                 min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-09' : currentPeriod.startDate}
                 max={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-09-19' : currentPeriod.endDate}
+              onClick={(e) => e.currentTarget.showPicker?.()}
               required
             />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -1296,7 +1297,8 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                     type="date"
                     value={editingLog.date}
                     onChange={e => setEditingLog({...editingLog, date: e.target.value})}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    onClick={(e) => e.currentTarget.showPicker?.()}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary hover:border-primary hover:shadow-md transition-all duration-200 cursor-pointer"
                   />
                 </div>
                 <div>
