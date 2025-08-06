@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
 
 // Update the types to match the actual database schema
 type VolunteerLogFromDB = {
@@ -32,6 +34,13 @@ type FilterState = {
 }
 
 export default function AdminDashboard() {
+  const { user } = useAuth();
+  
+  // Allow specific emails to access the admin dashboard
+  if (!user || (user.email !== 'divineduskdragon08@gmail.com' && user.email !== 'dhriti.erusalagandi58@k12.leanderisd.org')) {
+    return <Navigate to="/dashboard" />;
+  }
+
   const [logs, setLogs] = useState<VolunteerLogFromDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
