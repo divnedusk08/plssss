@@ -157,11 +157,33 @@ export default function VolunteerLogForm() {
           }}
           minDate={new Date('2025-05-09')} // Allow dates from May 9, 2025 onwards
           maxDate={new Date('2026-05-29')} // Up to the end of Six Weeks 6
+          filterDate={(date) => {
+            // Allow May 9, 2025
+            const may9_2025 = new Date('2025-05-09');
+            if (date.getTime() === may9_2025.getTime()) {
+              return true;
+            }
+            
+            // Block May 10-23, 2025
+            const may10_2025 = new Date('2025-05-10');
+            const may23_2025 = new Date('2025-05-23');
+            if (date >= may10_2025 && date <= may23_2025) {
+              return false;
+            }
+            
+            // Allow May 24, 2025 onwards (within the max date range)
+            const may24_2025 = new Date('2025-05-24');
+            const maxDate = new Date('2026-05-29');
+            return date >= may24_2025 && date <= maxDate;
+          }}
           className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6"
         />
         {errors.date_of_service && (
           <p className="mt-2 text-sm sm:text-base text-red-600 font-semibold">{errors.date_of_service.message}</p>
         )}
+        <p className="mt-1 text-xs sm:text-sm text-gray-600">
+          Available dates: May 9, 2025, and May 24, 2025 onwards (May 10-23 are not available)
+        </p>
       </div>
 
       <div>

@@ -361,13 +361,29 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       // Allow Six Weeks 1 even when outside the time period
       const isSixWeeks1 = currentPeriod.name === 'Six Weeks 1 (2025-2026)';
       
-      // For Six Weeks 1, allow the full range from May 9 to Sep 19
+      // For Six Weeks 1, use special validation for allowed dates
       if (isSixWeeks1) {
-        const sixWeeks1FullStart = new Date('2025-05-09');
-        const sixWeeks1FullEnd = new Date('2025-09-19');
+        const may9_2025 = new Date('2025-05-09');
+        const may10_2025 = new Date('2025-05-10');
+        const may23_2025 = new Date('2025-05-23');
+        const may24_2025 = new Date('2025-05-24');
+        const sixWeeks1End = new Date('2025-09-19');
         
-        if (enteredDate < sixWeeks1FullStart || enteredDate > sixWeeks1FullEnd) {
-          setError(`Date must be within May 9, 2025 and September 19, 2025 for Six Weeks 1.`);
+        // Check if date is May 9, 2025 (allowed)
+        const isMay9 = enteredDate.getTime() === may9_2025.getTime();
+        
+        // Check if date is in blocked range (May 10-23, 2025)
+        const isInBlockedRange = enteredDate >= may10_2025 && enteredDate <= may23_2025;
+        
+        // Check if date is May 24, 2025 onwards (allowed)
+        const isMay24Onwards = enteredDate >= may24_2025 && enteredDate <= sixWeeks1End;
+        
+        if (!isMay9 && !isMay24Onwards) {
+          if (isInBlockedRange) {
+            setError(`Dates between May 10-23, 2025 are not available for volunteer hour submissions.`);
+          } else {
+            setError(`Date must be May 9, 2025, or between May 24, 2025 and September 19, 2025 for Six Weeks 1.`);
+          }
           setIsSubmitting(false);
           return;
         }
@@ -604,39 +620,47 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               id="date"
                 className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => {
+                const selectedDate = e.target.value;
+                const selectedDateObj = new Date(selectedDate);
+                
+                // Check if the selected date is in the blocked range (May 10-23, 2025)
+                const may10_2025 = new Date('2025-05-10');
+                const may23_2025 = new Date('2025-05-23');
+                
+                if (selectedDateObj >= may10_2025 && selectedDateObj <= may23_2025) {
+                  // Block this date - don't update the state and show error
+                  setError('Dates between May 10-23, 2025 are not available for volunteer hour submissions.');
+                  return;
+                } else {
+                  // Clear any previous error and set the date
+                  setError('');
+                  setDate(selectedDate);
+                }
+              }}
                 min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-09' : currentPeriod.startDate}
                 max={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-09-19' : currentPeriod.endDate}
               required
             />
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z" />
                 </svg>
               </div>
             </div>
             {date && (
-              <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="flex items-center justify-center">
-                  <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-sm font-semibold text-blue-800">
-                    Selected Date: {(() => {
-                      // Parse the date string properly to avoid timezone issues
-                      const [year, month, day] = date.split('-').map(Number);
-                      const parsedDate = new Date(year, month - 1, day);
-                      return parsedDate.toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      });
-                    })()}
-                  </span>
-                </div>
+              <div className="mt-2 text-sm text-green-600">
+                Selected date: {new Date(date).toLocaleDateString('en-US', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
               </div>
             )}
+            <div className="mt-1 text-xs text-gray-500">
+              Available dates: May 9, 2025, and May 24, 2025 onwards (May 10-23 are not available)
+            </div>
           </div>
           )}
           {stepIndex === 7 && (
@@ -1163,7 +1187,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 )}
               </div>
               <p className="text-xs text-gray-600 mb-1">
-                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 9, 2025 → Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
+                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 9, 2025 & May 24 - Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
               </p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
