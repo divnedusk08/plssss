@@ -422,13 +422,12 @@ export default function AdminDashboard() {
                   <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wide">Description</th>
                   <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wide">Hours</th>
                   <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wide">Proof of Service</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-lg font-black text-indigo-900 uppercase tracking-wide">Submitted At</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {logs.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-6 sm:py-8 text-gray-400" style={{fontSize: '12px'}}>No volunteer logs found.</td>
+                    <td colSpan={6} className="text-center py-6 sm:py-8 text-gray-400" style={{fontSize: '12px'}}>No volunteer logs found.</td>
                   </tr>
                 ) : (
                   logs.map((log, idx) => {
@@ -463,9 +462,6 @@ export default function AdminDashboard() {
                         <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-900 max-w-xs sm:max-w-lg truncate" style={{fontSize: '12px'}} title={log.description}>{log.description}</td>
                         <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-indigo-700 font-extrabold" style={{fontSize: '12px'}}>{hours.toFixed(2)}</td>
                         <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>{log.proof_of_service}</td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-600" style={{fontSize: '12px'}}>
-                          {log.created_at ? format(new Date(log.created_at), 'MMM d, yyyy h:mm a') : 'Not tracked'}
-                        </td>
                       </tr>
                     );
                   })

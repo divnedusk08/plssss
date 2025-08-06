@@ -55,7 +55,6 @@ export default function VolunteerLogForm() {
             user_id: user.id,
             ...data,
             date_of_service: data.date_of_service.toISOString().split('T')[0], // Store only the date part to avoid timezone issues
-            created_at: new Date().toISOString(), // Try to track submission time
           },
         ]);
 
