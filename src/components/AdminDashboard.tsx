@@ -464,7 +464,7 @@ export default function AdminDashboard() {
                         <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-indigo-700 font-extrabold" style={{fontSize: '12px'}}>{hours.toFixed(2)}</td>
                         <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>{log.proof_of_service}</td>
                         <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-600" style={{fontSize: '12px'}}>
-                          {log.created_at ? format(new Date(log.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
+                          {log.created_at ? format(new Date(log.created_at), 'MMM d, yyyy h:mm a') : 'Not tracked'}
                         </td>
                       </tr>
                     );
