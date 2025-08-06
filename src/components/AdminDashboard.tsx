@@ -45,7 +45,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [filters, setFilters] = useState<FilterState>({
     startDate: null,
     endDate: null,
@@ -136,7 +135,6 @@ export default function AdminDashboard() {
       console.log('Number of logs fetched:', data?.length || 0);
       
       setLogs(data || []);
-      setLastUpdated(new Date());
     } catch (error) {
       console.error('Error fetching logs:', error);
       setError('Failed to fetch volunteer logs');
@@ -386,11 +384,6 @@ export default function AdminDashboard() {
           {refreshing ? 'Refreshing...' : 'Refresh All Data'}
         </button>
       </div>
-      {lastUpdated && (
-        <p className="text-sm text-gray-500 mb-4">
-          Last updated: {lastUpdated.toLocaleTimeString()} | Total logs: {logs.length} | Total users: {njhsMembers.length}
-        </p>
-      )}
       {/* Dashboard-wide Search Bar */}
       <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-center gap-3">
         <input
