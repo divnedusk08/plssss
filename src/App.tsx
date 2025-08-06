@@ -229,7 +229,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
   // Define six-week periods (same as in Dashboard)
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -361,13 +361,13 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       // Allow Six Weeks 1 even when outside the time period
       const isSixWeeks1 = currentPeriod.name === 'Six Weeks 1 (2025-2026)';
       
-      // For Six Weeks 1, allow the full range from May 9 to Sep 19
+      // For Six Weeks 1, allow the full range from May 24 to Sep 19
       if (isSixWeeks1) {
-        const sixWeeks1FullStart = new Date('2025-05-09');
+        const sixWeeks1FullStart = new Date('2025-05-24');
         const sixWeeks1FullEnd = new Date('2025-09-19');
         
         if (enteredDate < sixWeeks1FullStart || enteredDate > sixWeeks1FullEnd) {
-          setError(`Date must be within May 9, 2025 and September 19, 2025 for Six Weeks 1.`);
+          setError(`Date must be within May 24, 2025 and September 19, 2025 for Six Weeks 1.`);
           setIsSubmitting(false);
           return;
         }
@@ -569,10 +569,9 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               <input
                 type="time"
                 id="timeStart"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 value={timeStart}
                 onChange={(e) => setTimeStart(e.target.value)}
-                onClick={(e) => e.currentTarget.showPicker?.()}
                 required
               />
             </div>
@@ -581,10 +580,9 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               <input
                 type="time"
                 id="timeEnd"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 value={timeEnd}
                 onChange={(e) => setTimeEnd(e.target.value)}
-                onClick={(e) => e.currentTarget.showPicker?.()}
                 required
               />
             </div>
@@ -604,11 +602,10 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
             <input
               type="date"
               id="date"
-                className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm cursor-pointer hover:border-primary transition-colors"
+                className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              onClick={(e) => e.currentTarget.showPicker?.()}
-                min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-09' : currentPeriod.startDate}
+                min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-24' : currentPeriod.startDate}
                 max={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-09-19' : currentPeriod.endDate}
               required
             />
@@ -753,7 +750,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
   // Define 6-week periods
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -1166,7 +1163,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 )}
               </div>
               <p className="text-xs text-gray-600 mb-1">
-                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 9, 2025 → Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
+                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 24, 2025 → Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
               </p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
@@ -1328,34 +1325,11 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
 function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   const { user } = useAuth();
-  
-  // Define all admin emails (NJHS Officers and Advisors)
-  const adminEmails = [
-    'divineduskdragon08@gmail.com',
-    'dhriti.erusalagandi58@k12.leanderisd.org',
-    'kavya.mukherjee18@k12.leanderisd.org',
-    'aarna.mishra63@k12.leanderisd.org',
-    'adhrit.premkumar33@k12.leanderisd.org',
-    'arshiya.khanna47@k12.leanderisd.org',
-    'sreenandana.kamattathilsaril62@k12.leanderisd.org',
-    'karen.currie@leanderisd.org',
-    'kellie.bruce@leanderisd.org'
-  ];
-  
-  const isSuperAdmin = user && adminEmails.includes(user.email);
+  // Allow specific emails to access the admin dashboard
+  if (!user || (user.email !== 'divineduskdragon08@gmail.com' && user.email !== 'dhriti.erusalagandi58@k12.leanderisd.org')) return <Navigate to="/dashboard" />;
   const [allLogs, setAllLogs] = React.useState<Log[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
-
-  // Debug: Log admin access
-  React.useEffect(() => {
-    console.log('Admin function: User email:', user?.email);
-    console.log('Admin function: Is super admin:', isSuperAdmin);
-    console.log('Admin function: Admin emails list:', adminEmails);
-  }, [user, isSuperAdmin]);
-
-  // Check admin access
-  if (!user || !isSuperAdmin) return <Navigate to="/dashboard" />;
 
   // Helper function to format dates nicely
   const formatDateRange = (startDate: string, endDate: string) => {
@@ -1374,7 +1348,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   // Define sixWeekPeriods for use in processPeriodData and rendering
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -1410,28 +1384,17 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
   // Move fetchAllLogs to outer scope so it can be used in both useEffects
   const fetchAllLogs = React.useCallback(async () => {
     try {
-      console.log('Admin function: Fetching logs from Supabase...');
-      
       const { data, error: fetchError } = await supabase
         .from('volunteer_log')
-        .select(`
-          *,
-          user:users(*)
-        `)
-        .order('date_of_service', { ascending: false });
+        .select('*')
+        .order('date', { ascending: false });
 
       if (fetchError) {
-        console.error('Admin function: Error fetching logs:', fetchError);
         setError(fetchError.message);
         return;
       }
-      
-      console.log('Admin function: Fetched logs:', data);
-      console.log('Admin function: Number of logs:', data?.length || 0);
-      
       setAllLogs(data || []);
     } catch (err) {
-      console.error('Admin function: Unexpected error:', err);
       setError('An unexpected error occurred');
     } finally {
       setIsLoading(false);
@@ -1443,16 +1406,6 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
     setError(null);
     fetchAllLogs();
   }, [dashboardRefreshKey, fetchAllLogs]);
-
-  // Add periodic refresh for real-time updates
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('Admin function: Auto-refreshing data...');
-      fetchAllLogs();
-    }, 10000); // Refresh every 10 seconds
-
-    return () => clearInterval(interval);
-  }, [fetchAllLogs]);
 
   React.useEffect(() => {
     const subscription = supabase
@@ -1556,25 +1509,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-2xl">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat text-center">Admin Dashboard: Volunteer Hour Progress</h2>
-        <button
-          onClick={() => {
-            console.log('Admin function: Manual refresh triggered');
-            setIsLoading(true);
-            fetchAllLogs();
-          }}
-          disabled={isLoading}
-          className={`px-4 py-2 bg-primary text-white rounded-lg transition-colors flex items-center gap-2 ${
-            isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-dark'
-          }`}
-        >
-          <svg className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          {isLoading ? 'Refreshing...' : 'Refresh Data'}
-        </button>
-      </div>
+      <h2 className="text-3xl font-extrabold text-primary-dark font-montserrat mb-8 text-center">Admin Dashboard: Volunteer Hour Progress</h2>
       
       {isLoading ? (
         <div className="flex justify-center items-center h-48">
@@ -1918,7 +1853,7 @@ function ContactUs() {
 
   const njhsAdvisors = [
     { name: 'Karen Currie', email: 'karen.currie@leanderisd.org' },
-    { name: 'Kellie Bruce', email: 'kellie.bruce@leanderisd.org', },
+    { name: 'Kellie Bruce', email: 'kellie.bruce@leanderisd.org' },
   ];
 
   return (
@@ -2167,22 +2102,7 @@ function Profile() {
 
 function AppRoutes({ setDashboardRefreshKey, dashboardRefreshKey }: { setDashboardRefreshKey: React.Dispatch<React.SetStateAction<number>>, dashboardRefreshKey: number }) {
   const { loading, user } = useAuth();
-  
-  // Define all admin emails (NJHS Officers and Advisors)
-  const adminEmails = [
-    'divineduskdragon08@gmail.com',
-    'dhriti.erusalagandi58@k12.leanderisd.org',
-    'kavya.mukherjee18@k12.leanderisd.org',
-    'aarna.mishra63@k12.leanderisd.org',
-    'adhrit.premkumar33@k12.leanderisd.org',
-    'arshiya.khanna47@k12.leanderisd.org',
-    'sreenandana.kamattathilsaril62@k12.leanderisd.org',
-    'karen.currie@leanderisd.org',
-    'kellie.bruce@leanderisd.org'
-  ];
-  
-  const isSuperAdmin = user && adminEmails.includes(user.email);
-  
+  const isSuperAdmin = user?.email === 'divineduskdragon08@gmail.com' || user?.email === 'dhriti.erusalagandi58@k12.leanderisd.org';
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-primary-light text-xl font-semibold font-montserrat text-primary-dark">Loading...</div>;
   return (
     <Routes>

@@ -1,21 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
-import { VolunteerLog, User } from '../lib/supabase';
 import DatePicker from 'react-datepicker';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
-import { SearchBar } from "./ui/search-bar";
+
+// Update the types to match the actual database schema
+type VolunteerLogFromDB = {
+  id: string;
+  user_email: string;
+  user_uid: string;
+  first_name: string;
+  last_name: string;
+  organization: string;
+  description: string;
+  proof_of_service: string;
+  time_range: string;
+  date: string;
+  hours: number;
+  additional_info?: string;
+  status?: string;
+  role?: string;
+  created_at?: string;
+  updated_at?: string;
+};
 
 type FilterState = {
   startDate: Date | null;
   endDate: Date | null;
   organization: string;
   userId: string;
-};
+}
 
 export default function AdminDashboard() {
-  const [logs, setLogs] = useState<(VolunteerLog & { user: User })[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [logs, setLogs] = useState<VolunteerLogFromDB[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -54,29 +71,18 @@ export default function AdminDashboard() {
     "Nikhil Vasepalli", "Brylee White", "Varun Yenna", "Jia Yoon"
   ];
 
-  // Define period date ranges
-  const periodRanges = [
-    { name: "Six Weeks 1 (2025-2026)", start: new Date("2025-05-09"), end: new Date("2025-09-19") }, // First period
-    { name: "Six Weeks 2", start: new Date("2023-09-20"), end: new Date("2023-10-31") },
-    { name: "Six Weeks 3", start: new Date("2023-11-01"), end: new Date("2023-12-15") },
-    { name: "Six Weeks 4", start: new Date("2023-12-16"), end: new Date("2024-02-15") },
-    { name: "Six Weeks 5", start: new Date("2024-02-16"), end: new Date("2024-04-15") },
-    { name: "Six Weeks 6", start: new Date("2024-04-16"), end: new Date("2024-05-31") }
+  // Define six week periods
+  const sixWeekPeriods = [
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
+    { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
+    { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
+    { name: 'Six Weeks 5 (2025-2026)', startDate: '2026-02-17', endDate: '2026-04-10', targetHours: 2 },
+    { name: 'Six Weeks 6 (2025-2026)', startDate: '2026-04-12', endDate: '2026-05-29', targetHours: 2 },
   ];
 
   useEffect(() => {
-    fetchUsers();
     fetchLogs();
-  }, [filters]);
-
-  // Add periodic refresh for real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('Auto-refreshing admin data...');
-      fetchLogs();
-    }, 15000); // Refresh every 15 seconds for more frequent updates
-
-    return () => clearInterval(interval);
   }, []);
 
   // Debug: Log all logs when they change
@@ -85,23 +91,9 @@ export default function AdminDashboard() {
     console.log('Total number of logs:', logs.length);
     if (logs.length > 0) {
       console.log('Sample log:', logs[0]);
-      console.log('All user names:', logs.map(log => `${log.user.first_name} ${log.user.last_name}`));
+      console.log('All user names:', logs.map(log => `${log.first_name} ${log.last_name}`));
     }
   }, [logs]);
-
-  const fetchUsers = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*');
-
-      if (error) throw error;
-      setUsers(data || []);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      setError('Failed to fetch users');
-    }
-  };
 
   const fetchLogs = async () => {
     try {
@@ -110,25 +102,21 @@ export default function AdminDashboard() {
       
       let query = supabase
         .from('volunteer_log')
-        .select(`
-          *,
-          user:users(*)
-        `)
-        .order('date_of_service', { ascending: false });
+        .select('*')
+        .order('date', { ascending: false });
 
-      // Remove any filters that might be limiting the data
-      // Only apply filters if they are explicitly set
+      // Apply filters if they are explicitly set
       if (filters.startDate) {
-        query = query.gte('date_of_service', filters.startDate.toISOString());
+        query = query.gte('date', filters.startDate.toISOString().split('T')[0]);
       }
       if (filters.endDate) {
-        query = query.lte('date_of_service', filters.endDate.toISOString());
+        query = query.lte('date', filters.endDate.toISOString().split('T')[0]);
       }
       if (filters.organization) {
         query = query.eq('organization', filters.organization);
       }
       if (filters.userId) {
-        query = query.eq('user_id', filters.userId);
+        query = query.eq('user_email', filters.userId);
       }
 
       const { data, error } = await query;
@@ -150,30 +138,33 @@ export default function AdminDashboard() {
   };
 
   const exportToCSV = () => {
-    const headers = [
-      'Date',
-      'User',
-      'Organization',
-      'Description',
-      'Start Time',
-      'End Time',
-      'Hours',
-      'Proof of Service',
-      'Additional Info',
-    ];
+    const headers = ['Date', 'Name', 'Organization', 'Description', 'Start Time', 'End Time', 'Hours', 'Proof', 'Additional Info'];
 
     const csvData = logs.map(log => {
-      const start = new Date(`1970-01-01T${log.start_time}`);
-      const end = new Date(`1970-01-01T${log.end_time}`);
-      const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      // Handle time_range parsing safely
+      const timeRange = log.time_range || '';
+      const timeParts = timeRange.split('-');
+      const startTime = timeParts[0] || '';
+      const endTime = timeParts[1] || '';
+      
+      let hours = 0;
+      if (startTime && endTime) {
+        try {
+          const start = new Date(`1970-01-01T${startTime}`);
+          const end = new Date(`1970-01-01T${endTime}`);
+          hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+        } catch (e) {
+          console.error('Error parsing time range:', timeRange, e);
+        }
+      }
 
       return [
-        format(new Date(log.date_of_service), 'MM/dd/yyyy'),
-        `${log.user.first_name} ${log.user.last_name}`,
+        format(new Date(log.date), 'MM/dd/yyyy'),
+        `${log.first_name} ${log.last_name}`,
         log.organization,
         log.description,
-        log.start_time,
-        log.end_time,
+        startTime,
+        endTime,
         hours.toFixed(2),
         log.proof_of_service,
         log.additional_info || '',
@@ -196,64 +187,80 @@ export default function AdminDashboard() {
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const filteredLogs = normalizedQuery
     ? logs.filter(log => {
-        const name = `${log.user.first_name} ${log.user.last_name}`.toLowerCase();
-         const email = (log.user.email || '').toLowerCase();
+        const name = `${log.first_name} ${log.last_name}`.toLowerCase();
+         const email = (log.user_email || '').toLowerCase();
         return name.includes(normalizedQuery) || email.includes(normalizedQuery);
       })
     : logs;
   const filteredUsers = normalizedQuery
-    ? users.filter(user => {
-        const name = `${user.first_name} ${user.last_name}`.toLowerCase();
-        const email = (user.email || '').toLowerCase();
-        return name.includes(normalizedQuery) || email.includes(normalizedQuery);
-      })
-    : users;
+    ? njhsMembers.filter(name => name.toLowerCase().includes(normalizedQuery))
+    : njhsMembers;
 
   // Calculate requirement met stats using filteredUsers and filteredLogs
   const requiredHours = 12; // 12 hours required per semester
-  const studentHours: { [userId: string]: number } = {};
+  const studentHours: { [email: string]: number } = {};
   filteredLogs.forEach(log => {
-    const start = new Date(`1970-01-01T${log.start_time}`);
-    const end = new Date(`1970-01-01T${log.end_time}`);
-    const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-    studentHours[log.user.id] = (studentHours[log.user.id] || 0) + hours;
+    // Handle time_range parsing safely
+    const timeRange = log.time_range || '';
+    const timeParts = timeRange.split('-');
+    const startTime = timeParts[0] || '';
+    const endTime = timeParts[1] || '';
+    
+    let hours = 0;
+    if (startTime && endTime) {
+      try {
+        const start = new Date(`1970-01-01T${startTime}`);
+        const end = new Date(`1970-01-01T${endTime}`);
+        hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      } catch (e) {
+        console.error('Error parsing time range:', timeRange, e);
+      }
+    }
+    
+    const userKey = log.user_email || log.user_uid;
+    studentHours[userKey] = (studentHours[userKey] || 0) + hours;
   });
-  const totalStudents = filteredUsers.length;
-  const metCount = filteredUsers.filter(u => (studentHours[u.id] || 0) >= requiredHours).length;
-  const notMetCount = totalStudents - metCount;
+  
+  // For now, we can't easily match njhsMembers to actual logs without email mapping
+  // So let's just show stats for users who have submitted logs
+  const usersWithLogs = Object.keys(studentHours);
+  const metCount = usersWithLogs.filter(userKey => (studentHours[userKey] || 0) >= requiredHours).length;
+  const notMetCount = usersWithLogs.length - metCount;
+  
   const pieData = [
-    { name: 'Met', value: metCount },
-    { name: 'Not Met', value: notMetCount },
+    { name: 'Met Requirements', value: metCount, color: '#4CAF50' },
+    { name: 'Not Met', value: notMetCount, color: '#F44336' }
   ];
-  const COLORS = ['#4CAF50', '#F87171'];
+
+  const COLORS = ['#4CAF50', '#F44336']; // Green for met, Red for not met
 
   // Helper: returns filtered members for a period based on search
-  function filterMembers(members: string[], query: string) {
-    if (!query) return members;
-    const q = query.trim().toLowerCase();
-    return members.filter(name => name.toLowerCase().includes(q));
-  }
+  const filterMembers = (members: string[], search: string): string[] => {
+    if (!search.trim()) return members;
+    const normalizedSearch = search.trim().toLowerCase();
+    return members.filter(member => member.toLowerCase().includes(normalizedSearch));
+  };
 
   // Get users who have submitted logs in a specific period
   function getUsersInPeriod(periodIndex: number) {
-    const period = periodRanges[periodIndex];
+    const period = sixWeekPeriods[periodIndex];
     
     // Debug log for period dates
     console.log(`Period ${periodIndex}: ${period.name}`, {
-      periodStart: period.start.toISOString(),
-      periodEnd: period.end.toISOString()
+      periodStart: period.startDate,
+      periodEnd: period.endDate
     });
     
     // Filter logs that fall within this period's date range
     const periodLogs = logs.filter(log => {
       // Create date objects and normalize to remove time component
-      const logDate = new Date(log.date_of_service);
+      const logDate = new Date(log.date);
       logDate.setHours(0, 0, 0, 0);
       
-      const periodStart = new Date(period.start);
+      const periodStart = new Date(period.startDate);
       periodStart.setHours(0, 0, 0, 0);
       
-      const periodEnd = new Date(period.end);
+      const periodEnd = new Date(period.endDate);
       periodEnd.setHours(23, 59, 59, 999); // End of day
       
       const isInPeriod = logDate >= periodStart && logDate <= periodEnd;
@@ -262,11 +269,11 @@ export default function AdminDashboard() {
       if (periodIndex === 0) { // Only log for the first period to avoid console spam
         console.log(`Log date check for period ${periodIndex}:`, {
           logDate: logDate.toISOString(),
-          logDateRaw: log.date_of_service,
+          logDateRaw: log.date,
           periodStart: periodStart.toISOString(),
           periodEnd: periodEnd.toISOString(),
           isInPeriod,
-          userName: `${log.user.first_name} ${log.user.last_name}`,
+          userName: `${log.first_name} ${log.last_name}`,
           logDateTimestamp: logDate.getTime(),
           periodStartTimestamp: periodStart.getTime(),
           periodEndTimestamp: periodEnd.getTime()
@@ -283,10 +290,24 @@ export default function AdminDashboard() {
     const userMap = new Map<string, { name: string, hours: number }>();
     
     periodLogs.forEach(log => {
-      const userName = `${log.user.first_name} ${log.user.last_name}`;
-      const start = new Date(`1970-01-01T${log.start_time}`);
-      const end = new Date(`1970-01-01T${log.end_time}`);
-      const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      const userName = `${log.first_name} ${log.last_name}`;
+      
+      // Handle time_range parsing safely
+      const timeRange = log.time_range || '';
+      const timeParts = timeRange.split('-');
+      const startTime = timeParts[0] || '';
+      const endTime = timeParts[1] || '';
+      
+      let hours = 0;
+      if (startTime && endTime) {
+        try {
+          const start = new Date(`1970-01-01T${startTime}`);
+          const end = new Date(`1970-01-01T${endTime}`);
+          hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+        } catch (e) {
+          console.error('Error parsing time range:', timeRange, e);
+        }
+      }
       
       if (userMap.has(userName)) {
         const current = userMap.get(userName)!;
@@ -303,7 +324,7 @@ export default function AdminDashboard() {
     
     // Convert to array and separate into met/not met requirements
     const userArray = Array.from(userMap.values());
-    const periodRequiredHours = 2; // 2 hours required per period
+    const periodRequiredHours = period.targetHours; // Use targetHours from period
     
     const accomplished = userArray
       .filter(user => user.hours >= periodRequiredHours)
@@ -353,9 +374,7 @@ export default function AdminDashboard() {
           onClick={() => {
             console.log('Manual refresh triggered');
             setLogs([]); // Clear current logs
-            setUsers([]); // Clear current users
             fetchLogs();
-            fetchUsers();
           }}
           disabled={refreshing}
           className={`px-4 py-2 bg-indigo-600 text-white rounded-lg transition-colors flex items-center gap-2 ${
@@ -370,7 +389,7 @@ export default function AdminDashboard() {
       </div>
       {lastUpdated && (
         <p className="text-sm text-gray-500 mb-4">
-          Last updated: {lastUpdated.toLocaleTimeString()} | Total logs: {logs.length} | Total users: {users.length}
+          Last updated: {lastUpdated.toLocaleTimeString()} | Total logs: {logs.length} | Total users: {njhsMembers.length}
         </p>
       )}
       {/* Dashboard-wide Search Bar */}
@@ -413,7 +432,7 @@ export default function AdminDashboard() {
       </div>
       {/* Per-Period Cards: Using actual data! */}
       <div className="space-y-6 sm:space-y-12">
-        {periodRanges.map((period, periodIdx) => {
+        {sixWeekPeriods.map((period, periodIdx) => {
           const { accomplished, notAccomplished } = getUsersInPeriod(periodIdx);
           const periodSearch = periodSearches[periodIdx] || '';
           const setPeriodSearch = (val: string) => {
@@ -429,13 +448,18 @@ export default function AdminDashboard() {
             <div key={period.name} className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-200">
               <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">{period.name}</h3>
               <p className="text-sm text-gray-500 mb-2">
-                {format(period.start, 'MMM d, yyyy')} - {format(period.end, 'MMM d, yyyy')}
+                {format(new Date(period.startDate), 'MMM d, yyyy')} - {format(new Date(period.endDate), 'MMM d, yyyy')}
               </p>
               {/* Per-Period Search Bar */}
               <div className="mb-4 sm:mb-6">
-                <SearchBar
+                {/* Assuming SearchBar is a custom component or needs to be imported */}
+                {/* For now, using a simple input for demonstration */}
+                <input
+                  type="text"
+                  value={periodSearch}
+                  onChange={e => setPeriodSearch(e.target.value)}
                   placeholder={`Search students in ${period.name}...`}
-                  onSearch={setPeriodSearch}
+                  className="w-full sm:w-96 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
                 />
               </div>
               {/* Met Section */}
@@ -508,8 +532,8 @@ export default function AdminDashboard() {
               >
                 <option value="">All Users</option>
                 {filteredUsers.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.first_name} {user.last_name}
+                  <option key={user} value={user}>
+                    {user}
                   </option>
                 ))}
               </select>
@@ -545,9 +569,23 @@ export default function AdminDashboard() {
                   </tr>
                 ) : (
                   filteredLogs.map((log, idx) => {
-                    const start = new Date(`1970-01-01T${log.start_time}`);
-                    const end = new Date(`1970-01-01T${log.end_time}`);
-                    const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+                    // Handle time_range parsing safely
+                    const timeRange = log.time_range || '';
+                    const timeParts = timeRange.split('-');
+                    const startTime = timeParts[0] || '';
+                    const endTime = timeParts[1] || '';
+                    
+                    let hours = 0;
+                    if (startTime && endTime) {
+                      try {
+                        const start = new Date(`1970-01-01T${startTime}`);
+                        const end = new Date(`1970-01-01T${endTime}`);
+                        hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+                      } catch (e) {
+                        console.error('Error parsing time range:', timeRange, e);
+                      }
+                    }
+                    
                     return (
                       <tr
                         key={log.id}
@@ -556,8 +594,8 @@ export default function AdminDashboard() {
                           ' hover:bg-purple-100 transition-colors duration-150'
                         }
                       >
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900 font-bold">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.user.first_name} {log.user.last_name}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900 font-bold">{format(new Date(log.date), 'MMM d, yyyy')}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.first_name} {log.last_name}</td>
                         <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.organization}</td>
                         <td className="px-3 sm:px-12 py-4 sm:py-8 text-sm sm:text-xl text-gray-900 max-w-xs sm:max-w-2xl truncate" title={log.description}>{log.description}</td>
                         <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
