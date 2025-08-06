@@ -1804,7 +1804,7 @@ function Profile() {
   if (!user) return <Navigate to="/login" />;
 
   return (
-    <div className="flex justify-center items-center min-h-[80vh] bg-gradient-to-br from-blue-50 to-white">
+    <div className="flex justify-center items-center min-h-[80vh] bg-white">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl p-8 font-inter">
         <h2 className="text-3xl font-extrabold mb-8 text-primary-dark text-center font-montserrat">Your Profile</h2>
         {error && (
