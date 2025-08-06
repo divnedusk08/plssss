@@ -554,7 +554,7 @@ export default function AdminDashboard() {
               <tbody className="bg-white divide-y divide-gray-100">
                 {logs.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-12 sm:py-20 text-gray-400 text-lg sm:text-2xl">No volunteer logs found.</td>
+                    <td colSpan={6} className="text-center py-12 sm:py-20 text-gray-400 text-base sm:text-lg">No volunteer logs found.</td>
                   </tr>
                 ) : (
                   logs.map((log, idx) => {
@@ -583,12 +583,12 @@ export default function AdminDashboard() {
                           ' hover:bg-purple-100 transition-colors duration-150'
                         }
                       >
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900 font-bold">{format(new Date(log.date), 'MMM d, yyyy')}</td>
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.first_name} {log.last_name}</td>
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.organization}</td>
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 text-sm sm:text-xl text-gray-900 max-w-xs sm:max-w-2xl truncate" title={log.description}>{log.description}</td>
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.proof_of_service}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-base text-gray-900 font-bold">{format(new Date(log.date), 'MMM d, yyyy')}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-base text-gray-900">{log.first_name} {log.last_name}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-base text-gray-900">{log.organization}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 text-sm sm:text-base text-gray-900 max-w-xs sm:max-w-2xl truncate" title={log.description}>{log.description}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-base text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-base text-gray-900">{log.proof_of_service}</td>
                       </tr>
                     );
                   })
