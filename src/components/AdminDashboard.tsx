@@ -295,12 +295,10 @@ export default function AdminDashboard() {
     // Debug log for filtered logs
     console.log(`Period ${periodIndex} logs:`, periodLogs.length);
     
-    // Get unique users from these logs
-    const userMap = new Map<string, { name: string, hours: number }>();
+    // Get unique users from these logs and calculate their hours
+    const userHoursMap = new Map<string, number>();
     
     periodLogs.forEach(log => {
-      const userName = `${log.first_name} ${log.last_name}`;
-      
       // Handle time_range parsing safely
       const timeRange = log.time_range || '';
       const timeParts = timeRange.split('-');
@@ -315,43 +313,71 @@ export default function AdminDashboard() {
           hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
         } catch (e) {
           console.error('Error parsing time range:', timeRange, e);
+          // Fallback to log.hours if available
+          hours = log.hours || 0;
+        }
+      } else if (log.hours) {
+        // Use the hours field directly if time_range parsing fails
+        hours = log.hours;
+      }
+      
+      // Try multiple ways to match names
+      const logFullName = `${log.first_name} ${log.last_name}`.trim();
+      const logEmail = log.user_email || '';
+      
+      // Find matching NJHS member
+      let matchedMember = null;
+      for (const member of njhsMembers) {
+        const memberNormalized = member.toLowerCase().replace(/[^a-z\s]/g, '');
+        const logNameNormalized = logFullName.toLowerCase().replace(/[^a-z\s]/g, '');
+        
+        // Direct name match
+        if (memberNormalized === logNameNormalized) {
+          matchedMember = member;
+          break;
+        }
+        
+        // First name + last name match
+        const memberParts = member.toLowerCase().split(' ');
+        const logParts = logFullName.toLowerCase().split(' ');
+        if (memberParts.length >= 2 && logParts.length >= 2) {
+          if (memberParts[0] === logParts[0] && memberParts[memberParts.length - 1] === logParts[logParts.length - 1]) {
+            matchedMember = member;
+            break;
+          }
+        }
+        
+        // Special case for Dhriti Erusalagandi
+        if (member === 'Dhriti Erusalagandi' && logEmail.includes('dhriti.erusalagandi')) {
+          matchedMember = member;
+          break;
         }
       }
       
-      if (userMap.has(userName)) {
-        const current = userMap.get(userName)!;
-        userMap.set(userName, { name: userName, hours: current.hours + hours });
-      } else {
-        userMap.set(userName, { name: userName, hours });
+      if (matchedMember) {
+        const currentHours = userHoursMap.get(matchedMember) || 0;
+        userHoursMap.set(matchedMember, currentHours + hours);
       }
     });
     
     // Debug log for user hours
     if (periodIndex === 0) {
-      console.log('User hours for Six Weeks 1:', Array.from(userMap.entries()));
+      console.log('User hours for Six Weeks 1:', Array.from(userHoursMap.entries()));
     }
     
-    // Convert to array and separate into met/not met requirements
-    const userArray = Array.from(userMap.values());
-    const periodRequiredHours = period.targetHours; // Use targetHours from period
+    // Separate into met/not met requirements
+    const periodRequiredHours = period.targetHours;
+    const accomplished: string[] = [];
+    const notAccomplished: string[] = [];
     
-    const accomplished = userArray
-      .filter(user => user.hours >= periodRequiredHours)
-      .map(user => user.name);
-      
-    // For not accomplished, we need to check against the full NJHS member list
-    // First, get members who haven't submitted any logs for this period
-    const noSubmission = njhsMembers.filter(member => 
-      !userArray.some(u => u.name === member)
-    );
-    
-    // Then, get members who submitted but didn't meet requirements
-    const submittedButNotMet = userArray
-      .filter(user => user.hours < periodRequiredHours)
-      .map(user => user.name);
-      
-    // Combine both groups for the not accomplished list (FIXED: removed duplication)
-    const notAccomplished = [...noSubmission, ...submittedButNotMet];
+    njhsMembers.forEach(member => {
+      const memberHours = userHoursMap.get(member) || 0;
+      if (memberHours >= periodRequiredHours) {
+        accomplished.push(member);
+      } else {
+        notAccomplished.push(member);
+      }
+    });
       
     return {
       accomplished,
@@ -453,16 +479,22 @@ export default function AdminDashboard() {
           };
           const filteredAccomplished = filterMembers(accomplished, periodSearch);
           const filteredNotAccomplished = filterMembers(notAccomplished, periodSearch);
+          
+          // Create pie chart data for this period
+          const periodPieData = [
+            { name: 'Met Requirements', value: accomplished.length, color: '#4CAF50' },
+            { name: 'Not Met', value: notAccomplished.length, color: '#F44336' }
+          ];
+          
           return (
             <div key={period.name} className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-200">
               <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">{period.name}</h3>
               <p className="text-sm text-gray-500 mb-2">
                 {format(new Date(period.startDate), 'MMM d, yyyy')} - {format(new Date(period.endDate), 'MMM d, yyyy')}
               </p>
+              
               {/* Per-Period Search Bar */}
               <div className="mb-4 sm:mb-6">
-                {/* Assuming SearchBar is a custom component or needs to be imported */}
-                {/* For now, using a simple input for demonstration */}
                 <input
                   type="text"
                   value={periodSearch}
@@ -471,30 +503,73 @@ export default function AdminDashboard() {
                   className="w-full sm:w-96 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm sm:text-base"
                 />
               </div>
-              {/* Met Section */}
-              <div className="mb-3 sm:mb-4">
-                <h4 className="text-base sm:text-lg font-semibold text-green-700 mb-2">Met Requirements ({filteredAccomplished.length})</h4>
-                <div className="max-h-32 sm:max-h-40 overflow-y-auto border border-green-200 rounded-md p-2 sm:p-3 bg-green-50">
-                  {filteredAccomplished.length > 0 ? (
-                    <ul className="list-disc list-inside text-xs sm:text-sm text-green-800">
-                      {filteredAccomplished.map(member => <li key={member}>{member}</li>)}
-                    </ul>
-                  ) : (
-                    <p className="text-xs sm:text-sm text-gray-500">No members met the goal for this period yet.</p>
-                  )}
+
+              {/* Pie Chart and Lists Layout */}
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Pie Chart */}
+                <div className="lg:w-1/3 flex flex-col items-center">
+                  <h4 className="text-base font-semibold text-gray-700 mb-3">Progress Overview</h4>
+                  <div className="w-full max-w-xs">
+                    <ResponsiveContainer width="100%" height={200}>
+                      <PieChart>
+                        <Pie
+                          data={periodPieData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                          outerRadius={70}
+                          fill="#8884d8"
+                          dataKey="value"
+                        >
+                          {periodPieData.map((_, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip formatter={(value) => `${value} students`} />
+                        <Legend
+                          verticalAlign="bottom"
+                          iconType="circle"
+                          wrapperStyle={{ fontWeight: 600, fontSize: '0.75rem' }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="text-center mt-2">
+                    <p className="text-sm text-gray-600">
+                      Target: {period.targetHours} hours
+                    </p>
+                  </div>
                 </div>
-              </div>
-              {/* Not Met Section */}
-              <div>
-                <h4 className="text-base sm:text-lg font-semibold text-red-700 mb-2">Not Met Requirements ({filteredNotAccomplished.length})</h4>
-                <div className="max-h-32 sm:max-h-40 overflow-y-auto border border-red-200 rounded-md p-2 sm:p-3 bg-red-50">
-                  {filteredNotAccomplished.length > 0 ? (
-                    <ul className="list-disc list-inside text-xs sm:text-sm text-red-800">
-                      {filteredNotAccomplished.map(member => <li key={member}>{member}</li>)}
-                    </ul>
-                  ) : (
-                    <p className="text-xs sm:text-sm text-gray-500">All members met the goal for this period!</p>
-                  )}
+
+                {/* Lists */}
+                <div className="lg:w-2/3 space-y-4">
+                  {/* Met Section */}
+                  <div>
+                    <h4 className="text-base sm:text-lg font-semibold text-green-700 mb-2">Met Requirements ({filteredAccomplished.length})</h4>
+                    <div className="max-h-32 sm:max-h-40 overflow-y-auto border border-green-200 rounded-md p-2 sm:p-3 bg-green-50">
+                      {filteredAccomplished.length > 0 ? (
+                        <ul className="list-disc list-inside text-xs sm:text-sm text-green-800">
+                          {filteredAccomplished.map(member => <li key={member}>{member}</li>)}
+                        </ul>
+                      ) : (
+                        <p className="text-xs sm:text-sm text-gray-500">No members met the goal for this period yet.</p>
+                      )}
+                    </div>
+                  </div>
+                  {/* Not Met Section */}
+                  <div>
+                    <h4 className="text-base sm:text-lg font-semibold text-red-700 mb-2">Not Met Requirements ({filteredNotAccomplished.length})</h4>
+                    <div className="max-h-32 sm:max-h-40 overflow-y-auto border border-red-200 rounded-md p-2 sm:p-3 bg-red-50">
+                      {filteredNotAccomplished.length > 0 ? (
+                        <ul className="list-disc list-inside text-xs sm:text-sm text-red-800">
+                          {filteredNotAccomplished.map(member => <li key={member}>{member}</li>)}
+                        </ul>
+                      ) : (
+                        <p className="text-xs sm:text-sm text-gray-500">All members met the goal for this period!</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
