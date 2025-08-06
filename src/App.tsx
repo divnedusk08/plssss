@@ -430,6 +430,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
           additional_info: additionalInformation,
           status: 'approved', // Auto-approve for testing
           role: 'admin',      // <--- Add this line
+          created_at: new Date().toISOString(), // Explicitly set submission timestamp
         });
 
       if (error) throw error;
