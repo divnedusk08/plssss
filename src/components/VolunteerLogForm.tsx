@@ -155,6 +155,8 @@ export default function VolunteerLogForm() {
             setSelectedDate(date);
             setValue('date_of_service', date || new Date());
           }}
+          minDate={new Date('2025-05-09')} // Allow dates from May 9, 2025 onwards
+          maxDate={new Date('2026-05-29')} // Up to the end of Six Weeks 6
           className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6"
         />
         {errors.date_of_service && (

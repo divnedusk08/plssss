@@ -229,7 +229,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
 
   // Define six-week periods (same as in Dashboard)
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -361,13 +361,13 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
       // Allow Six Weeks 1 even when outside the time period
       const isSixWeeks1 = currentPeriod.name === 'Six Weeks 1 (2025-2026)';
       
-      // For Six Weeks 1, allow the full range from May 24 to Sep 19
+      // For Six Weeks 1, allow the full range from May 9 to Sep 19
       if (isSixWeeks1) {
-        const sixWeeks1FullStart = new Date('2025-05-24');
+        const sixWeeks1FullStart = new Date('2025-05-09');
         const sixWeeks1FullEnd = new Date('2025-09-19');
         
         if (enteredDate < sixWeeks1FullStart || enteredDate > sixWeeks1FullEnd) {
-          setError(`Date must be within May 24, 2025 and September 19, 2025 for Six Weeks 1.`);
+          setError(`Date must be within May 9, 2025 and September 19, 2025 for Six Weeks 1.`);
           setIsSubmitting(false);
           return;
         }
@@ -605,7 +605,7 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
                 className="mt-1 block w-full px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-                min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-24' : currentPeriod.startDate}
+                min={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-05-09' : currentPeriod.startDate}
                 max={currentPeriod.name === 'Six Weeks 1 (2025-2026)' ? '2025-09-19' : currentPeriod.endDate}
               required
             />
@@ -750,7 +750,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
 
   // Define 6-week periods
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
@@ -1098,7 +1098,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
             
             // Special handling for Six Weeks 1 - use full date range
             if (period.name === 'Six Weeks 1 (2025-2026)') {
-              const sixWeeks1Start = new Date('2025-05-24');
+              const sixWeeks1Start = new Date('2025-05-09');
               const sixWeeks1End = new Date('2025-09-19');
               return logDate >= sixWeeks1Start && logDate <= sixWeeks1End;
             }
@@ -1163,7 +1163,7 @@ function Dashboard({ dashboardRefreshKey }: { dashboardRefreshKey: number }) {
                 )}
               </div>
               <p className="text-xs text-gray-600 mb-1">
-                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 24, 2025 → Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
+                {period.name === 'Six Weeks 1 (2025-2026)' ? 'May 9, 2025 → Sep 19, 2025' : formatDateRange(period.startDate, period.endDate)}
               </p>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs font-medium text-gray-600">Hours: {periodHours.toFixed(2)} / {period.targetHours}</span>
@@ -1348,7 +1348,7 @@ function Admin({ dashboardRefreshKey }: { dashboardRefreshKey: any }) {
 
   // Define sixWeekPeriods for use in processPeriodData and rendering
   const sixWeekPeriods = [
-    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-24', endDate: '2025-09-19', targetHours: 2 },
+    { name: 'Six Weeks 1 (2025-2026)', startDate: '2025-05-09', endDate: '2025-09-19', targetHours: 2 },
     { name: 'Six Weeks 2 (2025-2026)', startDate: '2025-09-23', endDate: '2025-10-31', targetHours: 2 },
     { name: 'Six Weeks 3 (2025-2026)', startDate: '2025-11-05', endDate: '2025-12-19', targetHours: 2 },
     { name: 'Six Weeks 4 (2025-2026)', startDate: '2026-01-06', endDate: '2026-02-11', targetHours: 2 },
