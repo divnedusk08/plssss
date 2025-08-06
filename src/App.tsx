@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { supabase } from './lib/supabase';
-import sneakPeakImg from './assets/SneakPeak.png';
+import sneakPeakImg from './assets/LogHoursInterface.png';
 import AdminDashboard from './components/AdminDashboard';
 import './index.css';
 
