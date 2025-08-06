@@ -81,12 +81,38 @@ export default function AdminDashboard() {
 
   // Debug: Log all logs when they change
   useEffect(() => {
+    console.log('=== ADMIN DASHBOARD DEBUG INFO ===');
+    console.log('Current user:', user?.email);
     console.log('All logs in database:', logs);
     console.log('Total number of logs:', logs.length);
+    
     if (logs.length > 0) {
-      console.log('Sample log:', logs[0]);
-      console.log('All user names:', logs.map(log => `${log.first_name} ${log.last_name}`));
+      console.log('Sample log structure:', logs[0]);
+      console.log('All user names in logs:', logs.map(log => `${log.first_name} ${log.last_name}`));
+      console.log('All user emails in logs:', logs.map(log => log.user_email).filter(Boolean));
+      console.log('All organizations in logs:', logs.map(log => log.organization).filter(Boolean));
+      
+      // Group logs by user
+      const logsByUser = logs.reduce((acc, log) => {
+        const userKey = log.user_email || `${log.first_name} ${log.last_name}`;
+        if (!acc[userKey]) acc[userKey] = [];
+        acc[userKey].push(log);
+        return acc;
+      }, {} as Record<string, any[]>);
+      
+      console.log('Logs grouped by user:', logsByUser);
+      console.log('Unique users who have submitted logs:', Object.keys(logsByUser));
     }
+    
+    // Test the getUsersInPeriod function for the first period
+    if (logs.length > 0) {
+      console.log('=== TESTING FIRST PERIOD ===');
+      const firstPeriodResult = getUsersInPeriod(0);
+      console.log('First period accomplished:', firstPeriodResult.accomplished);
+      console.log('First period not accomplished:', firstPeriodResult.notAccomplished);
+    }
+    
+    console.log('=== END DEBUG INFO ===');
   }, [logs]);
 
   const fetchLogs = async () => {
@@ -104,42 +130,76 @@ export default function AdminDashboard() {
       console.log('Fetched raw logs from Supabase:', data);
       console.log('Number of logs fetched:', data?.length || 0);
       
+      // Log each raw log to debug schema differences
+      if (data && data.length > 0) {
+        console.log('Sample raw logs:');
+        data.slice(0, 3).forEach((log, index) => {
+          console.log(`Log ${index + 1}:`, {
+            id: log.id,
+            user_email: log.user_email,
+            user_uid: log.user_uid,
+            user_id: log.user_id,
+            first_name: log.first_name,
+            last_name: log.last_name,
+            date: log.date,
+            date_of_service: log.date_of_service,
+            time_range: log.time_range,
+            start_time: log.start_time,
+            end_time: log.end_time,
+            organization: log.organization,
+            description: log.description,
+            created_at: log.created_at
+          });
+        });
+      }
+      
       // Normalize the data to handle both database schemas
       const normalizedLogs = (data || []).map(log => {
-        // Handle both schema types
-        const isOldSchema = log.user_email && log.first_name && log.last_name;
-        const isNewSchema = log.user_id && log.date_of_service;
+        // Create a normalized log that always has the expected fields
+        const normalized = {
+          ...log, // Keep all original fields
+          // Ensure we have user identification
+          user_email: log.user_email || '',
+          user_uid: log.user_uid || log.user_id || '',
+          // Ensure we have name fields
+          first_name: log.first_name || 'Unknown',
+          last_name: log.last_name || 'User',
+          // Ensure we have date field (prioritize 'date' over 'date_of_service')
+          date: log.date || log.date_of_service || '',
+          // Ensure we have time information
+          time_range: log.time_range || (log.start_time && log.end_time ? `${log.start_time}-${log.end_time}` : ''),
+          // Ensure we have other required fields
+          organization: log.organization || 'Unknown',
+          description: log.description || 'No description',
+          proof_of_service: log.proof_of_service || 'Not provided',
+          hours: log.hours || 0
+        };
         
-        if (isOldSchema) {
-          // Already in the expected format
-          return log;
-        } else if (isNewSchema) {
-          // Convert new schema to old schema format
-          return {
-            ...log,
-            user_email: log.user_email || '', // May not exist in new schema
-            user_uid: log.user_id,
-            first_name: log.first_name || 'Unknown',
-            last_name: log.last_name || 'User',
-            date: log.date_of_service,
-            time_range: log.start_time && log.end_time ? `${log.start_time}-${log.end_time}` : '',
-            // Keep other fields as-is
-          };
-        } else {
-          // Fallback for unknown schema
-          return {
-            ...log,
-            user_email: log.user_email || '',
-            user_uid: log.user_uid || log.user_id || '',
-            first_name: log.first_name || 'Unknown',
-            last_name: log.last_name || 'User',
-            date: log.date || log.date_of_service || '',
-            time_range: log.time_range || (log.start_time && log.end_time ? `${log.start_time}-${log.end_time}` : ''),
-          };
-        }
+        return normalized;
       });
       
       console.log('Normalized logs:', normalizedLogs);
+      console.log('Normalized logs count:', normalizedLogs.length);
+      
+      // Log some sample normalized logs
+      if (normalizedLogs.length > 0) {
+        console.log('Sample normalized logs:');
+        normalizedLogs.slice(0, 3).forEach((log, index) => {
+          console.log(`Normalized Log ${index + 1}:`, {
+            id: log.id,
+            user_email: log.user_email,
+            user_uid: log.user_uid,
+            first_name: log.first_name,
+            last_name: log.last_name,
+            date: log.date,
+            time_range: log.time_range,
+            organization: log.organization,
+            description: log.description,
+            created_at: log.created_at
+          });
+        });
+      }
+      
       setLogs(normalizedLogs);
     } catch (error) {
       console.error('Error fetching logs:', error);
