@@ -112,7 +112,7 @@ export default function AdminDashboard() {
         .from('volunteer_log')
         .select(`
           *,
-          users(*)
+          user:users(*)
         `)
         .order('date_of_service', { ascending: false });
 
@@ -196,8 +196,8 @@ export default function AdminDashboard() {
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const filteredLogs = normalizedQuery
     ? logs.filter(log => {
-        const name = `${log.users.first_name} ${log.users.last_name}`.toLowerCase();
-        const email = (log.users.email || '').toLowerCase();
+        const name = `${log.user.first_name} ${log.user.last_name}`.toLowerCase();
+         const email = (log.user.email || '').toLowerCase();
         return name.includes(normalizedQuery) || email.includes(normalizedQuery);
       })
     : logs;
@@ -216,7 +216,7 @@ export default function AdminDashboard() {
     const start = new Date(`1970-01-01T${log.start_time}`);
     const end = new Date(`1970-01-01T${log.end_time}`);
     const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-    studentHours[log.users.id] = (studentHours[log.users.id] || 0) + hours;
+    studentHours[log.user.id] = (studentHours[log.user.id] || 0) + hours;
   });
   const totalStudents = filteredUsers.length;
   const metCount = filteredUsers.filter(u => (studentHours[u.id] || 0) >= requiredHours).length;
@@ -266,7 +266,7 @@ export default function AdminDashboard() {
           periodStart: periodStart.toISOString(),
           periodEnd: periodEnd.toISOString(),
           isInPeriod,
-          userName: `${log.users.first_name} ${log.users.last_name}`,
+          userName: `${log.user.first_name} ${log.user.last_name}`,
           logDateTimestamp: logDate.getTime(),
           periodStartTimestamp: periodStart.getTime(),
           periodEndTimestamp: periodEnd.getTime()
@@ -283,7 +283,7 @@ export default function AdminDashboard() {
     const userMap = new Map<string, { name: string, hours: number }>();
     
     periodLogs.forEach(log => {
-      const userName = `${log.users.first_name} ${log.users.last_name}`;
+      const userName = `${log.user.first_name} ${log.user.last_name}`;
       const start = new Date(`1970-01-01T${log.start_time}`);
       const end = new Date(`1970-01-01T${log.end_time}`);
       const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
@@ -557,7 +557,7 @@ export default function AdminDashboard() {
                         }
                       >
                         <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900 font-bold">{format(new Date(log.date_of_service), 'MMM d, yyyy')}</td>
-                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.users.first_name} {log.users.last_name}</td>
+                        <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.user.first_name} {log.user.last_name}</td>
                         <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-gray-900">{log.organization}</td>
                         <td className="px-3 sm:px-12 py-4 sm:py-8 text-sm sm:text-xl text-gray-900 max-w-xs sm:max-w-2xl truncate" title={log.description}>{log.description}</td>
                         <td className="px-3 sm:px-12 py-4 sm:py-8 whitespace-nowrap text-sm sm:text-xl text-indigo-700 font-extrabold">{hours.toFixed(2)}</td>
