@@ -127,7 +127,7 @@ export default function VolunteerLogForm() {
             type="time"
             id="start_time"
             {...register('start_time')}
-            className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6 cursor-pointer hover:border-indigo-400 transition-colors"
+            className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 hover:border-indigo-400 hover:shadow-lg transition-all duration-200 cursor-pointer text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6"
             onClick={(e) => e.currentTarget.showPicker?.()}
           />
           {errors.start_time && (
@@ -143,7 +143,7 @@ export default function VolunteerLogForm() {
             type="time"
             id="end_time"
             {...register('end_time')}
-            className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6 cursor-pointer hover:border-indigo-400 transition-colors"
+            className="mt-1 block w-full rounded-lg sm:rounded-xl border border-indigo-200 sm:border-2 focus:border-indigo-500 focus:ring-indigo-500 hover:border-indigo-400 hover:shadow-lg transition-all duration-200 cursor-pointer text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6"
             onClick={(e) => e.currentTarget.showPicker?.()}
           />
           {errors.end_time && (

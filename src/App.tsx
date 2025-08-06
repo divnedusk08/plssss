@@ -586,9 +586,10 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               <input
                 type="time"
                 id="timeStart"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary hover:border-primary hover:shadow-md transition-all duration-200 cursor-pointer sm:text-sm"
                 value={timeStart}
                 onChange={(e) => setTimeStart(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
                 required
               />
             </div>
@@ -597,9 +598,10 @@ function LogHours({ setDashboardRefreshKey }: { setDashboardRefreshKey: React.Di
               <input
                 type="time"
                 id="timeEnd"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary hover:border-primary hover:shadow-md transition-all duration-200 cursor-pointer sm:text-sm"
                 value={timeEnd}
                 onChange={(e) => setTimeEnd(e.target.value)}
+                onClick={(e) => e.currentTarget.showPicker?.()}
                 required
               />
             </div>
