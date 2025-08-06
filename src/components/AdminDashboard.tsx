@@ -5,19 +5,23 @@ import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recha
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 
-// Update the types to match the actual database schema
+// Update the types to match both database schemas
 type VolunteerLogFromDB = {
   id: string;
-  user_email: string;
-  user_uid: string;
-  first_name: string;
-  last_name: string;
-  organization: string;
-  description: string;
-  proof_of_service: string;
-  time_range: string;
-  date: string;
-  hours: number;
+  user_email?: string;
+  user_uid?: string;
+  user_id?: string;  // New schema
+  first_name?: string;
+  last_name?: string;
+  organization?: string;
+  description?: string;
+  proof_of_service?: string;
+  time_range?: string;  // Old schema
+  start_time?: string;  // New schema
+  end_time?: string;    // New schema
+  date?: string;        // Old schema
+  date_of_service?: string;  // New schema
+  hours?: number;
   additional_info?: string;
   status?: string;
   role?: string;
@@ -90,19 +94,53 @@ export default function AdminDashboard() {
       setLoading(true);
       console.log('Fetching logs from Supabase...');
       
-      let query = supabase
+      const { data, error } = await supabase
         .from('volunteer_log')
         .select('*')
-        .order('date', { ascending: false });
-
-      const { data, error } = await query;
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       
-      console.log('Fetched logs from Supabase:', data);
+      console.log('Fetched raw logs from Supabase:', data);
       console.log('Number of logs fetched:', data?.length || 0);
       
-      setLogs(data || []);
+      // Normalize the data to handle both database schemas
+      const normalizedLogs = (data || []).map(log => {
+        // Handle both schema types
+        const isOldSchema = log.user_email && log.first_name && log.last_name;
+        const isNewSchema = log.user_id && log.date_of_service;
+        
+        if (isOldSchema) {
+          // Already in the expected format
+          return log;
+        } else if (isNewSchema) {
+          // Convert new schema to old schema format
+          return {
+            ...log,
+            user_email: log.user_email || '', // May not exist in new schema
+            user_uid: log.user_id,
+            first_name: log.first_name || 'Unknown',
+            last_name: log.last_name || 'User',
+            date: log.date_of_service,
+            time_range: log.start_time && log.end_time ? `${log.start_time}-${log.end_time}` : '',
+            // Keep other fields as-is
+          };
+        } else {
+          // Fallback for unknown schema
+          return {
+            ...log,
+            user_email: log.user_email || '',
+            user_uid: log.user_uid || log.user_id || '',
+            first_name: log.first_name || 'Unknown',
+            last_name: log.last_name || 'User',
+            date: log.date || log.date_of_service || '',
+            time_range: log.time_range || (log.start_time && log.end_time ? `${log.start_time}-${log.end_time}` : ''),
+          };
+        }
+      });
+      
+      console.log('Normalized logs:', normalizedLogs);
+      setLogs(normalizedLogs);
     } catch (error) {
       console.error('Error fetching logs:', error);
       setError('Failed to fetch volunteer logs');
@@ -133,8 +171,12 @@ export default function AdminDashboard() {
     
     // Filter logs that fall within this period's date range
     const periodLogs = logs.filter(log => {
+      // Get the date from either schema format
+      const logDateString = log.date || log.date_of_service;
+      if (!logDateString) return false;
+      
       // Create date objects and normalize to remove time component
-      const logDate = new Date(log.date);
+      const logDate = new Date(logDateString);
       logDate.setHours(0, 0, 0, 0);
       
       const periodStart = new Date(period.startDate);
@@ -149,11 +191,11 @@ export default function AdminDashboard() {
       if (periodIndex === 0) { // Only log for the first period to avoid console spam
         console.log(`Log date check for period ${periodIndex}:`, {
           logDate: logDate.toISOString(),
-          logDateRaw: log.date,
+          logDateRaw: logDateString,
           periodStart: periodStart.toISOString(),
           periodEnd: periodEnd.toISOString(),
           isInPeriod,
-          userName: `${log.first_name} ${log.last_name}`,
+          userName: `${log.first_name || 'Unknown'} ${log.last_name || 'User'}`,
           logDateTimestamp: logDate.getTime(),
           periodStartTimestamp: periodStart.getTime(),
           periodEndTimestamp: periodEnd.getTime()
@@ -170,30 +212,43 @@ export default function AdminDashboard() {
     const userHoursMap = new Map<string, number>();
     
     periodLogs.forEach(log => {
-      // Handle time_range parsing safely
-      const timeRange = log.time_range || '';
-      const timeParts = timeRange.split('-');
-      const startTime = timeParts[0] || '';
-      const endTime = timeParts[1] || '';
-      
+      // Handle time_range parsing safely for both schemas
       let hours = 0;
-      if (startTime && endTime) {
+      
+      if (log.time_range) {
+        // Handle old schema time_range format
+        const timeParts = log.time_range.split('-');
+        const startTime = timeParts[0] || '';
+        const endTime = timeParts[1] || '';
+        
+        if (startTime && endTime) {
+          try {
+            const start = new Date(`1970-01-01T${startTime}`);
+            const end = new Date(`1970-01-01T${endTime}`);
+            hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+          } catch (e) {
+            console.error('Error parsing time range:', log.time_range, e);
+            // Fallback to log.hours if available
+            hours = log.hours || 0;
+          }
+        }
+      } else if (log.start_time && log.end_time) {
+        // Handle new schema start_time/end_time format
         try {
-          const start = new Date(`1970-01-01T${startTime}`);
-          const end = new Date(`1970-01-01T${endTime}`);
+          const start = new Date(`1970-01-01T${log.start_time}`);
+          const end = new Date(`1970-01-01T${log.end_time}`);
           hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
         } catch (e) {
-          console.error('Error parsing time range:', timeRange, e);
-          // Fallback to log.hours if available
+          console.error('Error parsing start/end time:', log.start_time, log.end_time, e);
           hours = log.hours || 0;
         }
       } else if (log.hours) {
-        // Use the hours field directly if time_range parsing fails
+        // Use the hours field directly if time parsing fails
         hours = log.hours;
       }
       
       // Try multiple ways to match names
-      const logFullName = `${log.first_name} ${log.last_name}`.trim();
+      const logFullName = `${log.first_name || ''} ${log.last_name || ''}`.trim();
       const logEmail = log.user_email || '';
       
       // Find matching NJHS member
@@ -267,32 +322,48 @@ export default function AdminDashboard() {
       
       // Create CSV rows
       const rows = logs.map(log => {
-        // Calculate hours from time_range
-        const timeRange = log.time_range || '';
-        const timeParts = timeRange.split('-');
-        const startTime = timeParts[0] || '';
-        const endTime = timeParts[1] || '';
-        
+        // Calculate hours from time_range or start_time/end_time
         let hours = 0;
-        if (startTime && endTime) {
+        
+        if (log.time_range) {
+          // Handle old schema time_range format
+          const timeParts = log.time_range.split('-');
+          const startTime = timeParts[0] || '';
+          const endTime = timeParts[1] || '';
+          
+          if (startTime && endTime) {
+            try {
+              const start = new Date(`1970-01-01T${startTime}`);
+              const end = new Date(`1970-01-01T${endTime}`);
+              hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+            } catch (e) {
+              console.error('Error parsing time range:', log.time_range, e);
+            }
+          }
+        } else if (log.start_time && log.end_time) {
+          // Handle new schema start_time/end_time format
           try {
-            const start = new Date(`1970-01-01T${startTime}`);
-            const end = new Date(`1970-01-01T${endTime}`);
+            const start = new Date(`1970-01-01T${log.start_time}`);
+            const end = new Date(`1970-01-01T${log.end_time}`);
             hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
           } catch (e) {
-            console.error('Error parsing time range:', timeRange, e);
+            console.error('Error parsing start/end time:', log.start_time, log.end_time, e);
           }
+        } else if (log.hours) {
+          // Use hours field if available
+          hours = log.hours;
         }
 
         const submittedAt = log.created_at ? format(new Date(log.created_at), 'MMM d, yyyy h:mm a') : 'Not tracked';
+        const logDate = log.date || log.date_of_service || '';
         
         return [
-          format(new Date(log.date), 'MMM d, yyyy'),
-          `${log.first_name} ${log.last_name}`,
-          log.organization,
-          `"${log.description.replace(/"/g, '""')}"`, // Escape quotes in description
+          logDate ? format(new Date(logDate), 'MMM d, yyyy') : 'Unknown',
+          `${log.first_name || 'Unknown'} ${log.last_name || 'User'}`,
+          log.organization || 'Unknown',
+          `"${(log.description || '').replace(/"/g, '""')}"`, // Escape quotes in description
           hours.toFixed(2),
-          log.proof_of_service,
+          log.proof_of_service || 'Not provided',
           submittedAt
         ];
       });
@@ -498,22 +569,39 @@ export default function AdminDashboard() {
                   </tr>
                 ) : (
                   logs.map((log, idx) => {
-                    // Handle time_range parsing safely
-                    const timeRange = log.time_range || '';
-                    const timeParts = timeRange.split('-');
-                    const startTime = timeParts[0] || '';
-                    const endTime = timeParts[1] || '';
-                    
+                    // Handle time_range parsing safely for both schemas
                     let hours = 0;
-                    if (startTime && endTime) {
+                    
+                    if (log.time_range) {
+                      // Handle old schema time_range format
+                      const timeParts = log.time_range.split('-');
+                      const startTime = timeParts[0] || '';
+                      const endTime = timeParts[1] || '';
+                      
+                      if (startTime && endTime) {
+                        try {
+                          const start = new Date(`1970-01-01T${startTime}`);
+                          const end = new Date(`1970-01-01T${endTime}`);
+                          hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+                        } catch (e) {
+                          console.error('Error parsing time range:', log.time_range, e);
+                        }
+                      }
+                    } else if (log.start_time && log.end_time) {
+                      // Handle new schema start_time/end_time format
                       try {
-                        const start = new Date(`1970-01-01T${startTime}`);
-                        const end = new Date(`1970-01-01T${endTime}`);
+                        const start = new Date(`1970-01-01T${log.start_time}`);
+                        const end = new Date(`1970-01-01T${log.end_time}`);
                         hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
                       } catch (e) {
-                        console.error('Error parsing time range:', timeRange, e);
+                        console.error('Error parsing start/end time:', log.start_time, log.end_time, e);
                       }
+                    } else if (log.hours) {
+                      // Use hours field if available
+                      hours = log.hours;
                     }
+
+                    const logDate = log.date || log.date_of_service || '';
                     
                     return (
                       <tr
@@ -523,12 +611,24 @@ export default function AdminDashboard() {
                           ' hover:bg-purple-100 transition-colors duration-150'
                         }
                       >
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900 font-bold" style={{fontSize: '12px'}}>{format(new Date(log.date), 'MMM d, yyyy')}</td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>{log.first_name} {log.last_name}</td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>{log.organization}</td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-900 max-w-xs sm:max-w-lg truncate" style={{fontSize: '12px'}} title={log.description}>{log.description}</td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-indigo-700 font-extrabold" style={{fontSize: '12px'}}>{hours.toFixed(2)}</td>
-                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>{log.proof_of_service}</td>
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900 font-bold" style={{fontSize: '12px'}}>
+                          {logDate ? format(new Date(logDate), 'MMM d, yyyy') : 'Unknown'}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>
+                          {log.first_name || 'Unknown'} {log.last_name || 'User'}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>
+                          {log.organization || 'Unknown'}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 text-gray-900 max-w-xs sm:max-w-lg truncate" style={{fontSize: '12px'}} title={log.description || 'No description'}>
+                          {log.description || 'No description'}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-indigo-700 font-extrabold" style={{fontSize: '12px'}}>
+                          {hours.toFixed(2)}
+                        </td>
+                        <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-900" style={{fontSize: '12px'}}>
+                          {log.proof_of_service || 'Not provided'}
+                        </td>
                         <td className="px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap text-gray-600" style={{fontSize: '12px'}}>
                           {log.created_at ? format(new Date(log.created_at), 'MMM d, yyyy h:mm a') : 'Not tracked'}
                         </td>
